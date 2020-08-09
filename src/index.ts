@@ -105,7 +105,7 @@ const timestampData = `
 
 export default class AxiosApi extends Api.Implementation {
   private getAccessToken: (
-    loginWithRefresh: (refreshToken: string) => Promise<Api.LoginRefreshResponse>,
+    refreshAccessToken: (refreshToken: string) => Promise<Api.LoginRefreshResponse>,
   ) => Promise<string>;
 
   /**
@@ -115,7 +115,7 @@ export default class AxiosApi extends Api.Implementation {
    */
   constructor(
     getAccessToken: (
-      loginWithRefresh: (refreshToken: string) => Promise<Api.LoginRefreshResponse>,
+      refreshAccessToken: (refreshToken: string) => Promise<Api.LoginRefreshResponse>,
     ) => Promise<string>,
   ) {
     super();
