@@ -169,7 +169,7 @@ export default class AxiosApi extends ApiImplementation {
       if (response.data?.errors) {
         let error: AxiosError;
         if (response.data.errors.length === 1) {
-          error = new Error(response.data.errors[0]) as AxiosError;
+          error = new Error(response.data.errors[0].message) as AxiosError;
         } else {
           error = new Error(
             `GraphQL Request failed with ${response.data.errors.length} errors`,
