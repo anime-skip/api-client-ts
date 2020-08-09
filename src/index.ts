@@ -104,7 +104,7 @@ const timestampData = `
 `;
 
 export default class AxiosApi extends ApiImplementation {
-  private getAccessToken: (
+  protected getAccessToken: (
     refreshAccessToken: (refreshToken: string) => Promise<Api.LoginRefreshResponse>,
   ) => Promise<string>;
 
@@ -149,13 +149,13 @@ export default class AxiosApi extends ApiImplementation {
   }
 
   /* eslint-disable no-console */
-  private async sendUnauthorizedGraphql<Q extends string, D>(
+  protected async sendUnauthorizedGraphql<Q extends string, D>(
     data: Api.GraphQlBody,
   ): Promise<{ data: { [field in Q]: D } }> {
     return await this.sendGraphql(data, true);
   }
 
-  private async sendGraphql<Q extends string, D>(
+  protected async sendGraphql<Q extends string, D>(
     data: Api.GraphQlBody,
     skipAuth = false,
   ): Promise<{ data: { [field in Q]: D } }> {
