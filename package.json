@@ -1,0 +1,30 @@
+{
+  "name": "@anime-skip/axios-api",
+  "version": "1.0.0",
+  "description": "Implmentation of all the API calls to the primary backend service",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "repository": "https://github.com/anime-skip/lib-axios-api",
+  "author": "Aaron Klinker <aaronklinker1@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "scripts": {
+    "lint": "eslint --fix",
+    "lint:no-fix": "eslint",
+    "build": "tsc -p ."
+  },
+  "devDependencies": {
+    "@anime-skip/types": "^1.1.0",
+    "@types/md5": "^2.2.0",
+    "prettier": "^2.0.5",
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "eslint": "^7.6.0",
+    "md5": "^2.3.0"
+  }
+}
