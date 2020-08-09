@@ -104,14 +104,20 @@ const timestampData = `
 `;
 
 export default class AxiosApi extends Api.Implementation {
-  private getAccessToken: () => Promise<string>;
+  private getAccessToken: (
+    loginWithRefresh: (refreshToken: string) => Promise<Api.LoginRefreshResponse>,
+  ) => Promise<string>;
 
   /**
    * @param getAccessToken A async funtion that returns a token. This function should not only
    *                       return the access or refreshed access token, but also store the new
    *                       tokens for use inside this function again.
    */
-  constructor(getAccessToken: () => Promise<string>) {
+  constructor(
+    getAccessToken: (
+      loginWithRefresh: (refreshToken: string) => Promise<Api.LoginRefreshResponse>,
+    ) => Promise<string>,
+  ) {
     super();
     this.getAccessToken = getAccessToken;
   }
@@ -154,7 +160,7 @@ export default class AxiosApi extends Api.Implementation {
     skipAuth = false,
   ): Promise<{ data: { [field in Q]: D } }> {
     try {
-      const token = skipAuth ? undefined : await this.getAccessToken();
+      const token = skipAuth ? undefined : await this.getAccessToken(this.loginRefresh);
       const response = await axios.post('graphql', data, {
         headers: {
           Authorization: token ? `Bearer ${token}` : undefined,
