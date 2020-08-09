@@ -55,18 +55,18 @@ const preferencesData = `
   skipBranding skipIntros skipNewIntros skipMixedIntros skipRecaps skipFiller skipCanon skipTransitions skipTitleCard skipCredits skipMixedCredits skipNewCredits skipPreview
 `;
 
-const loginData = `
+const loginRefreshData = `
   authToken refreshToken
+`;
+
+const loginData = `
+  ${loginRefreshData}
   account {
     username emailVerified
     preferences {
       ${preferencesData}
     }
   }
-`;
-
-const loginRefreshData = `
-  authToken refreshToken
 `;
 
 const showSearchData = `id name originalName`;
@@ -192,7 +192,30 @@ export default class AxiosApi extends Api.Implementation {
   /* eslint-enable no-console */
   //#endregion
 
-  //#region Log In
+  //#region Account
+  async createAccount(
+    username: string,
+    email: string,
+    password: string,
+    recaptchaResponse: string,
+  ): Promise<Api.LoginResponse> {
+    const m = mutation(
+      `mutation CreateAccount($username: String!, $email: String!, $passwordHash: String!, $recaptchaResponse: String!) {
+        createAccount(username: $username, email: $email, passwordHash: $passwordHash, recaptchaResponse: $recaptchaResponse) {
+          ${loginData}
+        }
+      }`,
+      {
+        username,
+        email,
+        passwordHash: md5(password),
+        recaptchaResponse,
+      },
+    );
+    const response = await this.sendUnauthorizedGraphql<'login', Api.LoginResponse>(m);
+    return response.data.login;
+  }
+
   async loginManual(username: string, password: string): Promise<Api.LoginResponse> {
     const q = query(
       `{
