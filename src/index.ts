@@ -212,8 +212,8 @@ export default class AxiosApi extends Api.Implementation {
         recaptchaResponse,
       },
     );
-    const response = await this.sendUnauthorizedGraphql<'login', Api.LoginResponse>(m);
-    return response.data.login;
+    const response = await this.sendUnauthorizedGraphql<'createAccount', Api.LoginResponse>(m);
+    return response.data.createAccount;
   }
 
   async loginManual(username: string, password: string): Promise<Api.LoginResponse> {
