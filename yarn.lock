@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@anime-skip/types@^1.1.0":
-  version "1.1.0"
-  resolved "https://npm.pkg.github.com/download/@anime-skip/types/1.1.0/ffaecd90311bfc3a66c93f8b4b82cead851260b4cd3f50267d8540f328830aa7#4efe7b1dc30a2cbcfd24914823a0aa081623b75a"
-  integrity sha512-ayi7tXwD4LoVhUABBIGI06CBSKRPT4J19Vu5jHyc/zJpnlRtHcX4v0wQR0zDzDch1pQ1mBVPhofp5cOar3Jofg==
+"@anime-skip/types@^1.1.1":
+  version "1.1.1"
+  resolved "https://npm.pkg.github.com/download/@anime-skip/types/1.1.1/6e23d1c1ae6c2d969b5ad5bbabe82c98e9f8bd109700ca68fe5a05754ff165ea#1d449300d9377ed1c3fe9af05aeba638de8a1237"
+  integrity sha512-4NmAJn+C1iQFeEBVeGhvn7ELJS2BKxqX46g87rSJaTzd8YL5E9ByihclFHlNlvJUwxX++yEAE/F358yN33a+5A==
 
 "@babel/code-frame@^7.0.0":
   version "7.10.4"

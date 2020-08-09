@@ -17,7 +17,7 @@
     "build": "tsc -p ."
   },
   "devDependencies": {
-    "@anime-skip/types": "^1.1.0",
+    "@anime-skip/types": "^1.1.1",
     "@types/md5": "^2.2.0",
     "prettier": "^2.0.5",
     "typescript": "^3.9.7"
