@@ -1,4 +1,4 @@
-import type { Api } from '@anime-skip/types';
+import { Api, ApiImplementation } from '@anime-skip/types';
 import Axios, { AxiosError } from 'axios';
 import md5 from 'md5';
 
@@ -103,7 +103,7 @@ const timestampData = `
   typeId
 `;
 
-export default class AxiosApi extends Api.Implementation {
+export default class AxiosApi extends ApiImplementation {
   private getAccessToken: (
     refreshAccessToken: (refreshToken: string) => Promise<Api.LoginRefreshResponse>,
   ) => Promise<string>;
