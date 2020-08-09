@@ -1,5 +1,7 @@
 /.vscode
 /src
+/.github
 .eslintrc.js
 .prettierrc
 tsconfig.json
+*.log
