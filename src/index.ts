@@ -1,4 +1,4 @@
-import { Api } from '@anime-skip/types';
+import type { Api } from '@anime-skip/types';
 import Axios, { AxiosError } from 'axios';
 import md5 from 'md5';
 
