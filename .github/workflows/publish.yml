@@ -1,7 +1,7 @@
 name: Publish
 on:
   release:
-    types: [created]
+    types: [created, updated]
 
 jobs:
   build:
@@ -13,8 +13,12 @@ jobs:
           node-version: '12.x'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@anime-skip'
-      - run: npm install
+      - run: yarn install
+        env:
+          CI: true
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
       - run: npm run build
       - run: npm publish
         env:
+          CI: true
           NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
