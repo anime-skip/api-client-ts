@@ -4,7 +4,9 @@ import md5 from 'md5';
 
 const axios = Axios.create({
   baseURL:
-    process.env.NODE_ENV === 'production' ? 'http://api.anime-skip.com/' : 'http://localhost:8000/',
+    process.env.NODE_ENV === 'production'
+      ? 'https://api.anime-skip.com/'
+      : 'http://localhost:8000/',
 });
 
 if (process.env.NODE_ENV !== 'production') {
