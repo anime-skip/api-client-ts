@@ -1,6 +1,6 @@
 {
   "name": "@anime-skip/axios-api",
-  "version": "1.0.10",
+  "version": "1.1.0",
   "description": "Implmentation of all the API calls to the primary backend service",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -17,7 +17,7 @@
     "build": "tsc -p ."
   },
   "devDependencies": {
-    "@anime-skip/types": "^1.2.0",
+    "@anime-skip/types": "^1.3.0",
     "@types/md5": "^2.2.0",
     "prettier": "^2.0.5",
     "typescript": "^3.9.7"
