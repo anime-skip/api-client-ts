@@ -22,7 +22,7 @@ const loginRefreshData = `
 const loginData = `
   ${loginRefreshData}
   account {
-    username emailVerified
+    username email emailVerified
     preferences {
       ${preferencesData}
     }
