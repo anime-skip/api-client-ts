@@ -1,48 +1,6 @@
 import { Api, ApiImplementation } from '@anime-skip/types';
-import Axios, { AxiosError } from 'axios';
+import Axios, { AxiosError, AxiosInstance } from 'axios';
 import md5 from 'md5';
-
-const axios = Axios.create({
-  baseURL:
-    process.env.NODE_ENV === 'production'
-      ? 'https://api.anime-skip.com/'
-      : 'http://localhost:8000/',
-});
-
-if (process.env.NODE_ENV !== 'production') {
-  axios.interceptors.request.use((config): any => {
-    /* eslint-disable no-console */
-    console.groupCollapsed(
-      `%cAPI  %c/${config.url}`,
-      'font-weight: 600; color: default;',
-      'font-weight: 400; color: black;',
-    );
-    console.log(`URL: %c${config.baseURL}${config.url}`, 'color: #137AF8');
-    const headers = {
-      ...config.headers,
-      ...config.headers.common,
-      ...config.headers[config.method || 'get'],
-    };
-    delete headers.get;
-    delete headers.post;
-    delete headers.put;
-    delete headers.delete;
-    delete headers.patch;
-    delete headers.head;
-    console.log('Headers: ', headers);
-    if (config.params) {
-      console.log('Parameters: ', config.params);
-    }
-    if (config.data) {
-      console.log(`GraphQL:\n%c${AxiosApi.formatGraphql(config.data.query)}`, 'color: #137AF8');
-      if (config.data.variables) {
-        console.log('Variables: ', config.data.variables);
-      }
-    }
-    /* eslint-enable no-console */
-    return config;
-  });
-}
 
 function query(q: string): Api.GraphQlBody {
   return { query: q };
@@ -106,9 +64,7 @@ const timestampData = `
 `;
 
 export default class AxiosApi extends ApiImplementation {
-  protected getAccessToken: (
-    refreshAccessToken: (refreshToken: string) => Promise<Api.LoginRefreshResponse>,
-  ) => Promise<string>;
+  protected axios: AxiosInstance;
 
   /**
    * @param getAccessToken A async funtion that returns a token. This function should not only
@@ -119,12 +75,53 @@ export default class AxiosApi extends ApiImplementation {
     getAccessToken: (
       refreshAccessToken: (refreshToken: string) => Promise<Api.LoginRefreshResponse>,
     ) => Promise<string>,
+    baseUrl = 'https://api.anime-skip.com/',
   ) {
     super();
     this.getAccessToken = getAccessToken;
+    this.axios = Axios.create({ baseURL: baseUrl });
+
+    if (process.env.NODE_ENV !== 'production') {
+      this.axios.interceptors.request.use((config): any => {
+        /* eslint-disable no-console */
+        console.groupCollapsed(
+          `%cAPI  %c/${config.url}`,
+          'font-weight: 600; color: default;',
+          'font-weight: 400; color: black;',
+        );
+        console.log(`URL: %c${config.baseURL}${config.url}`, 'color: #137AF8');
+        const headers = {
+          ...config.headers,
+          ...config.headers.common,
+          ...config.headers[config.method || 'get'],
+        };
+        delete headers.get;
+        delete headers.post;
+        delete headers.put;
+        delete headers.delete;
+        delete headers.patch;
+        delete headers.head;
+        console.log('Headers: ', headers);
+        if (config.params) {
+          console.log('Parameters: ', config.params);
+        }
+        if (config.data) {
+          console.log(`GraphQL:\n%c${AxiosApi.formatGraphql(config.data.query)}`, 'color: #137AF8');
+          if (config.data.variables) {
+            console.log('Variables: ', config.data.variables);
+          }
+        }
+        /* eslint-enable no-console */
+        return config;
+      });
+    }
   }
 
   //#region Utils
+  protected getAccessToken: (
+    refreshAccessToken: (refreshToken: string) => Promise<Api.LoginRefreshResponse>,
+  ) => Promise<string>;
+
   public static formatGraphql(data: string): string {
     const lines = data
       .split('\n')
@@ -163,7 +160,7 @@ export default class AxiosApi extends ApiImplementation {
   ): Promise<{ data: { [field in Q]: D } }> {
     try {
       const token = skipAuth ? undefined : await this.getAccessToken(this.loginRefresh);
-      const response = await axios.post('graphql', data, {
+      const response = await this.axios.post('graphql', data, {
         headers: {
           Authorization: token ? `Bearer ${token}` : undefined,
         },
