@@ -33,10 +33,10 @@ const showSearchData = `id name originalName`;
 
 const showData = `id name originalName website image`;
 
-const episodeSearchData = `id name season number absoluteNumber`;
+const episodeSearchData = `id name season number absoluteNumber baseDuration`;
 
 const episodeData = `
-  id absoluteNumber number season name 
+  id absoluteNumber number season name baseDuration
   timestamps {
     id at typeId
   }
@@ -48,6 +48,8 @@ const episodeData = `
 const episodeUrlNoEpisodeData = `
   url
   createdAt
+  duration
+  timestampsOffset
 `;
 
 const episodeUrlData = `
