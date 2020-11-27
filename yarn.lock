@@ -3,9 +3,9 @@
 
 
 "@anime-skip/types@^1.3.0":
-  version "1.3.0"
-  resolved "https://npm.pkg.github.com/download/@anime-skip/types/1.3.0/35d45faf8172e286ad84152b0030c333a00c34d0e4cdf9a4a9bd184a2e5c019e#13ad0866bc055f58cae047375319e8ee94bf0346"
-  integrity sha512-Gg3eSc7JMK1idLltihTiSF9gJKVklYypw4joka1EQNgHHfx0JLV/yUPUxPPQkvpYQiH21I0s2fz1YYs3/xBV6Q==
+  version "1.3.2"
+  resolved "https://npm.pkg.github.com/download/@anime-skip/types/1.3.2/212e64731e63095718d56aed22546ad94cbe3a504e5c98c775d23b7d63dd14f5#521cda6acc73362a633ac021685d57e9976775d1"
+  integrity sha512-4jVtV4m+XRjrtRGdsdMLGJ1GqbiM0VaQEuJyY4rezxRsRVr92rUjtdeKZY+QlFW4/d0zJwTfPPm/M5eWbp28Pg==
 
 "@babel/code-frame@^7.0.0":
   version "7.10.4"
