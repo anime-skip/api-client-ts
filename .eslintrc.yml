@@ -1,0 +1,23 @@
+root: true
+plugins:
+  - '@typescript-eslint'
+  - only-warn
+extends:
+  - eslint:recommended
+
+env:
+  browser: true
+
+rules:
+  no-unused-vars:
+    - warn
+    - argsIgnorePattern: _.*
+      varsIgnorePattern: _.*
+  generator-star-spacing: off
+
+overrides:
+  - files: ['*.js']
+  - files: ['*.ts']
+    excludedFiles: ['*.d.ts']
+    extends:
+      - plugin:@typescript-eslint/recommended
