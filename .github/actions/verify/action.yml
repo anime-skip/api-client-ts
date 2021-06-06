@@ -1,0 +1,7 @@
+name: Verify Code
+runs:
+  using: composite
+  steps:
+    - run: |
+        yarn build
+      shell: bash

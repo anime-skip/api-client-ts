@@ -1,0 +1,6 @@
+// KEYS:
+// - NAME
+// - VALUE
+// VARS:
+// TEMPLATE:
+"$NAME$": args.$VALUE$
