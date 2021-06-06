@@ -8,3 +8,10 @@ runs:
         yarn format:check
         yarn build
       shell: bash
+    - run: |
+        if [[ "$(git diff --stat)" != "" ]]; then
+          echo "Generated files are out of date. Run `yarn gen` to regenerate them. Diff:"
+          git diff
+          exit 1
+        fi
+      shell: bash
