@@ -15,10 +15,10 @@
     "compile": "tsc --noEmit",
     "lint": "yarn lint:no-fix --fix",
     "lint:no-fix": "eslint . --ext .js,.ts,.vue --max-warnings 0",
-    "prettier": "prettier --check .",
-    "prettier:write": "prettier --write .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "gen": "ts-node src/generate/index.ts",
-    "build": "tsc -p .",
+    "build": "tsc",
     "test:e2e": "yarn gen && COMPOSE_TARGET=prod mocha"
   },
   "devDependencies": {

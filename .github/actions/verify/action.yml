@@ -3,5 +3,8 @@ runs:
   using: composite
   steps:
     - run: |
+        yarn compile
+        yarn lint:no-fix
+        yarn format:check
         yarn build
       shell: bash
