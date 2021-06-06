@@ -4,7 +4,6 @@ import { loadTemplate } from './load-template';
 import { mapType } from './map-type';
 import { capitalize } from './capitalize';
 import fs from 'fs';
-import path from 'path';
 
 async function introspection(url: string): Promise<IntrospectionSchema> {
   console.log('Loading schema...');
@@ -109,11 +108,12 @@ async function introspection(url: string): Promise<IntrospectionSchema> {
             }
           }
         }`,
-      operationName: 'IntrospectionQuery'
+      operationName: 'IntrospectionQuery',
     })
   ).data.data.__schema;
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function parseSchema(url: string, customScalars?: Record<string, string>) {
   const jsonSchema = await introspection(url);
 
@@ -123,7 +123,7 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
         return loadTemplate('root-type.template.ts', {
           NAME: name,
           TYPE: '{}',
-          VALUES: ''
+          VALUES: '',
         });
       }
       return loadTemplate('root-type.template.ts', {
@@ -137,7 +137,7 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
               REQUEST_NAME: query.name,
               REQUEST_NAME_CAPITALIZED: capitalize(query.name),
               TYPE: type,
-              RETURN_TYPE: `${returnType}${nullable ? ' | null' : ''}`
+              RETURN_TYPE: `${returnType}${nullable ? ' | null' : ''}`,
             };
             if (query.args.length === 0) {
               return loadTemplate('request.template.ts', templateValues);
@@ -149,14 +149,14 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
                   const { type, nullable } = mapType(arg.type);
                   return loadTemplate('variable-declaration.template.txt', {
                     TYPE: `${type.replace('Gql', '')}${nullable ? '' : '!'}`,
-                    NAME: arg.name
+                    NAME: arg.name,
                   });
                 })
                 .join(', '),
               VARIABLE_PASSED: query.args
                 .map(arg => {
                   return loadTemplate('pass-variable.template.txt', {
-                    NAME: arg.name
+                    NAME: arg.name,
                   });
                 })
                 .join(', '),
@@ -164,13 +164,13 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
                 .map(arg => {
                   return loadTemplate('variable-value.template.txt', {
                     NAME: arg.name,
-                    VALUE: arg.name
+                    VALUE: arg.name,
                   });
                 })
-                .join(', ')
+                .join(', '),
             });
           })
-          .join(',\n')
+          .join(',\n'),
       });
     },
     _generateQueries(): string {
@@ -216,7 +216,7 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
     _generateEnumType(type: IntrospectionFullType): string {
       return loadTemplate('type-enum.template.ts', {
         NAME: type.name,
-        VALUES: type.enumValues!.map(value => `${value.name} = "${value.name}"`).join(',\n  ')
+        VALUES: type.enumValues?.map(value => `${value.name} = "${value.name}"`).join(',\n  '),
       });
     },
     _generateScalarType(type: IntrospectionFullType): string {
@@ -227,13 +227,13 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
         String: 'string',
         Time: 'string',
         ID: 'string',
-        ...customScalars
+        ...customScalars,
       };
-      const value = types[type.name!];
+      const value = type.name && types[type.name];
       if (value == null) throw Error(`Could not alias scalar '${type.name}'`);
       return loadTemplate('type-scalar.template.ts', {
         NAME: type.name,
-        VALUE: value
+        VALUE: value,
       });
     },
     _generateObjectType(type: IntrospectionFullType): string {
@@ -244,7 +244,7 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
             const { type, nullable } = mapType(f.type);
             return `${f.name}${nullable ? '?' : ''}: ${type}`;
           })
-          .join(';\n  ')
+          .join(';\n  '),
       });
     },
     _generateInputObjectType(type: IntrospectionFullType): string {
@@ -255,7 +255,7 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
             const { type, nullable } = mapType(f.type);
             return `${f.name}${nullable ? '?' : ''}: ${type}`;
           })
-          .join(';\n  ')
+          .join(';\n  '),
       });
     },
     _generateInterfaceType(type: IntrospectionFullType): string {
@@ -281,14 +281,14 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
                     const { type, nullable } = mapType(f.type);
                     return `${f.name}${nullable ? '?' : ''}: ${type}`;
                   })
-                  .join(';\n  ')
-              })
+                  .join(';\n  '),
+              }),
             );
             return `${f.name}(query: string, args: Gql${argsTypeName}): Promise<${type}${
               nullable ? ' | null' : ''
             }>`;
           })
-          .join(';\n  ')
+          .join(';\n  '),
       });
 
       return [...argTemplates, objectTemplate].join('\n\n');
@@ -301,12 +301,12 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
         QUERIES: this._generateQueries(),
         MUTATIONS: this._generateMutations(),
         SUBSCRIPTIONS: this._generateSubscriptions(),
-        TYPES: this._generateTypes().join('\n\n')
+        TYPES: this._generateTypes().join('\n\n'),
       });
 
       fs.writeFileSync(outputPath, template, { encoding: 'utf-8' });
 
       console.log('Done!\n');
-    }
+    },
   };
 }

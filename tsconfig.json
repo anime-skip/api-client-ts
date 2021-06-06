@@ -11,5 +11,5 @@
     "types": ["node", "mocha", "mocha-steps"]
   },
   "include": ["src", "e2e"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "src/generate/templates/*"]
 }

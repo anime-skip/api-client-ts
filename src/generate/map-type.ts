@@ -1,13 +1,5 @@
 import { IntrospectionType } from './types';
 
-const knownTypes: Record<string, string> = {
-  Int: 'number',
-  Float: 'number',
-  String: 'string',
-  Boolean: 'boolean',
-  Time: 'string'
-};
-
 export function mapType(type: IntrospectionType): { type: string; nullable: boolean } {
   if (
     type.kind === 'SCALAR' ||
@@ -19,12 +11,12 @@ export function mapType(type: IntrospectionType): { type: string; nullable: bool
       console.warn('Some type.name was null');
       return {
         type: 'unknown',
-        nullable: true
+        nullable: true,
       };
     }
     return {
       type: 'Gql' + type.name,
-      nullable: true
+      nullable: true,
     };
   }
   if (type.ofType == null) {
@@ -35,7 +27,7 @@ export function mapType(type: IntrospectionType): { type: string; nullable: bool
       console.warn('Non-null type missing what it is non-null of');
       return {
         type: 'unknown',
-        nullable: true
+        nullable: true,
       };
     }
     const { type: t } = mapType(type.ofType);
@@ -45,7 +37,7 @@ export function mapType(type: IntrospectionType): { type: string; nullable: bool
     const { type: t, nullable } = mapType(type.ofType);
     return {
       type: `Array<${t + (nullable ? ' | null' : '')}>`,
-      nullable: true
+      nullable: true,
     };
   }
   throw Error(`Unknown kind: ${type.kind}`);

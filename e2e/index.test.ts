@@ -32,19 +32,19 @@ describe('E2E API Calls', function () {
             email: 'user@test.com',
             passwordHash: md5('password'),
             recaptchaResponse: 'password1',
-            username: 'a'
-          }
-        )
+            username: 'a',
+          },
+        ),
       ).rejects.toEqual({
         graphql: true,
         status: 200,
         errors: [
           {
             message: 'test',
-            paths: ['usernames']
-          }
-        ]
-      })
+            paths: ['usernames'],
+          },
+        ],
+      }),
     );
 
     step('Fail when email is invalid', () =>
@@ -57,18 +57,18 @@ describe('E2E API Calls', function () {
             email: 'not-an-email',
             passwordHash: md5('password'),
             recaptchaResponse: 'password1',
-            username: 'user'
-          }
-        )
+            username: 'user',
+          },
+        ),
       ).rejects.toContainEqual({
         graphql: true,
         errors: [
           {
             message: 'test',
-            paths: ['emails']
-          }
-        ]
-      })
+            paths: ['emails'],
+          },
+        ],
+      }),
     );
 
     step("Create 'user' account", async () => {
@@ -84,15 +84,15 @@ describe('E2E API Calls', function () {
           email: 'user@test.com',
           passwordHash: md5('password'),
           recaptchaResponse: 'password1',
-          username: 'user'
-        }
+          username: 'user',
+        },
       );
       expect(loginData).toEqual({
         authToken: expect.any(String),
         refreshToken: expect.any(String),
         account: {
-          username: 'user'
-        }
+          username: 'user',
+        },
       });
 
       axios.interceptors.request.use(config => {
@@ -100,8 +100,8 @@ describe('E2E API Calls', function () {
           ...config,
           headers: {
             ...config.headers,
-            Authorization: `Bearer ${loginData?.authToken}`
-          }
+            Authorization: `Bearer ${loginData?.authToken}`,
+          },
         };
       });
     });
@@ -117,7 +117,7 @@ describe('E2E API Calls', function () {
         username: 'user',
         passwordHash: expect.any(String),
         email: 'user@test.com',
-        verified: false
+        verified: false,
       });
     });
   });

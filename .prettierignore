@@ -1,2 +1,3 @@
-src/generate/templates/*
-src/index.ts
+/src/generate/templates/*
+/src/index.ts
+/lib
