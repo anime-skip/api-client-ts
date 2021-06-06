@@ -1,0 +1,5 @@
+// KEYS:
+// - NAME
+// VARS:
+// TEMPLATE:
+$NAME$: $$NAME$

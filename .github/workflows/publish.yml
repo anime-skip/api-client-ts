@@ -1,24 +1,42 @@
 name: Publish
 on:
-  release:
-    types: [created]
+  workflow_dispatch: {}
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  publish:
+    name: Publish
+    runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - name: Install Node 14
+        uses: actions/setup-node@v1
         with:
-          node-version: '12.x'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@anime-skip'
-      - run: yarn install
+          node-version: '14.x'
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Cache Dependencies
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - uses: ./.github/actions/install
+      - uses: ./.github/actions/verify
+      - name: Create Changelog
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          github-token: ${{ secrets.github_token }}
+          output-file: 'false'
+      - name: Publish to GitHub Packages
+        uses: ./.github/actions/publish
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        with:
+          npmAuthToken: ${{ secrets.ANIME_SKIP_PACKAGES_TOKEN }}
+      - name: Create Release
+        uses: actions/create-release@v1
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         env:
-          CI: true
-          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
-      - run: npm run build
-      - run: npm publish
-        env:
-          CI: true
-          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        with:
+          tag_name: ${{ steps.changelog.outputs.tag }}
+          release_name: ${{ steps.changelog.outputs.tag }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
