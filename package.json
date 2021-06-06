@@ -14,7 +14,7 @@
   "scripts": {
     "compile": "tsc --noEmit",
     "lint": "yarn lint:no-fix --fix",
-    "lint:no-fix": "eslint . --ext .js,.ts,.vue --max-warnings 0",
+    "lint:no-fix": "eslint . --ext .js,.ts --max-warnings 0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "gen": "ts-node src/generate/index.ts",

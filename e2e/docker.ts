@@ -7,8 +7,11 @@ const debug = process.env.DEBUG_DOCKER === 'true';
 const service = (process.env.COMPOSE_TARGET || 'prod') + '_backend';
 const composeOptions: compose.IDockerComposeOptions = {
   cwd: __dirname,
-  log: debug
+  log: debug,
 };
+
+// eslint-disable-next-line no-control-regex
+const textFormatRegex = /\x1b\[.+?m/g;
 
 function sleep(ms: number): Promise<void> {
   return new Promise(res => setTimeout(res, ms));
@@ -36,16 +39,16 @@ async function waitUntilRunning(axios: AxiosInstance) {
   }
 }
 
-export async function startServices(axios: AxiosInstance) {
+export async function startServices(axios: AxiosInstance): Promise<void> {
   await compose.pullAll(composeOptions);
   await compose.upOne(service, { ...composeOptions, commandOptions: ['-V'] });
   await waitUntilRunning(axios);
 }
 
-export async function stopServices() {
+export async function stopServices(): Promise<void> {
   const logs = await compose.logs([service, 'db'], { ...composeOptions, log: false });
-  fs.writeFileSync(path.resolve(__dirname, 'e2e.log'), logs.out.replace(/\x1b\[.+?m/g, ''), {
-    encoding: 'utf-8'
+  fs.writeFileSync(path.resolve(__dirname, 'e2e.log'), logs.out.replace(textFormatRegex, ''), {
+    encoding: 'utf-8',
   });
   await compose.down(composeOptions);
   if (debug) console.log('Stopped docker:');

@@ -642,7 +642,7 @@ export interface GqlEpisodeUrl {
   episodeId: GqlID;
   episode: GqlEpisode;
   source: GqlEpisodeSource;
-};
+}
 
 export default function createAnimeSkipClient(baseUrl: string) {
   const axios = Axios.create({
