@@ -1,7 +1,7 @@
 {
   "name": "@anime-skip/axios-api",
-  "version": "1.1.3",
-  "description": "Implmentation of all the API calls to the primary backend service",
+  "version": "2.0.0",
+  "description": "Implementation of all the API calls to the primary backend service",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "repository": "https://github.com/anime-skip/lib-axios-api",
