@@ -1,6 +1,11 @@
 name: Publish
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      forcePublish:
+        description: Skip check for version diff and publish as is (`true` | `false`)
+        required: false
+        default: false
 
 jobs:
   publish:
@@ -28,7 +33,7 @@ jobs:
           output-file: 'false'
       - name: Publish to GitHub Packages
         uses: ./.github/actions/publish
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        if: ${{ github.event.inputs.forcePublish == 'true' || steps.changelog.outputs.skipped == 'false' }}
         with:
           npmAuthToken: ${{ secrets.ANIME_SKIP_PACKAGES_TOKEN }}
       - name: Create Release
