@@ -42,3 +42,15 @@ const actions = {
   },
 };
 ```
+
+## Publishing
+
+Run the [publish]() workflow to bump the version, create the tag and release, and deploy to github packages
+
+For fully manual deployments, bump the version and tag the commit yourself, then force the deployment in the publish workflow popup.
+
+```bash
+$EDITOR package.json
+git commit -am "chore(release): vX.Y.Z"
+git tag vX.Y.Z
+```
