@@ -27,6 +27,7 @@ jobs:
       - uses: ./.github/actions/verify
       - name: Create Changelog
         id: changelog
+        if: ${{ github.event.inputs.forcePublish != 'true' }}
         uses: TriPSs/conventional-changelog-action@v3
         with:
           github-token: ${{ secrets.github_token }}
