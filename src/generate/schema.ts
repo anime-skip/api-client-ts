@@ -131,7 +131,8 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
         TYPE: 'Gql' + schemaLocation.name,
         VALUES: jsonSchema.types
           .find(type => type.name === schemaLocation?.name)
-          ?.fields?.map(query => {
+          ?.fields?.sort((l, r) => l.name.localeCompare(r.name))
+          .map(query => {
             const { type: returnType, nullable } = mapType(query.type);
             const templateValues = {
               REQUEST_NAME: query.name,
@@ -185,6 +186,7 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
 
     _generateTypes(): string[] {
       return jsonSchema.types
+        .sort((l, r) => (l.name ?? '').localeCompare(r.name ?? ''))
         .map(t => {
           if (
             (jsonSchema.queryType != null && t.name === jsonSchema.queryType?.name) ||

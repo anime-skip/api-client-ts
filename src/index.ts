@@ -28,7 +28,22 @@ export class GqlError {
   }
 }
 
-export interface GqlShowAdmin {
+export interface GqlAccount {
+  id: GqlID;
+  createdAt: GqlTime;
+  deletedAt?: GqlTime;
+  username: GqlString;
+  email: GqlString;
+  profileUrl: GqlString;
+  adminOfShows: Array<GqlShowAdmin>;
+  emailVerified: GqlBoolean;
+  role: GqlRole;
+  preferences: GqlPreferences;
+}
+
+export type GqlBoolean = boolean;
+
+export interface GqlEpisode {
   id: GqlID;
   createdAt: GqlTime;
   createdByUserId: GqlID;
@@ -39,55 +54,22 @@ export interface GqlShowAdmin {
   deletedAt?: GqlTime;
   deletedByUserId?: GqlID;
   deletedBy?: GqlUser;
-  showId: GqlID;
-  show: GqlShow;
-  userId: GqlID;
-  user: GqlUser;
-}
-
-export interface GqlInputTimestamp {
-  at: GqlFloat;
-  typeId: GqlID;
-  source?: GqlTimestampSource;
-}
-
-export interface GqlInputEpisode {
   season?: GqlString;
   number?: GqlString;
   absoluteNumber?: GqlString;
-  name?: GqlString;
   baseDuration?: GqlFloat;
+  name?: GqlString;
+  show: GqlShow;
+  showId: GqlID;
+  timestamps: Array<GqlTimestamp>;
+  urls: Array<GqlEpisodeUrl>;
+  template?: GqlTemplate;
 }
 
-export interface GqlInputEpisodeUrl {
-  url: GqlString;
-  duration?: GqlFloat;
-  timestampsOffset?: GqlFloat;
-}
-
-export interface GqlTimestamp {
-  id: GqlID;
-  createdAt: GqlTime;
-  createdByUserId: GqlID;
-  createdBy: GqlUser;
-  updatedAt: GqlTime;
-  updatedByUserId: GqlID;
-  updatedBy: GqlUser;
-  deletedAt?: GqlTime;
-  deletedByUserId?: GqlID;
-  deletedBy?: GqlUser;
-  at: GqlFloat;
-  source: GqlTimestampSource;
-  typeId: GqlID;
-  type: GqlTimestampType;
-  episodeId: GqlID;
-  episode: GqlEpisode;
-}
-
-export interface GqlLoginData {
-  authToken: GqlString;
-  refreshToken: GqlString;
-  account: GqlAccount;
+export enum GqlEpisodeSource {
+  UNKNOWN = 'UNKNOWN',
+  VRV = 'VRV',
+  FUNIMATION = 'FUNIMATION',
 }
 
 export interface GqlEpisodeUrl {
@@ -105,9 +87,275 @@ export interface GqlEpisodeUrl {
   source: GqlEpisodeSource;
 }
 
+export type GqlFloat = number;
+
+export type GqlID = string;
+
+export interface GqlInputEpisode {
+  season?: GqlString;
+  number?: GqlString;
+  absoluteNumber?: GqlString;
+  name?: GqlString;
+  baseDuration?: GqlFloat;
+}
+
+export interface GqlInputEpisodeUrl {
+  url: GqlString;
+  duration?: GqlFloat;
+  timestampsOffset?: GqlFloat;
+}
+
+export interface GqlInputExistingTimestamp {
+  id: GqlID;
+  timestamp: GqlInputTimestamp;
+}
+
+export interface GqlInputPreferences {
+  enableAutoSkip?: GqlBoolean;
+  enableAutoPlay?: GqlBoolean;
+  minimizeToolbarWhenEditing?: GqlBoolean;
+  hideTimelineWhenMinimized?: GqlBoolean;
+  skipBranding?: GqlBoolean;
+  skipIntros?: GqlBoolean;
+  skipNewIntros?: GqlBoolean;
+  skipMixedIntros?: GqlBoolean;
+  skipRecaps?: GqlBoolean;
+  skipFiller?: GqlBoolean;
+  skipCanon?: GqlBoolean;
+  skipTransitions?: GqlBoolean;
+  skipCredits?: GqlBoolean;
+  skipNewCredits?: GqlBoolean;
+  skipMixedCredits?: GqlBoolean;
+  skipPreview?: GqlBoolean;
+  skipTitleCard?: GqlBoolean;
+}
+
+export interface GqlInputShow {
+  name: GqlString;
+  originalName?: GqlString;
+  website?: GqlString;
+  image?: GqlString;
+}
+
 export interface GqlInputShowAdmin {
   showId: GqlID;
   userId: GqlID;
+}
+
+export interface GqlInputTemplate {
+  showId: GqlID;
+  type: GqlTemplateType;
+  seasons?: Array<GqlString>;
+  sourceEpisodeId: GqlID;
+}
+
+export interface GqlInputTemplateTimestamp {
+  templateId: GqlID;
+  timestampId: GqlID;
+}
+
+export interface GqlInputTimestamp {
+  at: GqlFloat;
+  typeId: GqlID;
+  source?: GqlTimestampSource;
+}
+
+export interface GqlInputTimestampOn {
+  episodeId: GqlID;
+  timestamp: GqlInputTimestamp;
+}
+
+export interface GqlInputTimestampType {
+  name: GqlString;
+  description: GqlString;
+}
+
+export type GqlInt = number;
+
+export interface GqlLoginData {
+  authToken: GqlString;
+  refreshToken: GqlString;
+  account: GqlAccount;
+}
+
+export interface GqlAddTimestampToTemplateArgs {
+  templateTimestamp: GqlInputTemplateTimestamp;
+}
+
+export interface GqlCreateAccountArgs {
+  username: GqlString;
+  email: GqlString;
+  passwordHash: GqlString;
+  recaptchaResponse: GqlString;
+}
+
+export interface GqlCreateEpisodeArgs {
+  showId: GqlID;
+  episodeInput: GqlInputEpisode;
+}
+
+export interface GqlCreateEpisodeUrlArgs {
+  episodeId: GqlID;
+  episodeUrlInput: GqlInputEpisodeUrl;
+}
+
+export interface GqlCreateShowArgs {
+  showInput: GqlInputShow;
+  becomeAdmin: GqlBoolean;
+}
+
+export interface GqlCreateShowAdminArgs {
+  showAdminInput: GqlInputShowAdmin;
+}
+
+export interface GqlCreateTemplateArgs {
+  newTemplate: GqlInputTemplate;
+}
+
+export interface GqlCreateTimestampArgs {
+  episodeId: GqlID;
+  timestampInput: GqlInputTimestamp;
+}
+
+export interface GqlCreateTimestampTypeArgs {
+  timestampTypeInput: GqlInputTimestampType;
+}
+
+export interface GqlDeleteAccountArgs {
+  deleteToken: GqlString;
+}
+
+export interface GqlDeleteAccountRequestArgs {
+  passwordHash: GqlString;
+}
+
+export interface GqlDeleteEpisodeArgs {
+  episodeId: GqlID;
+}
+
+export interface GqlDeleteEpisodeUrlArgs {
+  episodeUrl: GqlString;
+}
+
+export interface GqlDeleteShowArgs {
+  showId: GqlID;
+}
+
+export interface GqlDeleteShowAdminArgs {
+  showAdminId: GqlID;
+}
+
+export interface GqlDeleteTemplateArgs {
+  templateId: GqlID;
+}
+
+export interface GqlDeleteTimestampArgs {
+  timestampId: GqlID;
+}
+
+export interface GqlDeleteTimestampTypeArgs {
+  timestampTypeId: GqlID;
+}
+
+export interface GqlRemoveTimestampFromTemplateArgs {
+  templateTimestamp: GqlInputTemplateTimestamp;
+}
+
+export interface GqlSavePreferencesArgs {
+  preferences: GqlInputPreferences;
+}
+
+export interface GqlUpdateEpisodeArgs {
+  episodeId: GqlID;
+  newEpisode: GqlInputEpisode;
+}
+
+export interface GqlUpdateEpisodeUrlArgs {
+  episodeUrl: GqlString;
+  newEpisodeUrl: GqlInputEpisodeUrl;
+}
+
+export interface GqlUpdateShowArgs {
+  showId: GqlID;
+  newShow: GqlInputShow;
+}
+
+export interface GqlUpdateTemplateArgs {
+  templateId: GqlID;
+  newTemplate: GqlInputTemplate;
+}
+
+export interface GqlUpdateTimestampArgs {
+  timestampId: GqlID;
+  newTimestamp: GqlInputTimestamp;
+}
+
+export interface GqlUpdateTimestampsArgs {
+  create: Array<GqlInputTimestampOn>;
+  update: Array<GqlInputExistingTimestamp>;
+  delete: Array<GqlID>;
+}
+
+export interface GqlUpdateTimestampTypeArgs {
+  timestampTypeId: GqlID;
+  newTimestampType: GqlInputTimestampType;
+}
+
+export interface GqlVerifyEmailAddressArgs {
+  validationToken: GqlString;
+}
+
+export interface GqlMutation {
+  addTimestampToTemplate(
+    query: string,
+    args: GqlAddTimestampToTemplateArgs,
+  ): Promise<GqlTemplateTimestamp | null>;
+  createAccount(query: string, args: GqlCreateAccountArgs): Promise<GqlLoginData | null>;
+  createEpisode(query: string, args: GqlCreateEpisodeArgs): Promise<GqlEpisode | null>;
+  createEpisodeUrl(query: string, args: GqlCreateEpisodeUrlArgs): Promise<GqlEpisodeUrl | null>;
+  createShow(query: string, args: GqlCreateShowArgs): Promise<GqlShow | null>;
+  createShowAdmin(query: string, args: GqlCreateShowAdminArgs): Promise<GqlShowAdmin | null>;
+  createTemplate(query: string, args: GqlCreateTemplateArgs): Promise<GqlTemplate | null>;
+  createTimestamp(query: string, args: GqlCreateTimestampArgs): Promise<GqlTimestamp | null>;
+  createTimestampType(
+    query: string,
+    args: GqlCreateTimestampTypeArgs,
+  ): Promise<GqlTimestampType | null>;
+  deleteAccount(query: string, args: GqlDeleteAccountArgs): Promise<GqlAccount | null>;
+  deleteAccountRequest(
+    query: string,
+    args: GqlDeleteAccountRequestArgs,
+  ): Promise<GqlAccount | null>;
+  deleteEpisode(query: string, args: GqlDeleteEpisodeArgs): Promise<GqlEpisode | null>;
+  deleteEpisodeUrl(query: string, args: GqlDeleteEpisodeUrlArgs): Promise<GqlEpisodeUrl | null>;
+  deleteShow(query: string, args: GqlDeleteShowArgs): Promise<GqlShow | null>;
+  deleteShowAdmin(query: string, args: GqlDeleteShowAdminArgs): Promise<GqlShowAdmin | null>;
+  deleteTemplate(query: string, args: GqlDeleteTemplateArgs): Promise<GqlTemplate | null>;
+  deleteTimestamp(query: string, args: GqlDeleteTimestampArgs): Promise<GqlTimestamp | null>;
+  deleteTimestampType(
+    query: string,
+    args: GqlDeleteTimestampTypeArgs,
+  ): Promise<GqlTimestampType | null>;
+  removeTimestampFromTemplate(
+    query: string,
+    args: GqlRemoveTimestampFromTemplateArgs,
+  ): Promise<GqlTemplateTimestamp | null>;
+  resendVerificationEmail(query: string): Promise<GqlBoolean | null>;
+  savePreferences(query: string, args: GqlSavePreferencesArgs): Promise<GqlPreferences | null>;
+  updateEpisode(query: string, args: GqlUpdateEpisodeArgs): Promise<GqlEpisode | null>;
+  updateEpisodeUrl(query: string, args: GqlUpdateEpisodeUrlArgs): Promise<GqlEpisodeUrl | null>;
+  updateShow(query: string, args: GqlUpdateShowArgs): Promise<GqlShow | null>;
+  updateTemplate(query: string, args: GqlUpdateTemplateArgs): Promise<GqlTemplate | null>;
+  updateTimestamp(query: string, args: GqlUpdateTimestampArgs): Promise<GqlTimestamp | null>;
+  updateTimestamps(
+    query: string,
+    args: GqlUpdateTimestampsArgs,
+  ): Promise<GqlUpdatedTimestamps | null>;
+  updateTimestampType(
+    query: string,
+    args: GqlUpdateTimestampTypeArgs,
+  ): Promise<GqlTimestampType | null>;
+  verifyEmailAddress(query: string, args: GqlVerifyEmailAddressArgs): Promise<GqlAccount | null>;
 }
 
 export interface GqlPreferences {
@@ -136,363 +384,28 @@ export interface GqlPreferences {
   skipTitleCard: GqlBoolean;
 }
 
-export interface GqlThirdPartyShow {
+export interface GqlFindEpisodeArgs {
+  episodeId: GqlID;
+}
+
+export interface GqlFindEpisodeByNameArgs {
   name: GqlString;
-  createdAt?: GqlTime;
-  updatedAt?: GqlTime;
 }
 
-export interface GqlInputShow {
-  name: GqlString;
-  originalName?: GqlString;
-  website?: GqlString;
-  image?: GqlString;
-}
-
-export interface GqlCreateAccountArgs {
-  username: GqlString;
-  email: GqlString;
-  passwordHash: GqlString;
-  recaptchaResponse: GqlString;
-}
-
-export interface GqlVerifyEmailAddressArgs {
-  validationToken: GqlString;
-}
-
-export interface GqlDeleteAccountRequestArgs {
-  passwordHash: GqlString;
-}
-
-export interface GqlDeleteAccountArgs {
-  deleteToken: GqlString;
-}
-
-export interface GqlSavePreferencesArgs {
-  preferences: GqlInputPreferences;
-}
-
-export interface GqlCreateShowArgs {
-  showInput: GqlInputShow;
-  becomeAdmin: GqlBoolean;
-}
-
-export interface GqlUpdateShowArgs {
-  showId: GqlID;
-  newShow: GqlInputShow;
-}
-
-export interface GqlDeleteShowArgs {
+export interface GqlFindEpisodesByShowIdArgs {
   showId: GqlID;
 }
 
-export interface GqlCreateShowAdminArgs {
-  showAdminInput: GqlInputShowAdmin;
-}
-
-export interface GqlDeleteShowAdminArgs {
-  showAdminId: GqlID;
-}
-
-export interface GqlCreateEpisodeArgs {
-  showId: GqlID;
-  episodeInput: GqlInputEpisode;
-}
-
-export interface GqlUpdateEpisodeArgs {
-  episodeId: GqlID;
-  newEpisode: GqlInputEpisode;
-}
-
-export interface GqlDeleteEpisodeArgs {
-  episodeId: GqlID;
-}
-
-export interface GqlCreateEpisodeUrlArgs {
-  episodeId: GqlID;
-  episodeUrlInput: GqlInputEpisodeUrl;
-}
-
-export interface GqlDeleteEpisodeUrlArgs {
+export interface GqlFindEpisodeUrlArgs {
   episodeUrl: GqlString;
 }
 
-export interface GqlUpdateEpisodeUrlArgs {
-  episodeUrl: GqlString;
-  newEpisodeUrl: GqlInputEpisodeUrl;
-}
-
-export interface GqlCreateTimestampArgs {
+export interface GqlFindEpisodeUrlsByEpisodeIdArgs {
   episodeId: GqlID;
-  timestampInput: GqlInputTimestamp;
-}
-
-export interface GqlUpdateTimestampArgs {
-  timestampId: GqlID;
-  newTimestamp: GqlInputTimestamp;
-}
-
-export interface GqlDeleteTimestampArgs {
-  timestampId: GqlID;
-}
-
-export interface GqlUpdateTimestampsArgs {
-  create: Array<GqlInputTimestampOn>;
-  update: Array<GqlInputExistingTimestamp>;
-  delete: Array<GqlID>;
-}
-
-export interface GqlCreateTimestampTypeArgs {
-  timestampTypeInput: GqlInputTimestampType;
-}
-
-export interface GqlUpdateTimestampTypeArgs {
-  timestampTypeId: GqlID;
-  newTimestampType: GqlInputTimestampType;
-}
-
-export interface GqlDeleteTimestampTypeArgs {
-  timestampTypeId: GqlID;
-}
-
-export interface GqlCreateTemplateArgs {
-  newTemplate: GqlInputTemplate;
-}
-
-export interface GqlUpdateTemplateArgs {
-  templateId: GqlID;
-  newTemplate: GqlInputTemplate;
-}
-
-export interface GqlDeleteTemplateArgs {
-  templateId: GqlID;
-}
-
-export interface GqlAddTimestampToTemplateArgs {
-  templateTimestamp: GqlInputTemplateTimestamp;
-}
-
-export interface GqlRemoveTimestampFromTemplateArgs {
-  templateTimestamp: GqlInputTemplateTimestamp;
-}
-
-export interface GqlMutation {
-  createAccount(query: string, args: GqlCreateAccountArgs): Promise<GqlLoginData | null>;
-  resendVerificationEmail(query: string): Promise<GqlBoolean | null>;
-  verifyEmailAddress(query: string, args: GqlVerifyEmailAddressArgs): Promise<GqlAccount | null>;
-  deleteAccountRequest(
-    query: string,
-    args: GqlDeleteAccountRequestArgs,
-  ): Promise<GqlAccount | null>;
-  deleteAccount(query: string, args: GqlDeleteAccountArgs): Promise<GqlAccount | null>;
-  savePreferences(query: string, args: GqlSavePreferencesArgs): Promise<GqlPreferences | null>;
-  createShow(query: string, args: GqlCreateShowArgs): Promise<GqlShow | null>;
-  updateShow(query: string, args: GqlUpdateShowArgs): Promise<GqlShow | null>;
-  deleteShow(query: string, args: GqlDeleteShowArgs): Promise<GqlShow | null>;
-  createShowAdmin(query: string, args: GqlCreateShowAdminArgs): Promise<GqlShowAdmin | null>;
-  deleteShowAdmin(query: string, args: GqlDeleteShowAdminArgs): Promise<GqlShowAdmin | null>;
-  createEpisode(query: string, args: GqlCreateEpisodeArgs): Promise<GqlEpisode | null>;
-  updateEpisode(query: string, args: GqlUpdateEpisodeArgs): Promise<GqlEpisode | null>;
-  deleteEpisode(query: string, args: GqlDeleteEpisodeArgs): Promise<GqlEpisode | null>;
-  createEpisodeUrl(query: string, args: GqlCreateEpisodeUrlArgs): Promise<GqlEpisodeUrl | null>;
-  deleteEpisodeUrl(query: string, args: GqlDeleteEpisodeUrlArgs): Promise<GqlEpisodeUrl | null>;
-  updateEpisodeUrl(query: string, args: GqlUpdateEpisodeUrlArgs): Promise<GqlEpisodeUrl | null>;
-  createTimestamp(query: string, args: GqlCreateTimestampArgs): Promise<GqlTimestamp | null>;
-  updateTimestamp(query: string, args: GqlUpdateTimestampArgs): Promise<GqlTimestamp | null>;
-  deleteTimestamp(query: string, args: GqlDeleteTimestampArgs): Promise<GqlTimestamp | null>;
-  updateTimestamps(
-    query: string,
-    args: GqlUpdateTimestampsArgs,
-  ): Promise<GqlUpdatedTimestamps | null>;
-  createTimestampType(
-    query: string,
-    args: GqlCreateTimestampTypeArgs,
-  ): Promise<GqlTimestampType | null>;
-  updateTimestampType(
-    query: string,
-    args: GqlUpdateTimestampTypeArgs,
-  ): Promise<GqlTimestampType | null>;
-  deleteTimestampType(
-    query: string,
-    args: GqlDeleteTimestampTypeArgs,
-  ): Promise<GqlTimestampType | null>;
-  createTemplate(query: string, args: GqlCreateTemplateArgs): Promise<GqlTemplate | null>;
-  updateTemplate(query: string, args: GqlUpdateTemplateArgs): Promise<GqlTemplate | null>;
-  deleteTemplate(query: string, args: GqlDeleteTemplateArgs): Promise<GqlTemplate | null>;
-  addTimestampToTemplate(
-    query: string,
-    args: GqlAddTimestampToTemplateArgs,
-  ): Promise<GqlTemplateTimestamp | null>;
-  removeTimestampFromTemplate(
-    query: string,
-    args: GqlRemoveTimestampFromTemplateArgs,
-  ): Promise<GqlTemplateTimestamp | null>;
-}
-
-export enum GqlTimestampSource {
-  ANIME_SKIP = 'ANIME_SKIP',
-  BETTER_VRV = 'BETTER_VRV',
-}
-
-export interface GqlThirdPartyEpisode {
-  id?: GqlID;
-  season?: GqlString;
-  number?: GqlString;
-  absoluteNumber?: GqlString;
-  baseDuration?: GqlFloat;
-  name?: GqlString;
-  source?: GqlTimestampSource;
-  timestamps: Array<GqlThirdPartyTimestamp>;
-  showId: GqlString;
-  show: GqlThirdPartyShow;
-}
-
-export type GqlID = string;
-
-export interface GqlInputExistingTimestamp {
-  id: GqlID;
-  timestamp: GqlInputTimestamp;
-}
-
-export interface GqlTimestampType {
-  id: GqlID;
-  createdAt: GqlTime;
-  createdByUserId: GqlID;
-  createdBy: GqlUser;
-  updatedAt: GqlTime;
-  updatedByUserId: GqlID;
-  updatedBy: GqlUser;
-  deletedAt?: GqlTime;
-  deletedByUserId?: GqlID;
-  deletedBy?: GqlUser;
-  name: GqlString;
-  description: GqlString;
-}
-
-export interface GqlInputTimestampType {
-  name: GqlString;
-  description: GqlString;
-}
-
-export type GqlFloat = number;
-
-export type GqlString = string;
-
-export type GqlBoolean = boolean;
-
-export interface GqlUser {
-  id: GqlID;
-  createdAt: GqlTime;
-  deletedAt?: GqlTime;
-  username: GqlString;
-  profileUrl: GqlString;
-  adminOfShows: Array<GqlShowAdmin>;
-}
-
-export interface GqlUpdatedTimestamps {
-  created: Array<GqlTimestamp>;
-  updated: Array<GqlTimestamp>;
-  deleted: Array<GqlTimestamp>;
-}
-
-export interface GqlEpisode {
-  id: GqlID;
-  createdAt: GqlTime;
-  createdByUserId: GqlID;
-  createdBy: GqlUser;
-  updatedAt: GqlTime;
-  updatedByUserId: GqlID;
-  updatedBy: GqlUser;
-  deletedAt?: GqlTime;
-  deletedByUserId?: GqlID;
-  deletedBy?: GqlUser;
-  season?: GqlString;
-  number?: GqlString;
-  absoluteNumber?: GqlString;
-  baseDuration?: GqlFloat;
-  name?: GqlString;
-  show: GqlShow;
-  showId: GqlID;
-  timestamps: Array<GqlTimestamp>;
-  urls: Array<GqlEpisodeUrl>;
-  template?: GqlTemplate;
-}
-
-export interface GqlInputPreferences {
-  enableAutoSkip?: GqlBoolean;
-  enableAutoPlay?: GqlBoolean;
-  minimizeToolbarWhenEditing?: GqlBoolean;
-  hideTimelineWhenMinimized?: GqlBoolean;
-  skipBranding?: GqlBoolean;
-  skipIntros?: GqlBoolean;
-  skipNewIntros?: GqlBoolean;
-  skipMixedIntros?: GqlBoolean;
-  skipRecaps?: GqlBoolean;
-  skipFiller?: GqlBoolean;
-  skipCanon?: GqlBoolean;
-  skipTransitions?: GqlBoolean;
-  skipCredits?: GqlBoolean;
-  skipNewCredits?: GqlBoolean;
-  skipMixedCredits?: GqlBoolean;
-  skipPreview?: GqlBoolean;
-  skipTitleCard?: GqlBoolean;
-}
-
-export type GqlInt = number;
-
-export enum GqlEpisodeSource {
-  UNKNOWN = 'UNKNOWN',
-  VRV = 'VRV',
-  FUNIMATION = 'FUNIMATION',
-}
-
-export interface GqlTemplate {
-  id: GqlID;
-  createdAt: GqlTime;
-  createdByUserId: GqlID;
-  createdBy: GqlUser;
-  updatedAt: GqlTime;
-  updatedByUserId: GqlID;
-  updatedBy: GqlUser;
-  deletedAt?: GqlTime;
-  deletedByUserId?: GqlID;
-  deletedBy?: GqlUser;
-  showId: GqlID;
-  show: GqlShow;
-  type: GqlTemplateType;
-  seasons?: Array<GqlString>;
-  sourceEpisodeId: GqlID;
-  sourceEpisode: GqlEpisode;
-  timestamps: Array<GqlTimestamp>;
-  timestampIds: Array<GqlID>;
-}
-
-export interface GqlLoginArgs {
-  usernameEmail: GqlString;
-  passwordHash: GqlString;
-}
-
-export interface GqlLoginRefreshArgs {
-  refreshToken: GqlString;
-}
-
-export interface GqlFindUserArgs {
-  userId: GqlID;
-}
-
-export interface GqlFindUserByUsernameArgs {
-  username: GqlString;
 }
 
 export interface GqlFindShowArgs {
   showId: GqlID;
-}
-
-export interface GqlSearchShowsArgs {
-  search?: GqlString;
-  offset?: GqlInt;
-  limit?: GqlInt;
-  sort?: GqlString;
 }
 
 export interface GqlFindShowAdminArgs {
@@ -507,37 +420,18 @@ export interface GqlFindShowAdminsByUserIdArgs {
   userId: GqlID;
 }
 
-export interface GqlRecentlyAddedEpisodesArgs {
-  limit?: GqlInt;
-  offset?: GqlInt;
+export interface GqlFindTemplateArgs {
+  templateId: GqlID;
 }
 
-export interface GqlFindEpisodeArgs {
-  episodeId: GqlID;
+export interface GqlFindTemplateByDetailsArgs {
+  episodeId?: GqlID;
+  showName?: GqlString;
+  season?: GqlString;
 }
 
-export interface GqlFindEpisodesByShowIdArgs {
+export interface GqlFindTemplatesByShowIdArgs {
   showId: GqlID;
-}
-
-export interface GqlSearchEpisodesArgs {
-  search?: GqlString;
-  showId?: GqlID;
-  offset?: GqlInt;
-  limit?: GqlInt;
-  sort?: GqlString;
-}
-
-export interface GqlFindEpisodeByNameArgs {
-  name: GqlString;
-}
-
-export interface GqlFindEpisodeUrlArgs {
-  episodeUrl: GqlString;
-}
-
-export interface GqlFindEpisodeUrlsByEpisodeIdArgs {
-  episodeId: GqlID;
 }
 
 export interface GqlFindTimestampArgs {
@@ -552,28 +446,61 @@ export interface GqlFindTimestampTypeArgs {
   timestampTypeId: GqlID;
 }
 
-export interface GqlFindTemplateArgs {
-  templateId: GqlID;
+export interface GqlFindUserArgs {
+  userId: GqlID;
 }
 
-export interface GqlFindTemplatesByShowIdArgs {
-  showId: GqlID;
+export interface GqlFindUserByUsernameArgs {
+  username: GqlString;
 }
 
-export interface GqlFindTemplateByDetailsArgs {
-  episodeId?: GqlID;
-  showName?: GqlString;
-  season?: GqlString;
+export interface GqlLoginArgs {
+  usernameEmail: GqlString;
+  passwordHash: GqlString;
+}
+
+export interface GqlLoginRefreshArgs {
+  refreshToken: GqlString;
+}
+
+export interface GqlRecentlyAddedEpisodesArgs {
+  limit?: GqlInt;
+  offset?: GqlInt;
+}
+
+export interface GqlSearchEpisodesArgs {
+  search?: GqlString;
+  showId?: GqlID;
+  offset?: GqlInt;
+  limit?: GqlInt;
+  sort?: GqlString;
+}
+
+export interface GqlSearchShowsArgs {
+  search?: GqlString;
+  offset?: GqlInt;
+  limit?: GqlInt;
+  sort?: GqlString;
 }
 
 export interface GqlQuery {
   account(query: string): Promise<GqlAccount | null>;
-  login(query: string, args: GqlLoginArgs): Promise<GqlLoginData | null>;
-  loginRefresh(query: string, args: GqlLoginRefreshArgs): Promise<GqlLoginData | null>;
-  findUser(query: string, args: GqlFindUserArgs): Promise<GqlUser | null>;
-  findUserByUsername(query: string, args: GqlFindUserByUsernameArgs): Promise<GqlUser | null>;
+  allTimestampTypes(query: string): Promise<Array<GqlTimestampType> | null>;
+  findEpisode(query: string, args: GqlFindEpisodeArgs): Promise<GqlEpisode | null>;
+  findEpisodeByName(
+    query: string,
+    args: GqlFindEpisodeByNameArgs,
+  ): Promise<Array<GqlThirdPartyEpisode | null> | null>;
+  findEpisodesByShowId(
+    query: string,
+    args: GqlFindEpisodesByShowIdArgs,
+  ): Promise<Array<GqlEpisode> | null>;
+  findEpisodeUrl(query: string, args: GqlFindEpisodeUrlArgs): Promise<GqlEpisodeUrl | null>;
+  findEpisodeUrlsByEpisodeId(
+    query: string,
+    args: GqlFindEpisodeUrlsByEpisodeIdArgs,
+  ): Promise<Array<GqlEpisodeUrl> | null>;
   findShow(query: string, args: GqlFindShowArgs): Promise<GqlShow | null>;
-  searchShows(query: string, args: GqlSearchShowsArgs): Promise<Array<GqlShow> | null>;
   findShowAdmin(query: string, args: GqlFindShowAdminArgs): Promise<GqlShowAdmin | null>;
   findShowAdminsByShowId(
     query: string,
@@ -583,25 +510,15 @@ export interface GqlQuery {
     query: string,
     args: GqlFindShowAdminsByUserIdArgs,
   ): Promise<Array<GqlShowAdmin> | null>;
-  recentlyAddedEpisodes(
+  findTemplate(query: string, args: GqlFindTemplateArgs): Promise<GqlTemplate | null>;
+  findTemplateByDetails(
     query: string,
-    args: GqlRecentlyAddedEpisodesArgs,
-  ): Promise<Array<GqlEpisode> | null>;
-  findEpisode(query: string, args: GqlFindEpisodeArgs): Promise<GqlEpisode | null>;
-  findEpisodesByShowId(
+    args: GqlFindTemplateByDetailsArgs,
+  ): Promise<GqlTemplate | null>;
+  findTemplatesByShowId(
     query: string,
-    args: GqlFindEpisodesByShowIdArgs,
-  ): Promise<Array<GqlEpisode> | null>;
-  searchEpisodes(query: string, args: GqlSearchEpisodesArgs): Promise<Array<GqlEpisode> | null>;
-  findEpisodeByName(
-    query: string,
-    args: GqlFindEpisodeByNameArgs,
-  ): Promise<Array<GqlThirdPartyEpisode | null> | null>;
-  findEpisodeUrl(query: string, args: GqlFindEpisodeUrlArgs): Promise<GqlEpisodeUrl | null>;
-  findEpisodeUrlsByEpisodeId(
-    query: string,
-    args: GqlFindEpisodeUrlsByEpisodeIdArgs,
-  ): Promise<Array<GqlEpisodeUrl> | null>;
+    args: GqlFindTemplatesByShowIdArgs,
+  ): Promise<Array<GqlTemplate>>;
   findTimestamp(query: string, args: GqlFindTimestampArgs): Promise<GqlTimestamp | null>;
   findTimestampsByEpisodeId(
     query: string,
@@ -611,40 +528,22 @@ export interface GqlQuery {
     query: string,
     args: GqlFindTimestampTypeArgs,
   ): Promise<GqlTimestampType | null>;
-  allTimestampTypes(query: string): Promise<Array<GqlTimestampType> | null>;
-  findTemplate(query: string, args: GqlFindTemplateArgs): Promise<GqlTemplate | null>;
-  findTemplatesByShowId(
+  findUser(query: string, args: GqlFindUserArgs): Promise<GqlUser | null>;
+  findUserByUsername(query: string, args: GqlFindUserByUsernameArgs): Promise<GqlUser | null>;
+  login(query: string, args: GqlLoginArgs): Promise<GqlLoginData | null>;
+  loginRefresh(query: string, args: GqlLoginRefreshArgs): Promise<GqlLoginData | null>;
+  recentlyAddedEpisodes(
     query: string,
-    args: GqlFindTemplatesByShowIdArgs,
-  ): Promise<Array<GqlTemplate>>;
-  findTemplateByDetails(
-    query: string,
-    args: GqlFindTemplateByDetailsArgs,
-  ): Promise<GqlTemplate | null>;
+    args: GqlRecentlyAddedEpisodesArgs,
+  ): Promise<Array<GqlEpisode> | null>;
+  searchEpisodes(query: string, args: GqlSearchEpisodesArgs): Promise<Array<GqlEpisode> | null>;
+  searchShows(query: string, args: GqlSearchShowsArgs): Promise<Array<GqlShow> | null>;
 }
 
 export enum GqlRole {
   DEV = 'DEV',
   ADMIN = 'ADMIN',
   USER = 'USER',
-}
-
-export enum GqlTemplateType {
-  SHOW = 'SHOW',
-  SEASONS = 'SEASONS',
-}
-
-export interface GqlAccount {
-  id: GqlID;
-  createdAt: GqlTime;
-  deletedAt?: GqlTime;
-  username: GqlString;
-  email: GqlString;
-  profileUrl: GqlString;
-  adminOfShows: Array<GqlShowAdmin>;
-  emailVerified: GqlBoolean;
-  role: GqlRole;
-  preferences: GqlPreferences;
 }
 
 export interface GqlShow {
@@ -667,18 +566,44 @@ export interface GqlShow {
   templates: Array<GqlTemplate>;
 }
 
-export interface GqlThirdPartyTimestamp {
-  id?: GqlID;
-  at: GqlFloat;
-  typeId: GqlID;
-  type: GqlTimestampType;
+export interface GqlShowAdmin {
+  id: GqlID;
+  createdAt: GqlTime;
+  createdByUserId: GqlID;
+  createdBy: GqlUser;
+  updatedAt: GqlTime;
+  updatedByUserId: GqlID;
+  updatedBy: GqlUser;
+  deletedAt?: GqlTime;
+  deletedByUserId?: GqlID;
+  deletedBy?: GqlUser;
+  showId: GqlID;
+  show: GqlShow;
+  userId: GqlID;
+  user: GqlUser;
 }
 
-export interface GqlInputTemplate {
+export type GqlString = string;
+
+export interface GqlTemplate {
+  id: GqlID;
+  createdAt: GqlTime;
+  createdByUserId: GqlID;
+  createdBy: GqlUser;
+  updatedAt: GqlTime;
+  updatedByUserId: GqlID;
+  updatedBy: GqlUser;
+  deletedAt?: GqlTime;
+  deletedByUserId?: GqlID;
+  deletedBy?: GqlUser;
   showId: GqlID;
+  show: GqlShow;
   type: GqlTemplateType;
   seasons?: Array<GqlString>;
   sourceEpisodeId: GqlID;
+  sourceEpisode: GqlEpisode;
+  timestamps: Array<GqlTimestamp>;
+  timestampIds: Array<GqlID>;
 }
 
 export interface GqlTemplateTimestamp {
@@ -688,17 +613,92 @@ export interface GqlTemplateTimestamp {
   timestamp: GqlTimestamp;
 }
 
-export interface GqlInputTimestampOn {
-  episodeId: GqlID;
-  timestamp: GqlInputTimestamp;
+export enum GqlTemplateType {
+  SHOW = 'SHOW',
+  SEASONS = 'SEASONS',
 }
 
-export interface GqlInputTemplateTimestamp {
-  templateId: GqlID;
-  timestampId: GqlID;
+export interface GqlThirdPartyEpisode {
+  id?: GqlID;
+  season?: GqlString;
+  number?: GqlString;
+  absoluteNumber?: GqlString;
+  baseDuration?: GqlFloat;
+  name?: GqlString;
+  source?: GqlTimestampSource;
+  timestamps: Array<GqlThirdPartyTimestamp>;
+  showId: GqlString;
+  show: GqlThirdPartyShow;
+}
+
+export interface GqlThirdPartyShow {
+  name: GqlString;
+  createdAt?: GqlTime;
+  updatedAt?: GqlTime;
+}
+
+export interface GqlThirdPartyTimestamp {
+  id?: GqlID;
+  at: GqlFloat;
+  typeId: GqlID;
+  type: GqlTimestampType;
 }
 
 export type GqlTime = string;
+
+export interface GqlTimestamp {
+  id: GqlID;
+  createdAt: GqlTime;
+  createdByUserId: GqlID;
+  createdBy: GqlUser;
+  updatedAt: GqlTime;
+  updatedByUserId: GqlID;
+  updatedBy: GqlUser;
+  deletedAt?: GqlTime;
+  deletedByUserId?: GqlID;
+  deletedBy?: GqlUser;
+  at: GqlFloat;
+  source: GqlTimestampSource;
+  typeId: GqlID;
+  type: GqlTimestampType;
+  episodeId: GqlID;
+  episode: GqlEpisode;
+}
+
+export enum GqlTimestampSource {
+  ANIME_SKIP = 'ANIME_SKIP',
+  BETTER_VRV = 'BETTER_VRV',
+}
+
+export interface GqlTimestampType {
+  id: GqlID;
+  createdAt: GqlTime;
+  createdByUserId: GqlID;
+  createdBy: GqlUser;
+  updatedAt: GqlTime;
+  updatedByUserId: GqlID;
+  updatedBy: GqlUser;
+  deletedAt?: GqlTime;
+  deletedByUserId?: GqlID;
+  deletedBy?: GqlUser;
+  name: GqlString;
+  description: GqlString;
+}
+
+export interface GqlUpdatedTimestamps {
+  created: Array<GqlTimestamp>;
+  updated: Array<GqlTimestamp>;
+  deleted: Array<GqlTimestamp>;
+}
+
+export interface GqlUser {
+  id: GqlID;
+  createdAt: GqlTime;
+  deletedAt?: GqlTime;
+  username: GqlString;
+  profileUrl: GqlString;
+  adminOfShows: Array<GqlShowAdmin>;
+}
 
 export default function createAnimeSkipClient(baseUrl: string, clientId: string) {
   const axios = Axios.create({
@@ -736,27 +736,57 @@ query Account {
         throw err;
       }
     },
-    async login<T extends Partial<GqlLoginData | null>>(
+    async allTimestampTypes<T extends Partial<Array<GqlTimestampType> | null>>(
       graphql: string,
-      args: GqlLoginArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'login', T> = await axios.post(
+        const response: GqlResponse<'allTimestampTypes', T> = await axios.post(
           '/graphql',
           {
             query: `
-query Login(
-  $usernameEmail: String!, $passwordHash: String!
+query AllTimestampTypes {
+  allTimestampTypes ${graphql}
+}
+          `,
+            operationName: 'AllTimestampTypes',
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['allTimestampTypes'];
+      } catch (err) {
+        if (err.resposne != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async findEpisode<T extends Partial<GqlEpisode | null>>(
+      graphql: string,
+      args: GqlFindEpisodeArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'findEpisode', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+query FindEpisode(
+  $episodeId: ID!
 ) {
-  login(
-    usernameEmail: $usernameEmail, passwordHash: $passwordHash
+  findEpisode(
+    episodeId: $episodeId
   ) ${graphql}
 }
           `,
-            operationName: 'Login',
+            operationName: 'FindEpisode',
             variables: {
-              usernameEmail: args.usernameEmail,
-              passwordHash: args.passwordHash,
+              episodeId: args.episodeId,
             },
           },
           {
@@ -768,7 +798,7 @@ query Login(
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
-        return response.data.data['login'];
+        return response.data.data['findEpisode'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
@@ -776,26 +806,26 @@ query Login(
         throw err;
       }
     },
-    async loginRefresh<T extends Partial<GqlLoginData | null>>(
+    async findEpisodeByName<T extends Partial<Array<GqlThirdPartyEpisode | null> | null>>(
       graphql: string,
-      args: GqlLoginRefreshArgs,
+      args: GqlFindEpisodeByNameArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'loginRefresh', T> = await axios.post(
+        const response: GqlResponse<'findEpisodeByName', T> = await axios.post(
           '/graphql',
           {
             query: `
-query LoginRefresh(
-  $refreshToken: String!
+query FindEpisodeByName(
+  $name: String!
 ) {
-  loginRefresh(
-    refreshToken: $refreshToken
+  findEpisodeByName(
+    name: $name
   ) ${graphql}
 }
           `,
-            operationName: 'LoginRefresh',
+            operationName: 'FindEpisodeByName',
             variables: {
-              refreshToken: args.refreshToken,
+              name: args.name,
             },
           },
           {
@@ -807,7 +837,7 @@ query LoginRefresh(
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
-        return response.data.data['loginRefresh'];
+        return response.data.data['findEpisodeByName'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
@@ -815,26 +845,26 @@ query LoginRefresh(
         throw err;
       }
     },
-    async findUser<T extends Partial<GqlUser | null>>(
+    async findEpisodesByShowId<T extends Partial<Array<GqlEpisode> | null>>(
       graphql: string,
-      args: GqlFindUserArgs,
+      args: GqlFindEpisodesByShowIdArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findUser', T> = await axios.post(
+        const response: GqlResponse<'findEpisodesByShowId', T> = await axios.post(
           '/graphql',
           {
             query: `
-query FindUser(
-  $userId: ID!
+query FindEpisodesByShowId(
+  $showId: ID!
 ) {
-  findUser(
-    userId: $userId
+  findEpisodesByShowId(
+    showId: $showId
   ) ${graphql}
 }
           `,
-            operationName: 'FindUser',
+            operationName: 'FindEpisodesByShowId',
             variables: {
-              userId: args.userId,
+              showId: args.showId,
             },
           },
           {
@@ -846,7 +876,7 @@ query FindUser(
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
-        return response.data.data['findUser'];
+        return response.data.data['findEpisodesByShowId'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
@@ -854,26 +884,26 @@ query FindUser(
         throw err;
       }
     },
-    async findUserByUsername<T extends Partial<GqlUser | null>>(
+    async findEpisodeUrl<T extends Partial<GqlEpisodeUrl | null>>(
       graphql: string,
-      args: GqlFindUserByUsernameArgs,
+      args: GqlFindEpisodeUrlArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findUserByUsername', T> = await axios.post(
+        const response: GqlResponse<'findEpisodeUrl', T> = await axios.post(
           '/graphql',
           {
             query: `
-query FindUserByUsername(
-  $username: String!
+query FindEpisodeUrl(
+  $episodeUrl: String!
 ) {
-  findUserByUsername(
-    username: $username
+  findEpisodeUrl(
+    episodeUrl: $episodeUrl
   ) ${graphql}
 }
           `,
-            operationName: 'FindUserByUsername',
+            operationName: 'FindEpisodeUrl',
             variables: {
-              username: args.username,
+              episodeUrl: args.episodeUrl,
             },
           },
           {
@@ -885,7 +915,46 @@ query FindUserByUsername(
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
-        return response.data.data['findUserByUsername'];
+        return response.data.data['findEpisodeUrl'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async findEpisodeUrlsByEpisodeId<T extends Partial<Array<GqlEpisodeUrl> | null>>(
+      graphql: string,
+      args: GqlFindEpisodeUrlsByEpisodeIdArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'findEpisodeUrlsByEpisodeId', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+query FindEpisodeUrlsByEpisodeId(
+  $episodeId: ID!
+) {
+  findEpisodeUrlsByEpisodeId(
+    episodeId: $episodeId
+  ) ${graphql}
+}
+          `,
+            operationName: 'FindEpisodeUrlsByEpisodeId',
+            variables: {
+              episodeId: args.episodeId,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['findEpisodeUrlsByEpisodeId'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
@@ -925,48 +994,6 @@ query FindShow(
           throw new GqlError(response.status, response.data.errors);
         }
         return response.data.data['findShow'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async searchShows<T extends Partial<Array<GqlShow> | null>>(
-      graphql: string,
-      args: GqlSearchShowsArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'searchShows', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-query SearchShows(
-  $search: String, $offset: Int, $limit: Int, $sort: String
-) {
-  searchShows(
-    search: $search, offset: $offset, limit: $limit, sort: $sort
-  ) ${graphql}
-}
-          `,
-            operationName: 'SearchShows',
-            variables: {
-              search: args.search,
-              offset: args.offset,
-              limit: args.limit,
-              sort: args.sort,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['searchShows'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
@@ -1091,27 +1118,26 @@ query FindShowAdminsByUserId(
         throw err;
       }
     },
-    async recentlyAddedEpisodes<T extends Partial<Array<GqlEpisode> | null>>(
+    async findTemplate<T extends Partial<GqlTemplate | null>>(
       graphql: string,
-      args: GqlRecentlyAddedEpisodesArgs,
+      args: GqlFindTemplateArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'recentlyAddedEpisodes', T> = await axios.post(
+        const response: GqlResponse<'findTemplate', T> = await axios.post(
           '/graphql',
           {
             query: `
-query RecentlyAddedEpisodes(
-  $limit: Int, $offset: Int
+query FindTemplate(
+  $templateId: ID!
 ) {
-  recentlyAddedEpisodes(
-    limit: $limit, offset: $offset
+  findTemplate(
+    templateId: $templateId
   ) ${graphql}
 }
           `,
-            operationName: 'RecentlyAddedEpisodes',
+            operationName: 'FindTemplate',
             variables: {
-              limit: args.limit,
-              offset: args.offset,
+              templateId: args.templateId,
             },
           },
           {
@@ -1123,7 +1149,7 @@ query RecentlyAddedEpisodes(
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
-        return response.data.data['recentlyAddedEpisodes'];
+        return response.data.data['findTemplate'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
@@ -1131,26 +1157,28 @@ query RecentlyAddedEpisodes(
         throw err;
       }
     },
-    async findEpisode<T extends Partial<GqlEpisode | null>>(
+    async findTemplateByDetails<T extends Partial<GqlTemplate | null>>(
       graphql: string,
-      args: GqlFindEpisodeArgs,
+      args: GqlFindTemplateByDetailsArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findEpisode', T> = await axios.post(
+        const response: GqlResponse<'findTemplateByDetails', T> = await axios.post(
           '/graphql',
           {
             query: `
-query FindEpisode(
-  $episodeId: ID!
+query FindTemplateByDetails(
+  $episodeId: ID, $showName: String, $season: String
 ) {
-  findEpisode(
-    episodeId: $episodeId
+  findTemplateByDetails(
+    episodeId: $episodeId, showName: $showName, season: $season
   ) ${graphql}
 }
           `,
-            operationName: 'FindEpisode',
+            operationName: 'FindTemplateByDetails',
             variables: {
               episodeId: args.episodeId,
+              showName: args.showName,
+              season: args.season,
             },
           },
           {
@@ -1162,7 +1190,7 @@ query FindEpisode(
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
-        return response.data.data['findEpisode'];
+        return response.data.data['findTemplateByDetails'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
@@ -1170,24 +1198,24 @@ query FindEpisode(
         throw err;
       }
     },
-    async findEpisodesByShowId<T extends Partial<Array<GqlEpisode> | null>>(
+    async findTemplatesByShowId<T extends Partial<Array<GqlTemplate>>>(
       graphql: string,
-      args: GqlFindEpisodesByShowIdArgs,
+      args: GqlFindTemplatesByShowIdArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findEpisodesByShowId', T> = await axios.post(
+        const response: GqlResponse<'findTemplatesByShowId', T> = await axios.post(
           '/graphql',
           {
             query: `
-query FindEpisodesByShowId(
+query FindTemplatesByShowId(
   $showId: ID!
 ) {
-  findEpisodesByShowId(
+  findTemplatesByShowId(
     showId: $showId
   ) ${graphql}
 }
           `,
-            operationName: 'FindEpisodesByShowId',
+            operationName: 'FindTemplatesByShowId',
             variables: {
               showId: args.showId,
             },
@@ -1201,167 +1229,7 @@ query FindEpisodesByShowId(
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
-        return response.data.data['findEpisodesByShowId'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async searchEpisodes<T extends Partial<Array<GqlEpisode> | null>>(
-      graphql: string,
-      args: GqlSearchEpisodesArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'searchEpisodes', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-query SearchEpisodes(
-  $search: String, $showId: ID, $offset: Int, $limit: Int, $sort: String
-) {
-  searchEpisodes(
-    search: $search, showId: $showId, offset: $offset, limit: $limit, sort: $sort
-  ) ${graphql}
-}
-          `,
-            operationName: 'SearchEpisodes',
-            variables: {
-              search: args.search,
-              showId: args.showId,
-              offset: args.offset,
-              limit: args.limit,
-              sort: args.sort,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['searchEpisodes'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async findEpisodeByName<T extends Partial<Array<GqlThirdPartyEpisode | null> | null>>(
-      graphql: string,
-      args: GqlFindEpisodeByNameArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'findEpisodeByName', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-query FindEpisodeByName(
-  $name: String!
-) {
-  findEpisodeByName(
-    name: $name
-  ) ${graphql}
-}
-          `,
-            operationName: 'FindEpisodeByName',
-            variables: {
-              name: args.name,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['findEpisodeByName'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async findEpisodeUrl<T extends Partial<GqlEpisodeUrl | null>>(
-      graphql: string,
-      args: GqlFindEpisodeUrlArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'findEpisodeUrl', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-query FindEpisodeUrl(
-  $episodeUrl: String!
-) {
-  findEpisodeUrl(
-    episodeUrl: $episodeUrl
-  ) ${graphql}
-}
-          `,
-            operationName: 'FindEpisodeUrl',
-            variables: {
-              episodeUrl: args.episodeUrl,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['findEpisodeUrl'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async findEpisodeUrlsByEpisodeId<T extends Partial<Array<GqlEpisodeUrl> | null>>(
-      graphql: string,
-      args: GqlFindEpisodeUrlsByEpisodeIdArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'findEpisodeUrlsByEpisodeId', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-query FindEpisodeUrlsByEpisodeId(
-  $episodeId: ID!
-) {
-  findEpisodeUrlsByEpisodeId(
-    episodeId: $episodeId
-  ) ${graphql}
-}
-          `,
-            operationName: 'FindEpisodeUrlsByEpisodeId',
-            variables: {
-              episodeId: args.episodeId,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['findEpisodeUrlsByEpisodeId'];
+        return response.data.data['findTemplatesByShowId'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
@@ -1486,57 +1354,26 @@ query FindTimestampType(
         throw err;
       }
     },
-    async allTimestampTypes<T extends Partial<Array<GqlTimestampType> | null>>(
+    async findUser<T extends Partial<GqlUser | null>>(
       graphql: string,
+      args: GqlFindUserArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'allTimestampTypes', T> = await axios.post(
+        const response: GqlResponse<'findUser', T> = await axios.post(
           '/graphql',
           {
             query: `
-query AllTimestampTypes {
-  allTimestampTypes ${graphql}
-}
-          `,
-            operationName: 'AllTimestampTypes',
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['allTimestampTypes'];
-      } catch (err) {
-        if (err.resposne != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async findTemplate<T extends Partial<GqlTemplate | null>>(
-      graphql: string,
-      args: GqlFindTemplateArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'findTemplate', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-query FindTemplate(
-  $templateId: ID!
+query FindUser(
+  $userId: ID!
 ) {
-  findTemplate(
-    templateId: $templateId
+  findUser(
+    userId: $userId
   ) ${graphql}
 }
           `,
-            operationName: 'FindTemplate',
+            operationName: 'FindUser',
             variables: {
-              templateId: args.templateId,
+              userId: args.userId,
             },
           },
           {
@@ -1548,7 +1385,7 @@ query FindTemplate(
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
-        return response.data.data['findTemplate'];
+        return response.data.data['findUser'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
@@ -1556,26 +1393,188 @@ query FindTemplate(
         throw err;
       }
     },
-    async findTemplatesByShowId<T extends Partial<Array<GqlTemplate>>>(
+    async findUserByUsername<T extends Partial<GqlUser | null>>(
       graphql: string,
-      args: GqlFindTemplatesByShowIdArgs,
+      args: GqlFindUserByUsernameArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findTemplatesByShowId', T> = await axios.post(
+        const response: GqlResponse<'findUserByUsername', T> = await axios.post(
           '/graphql',
           {
             query: `
-query FindTemplatesByShowId(
-  $showId: ID!
+query FindUserByUsername(
+  $username: String!
 ) {
-  findTemplatesByShowId(
-    showId: $showId
+  findUserByUsername(
+    username: $username
   ) ${graphql}
 }
           `,
-            operationName: 'FindTemplatesByShowId',
+            operationName: 'FindUserByUsername',
             variables: {
+              username: args.username,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['findUserByUsername'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async login<T extends Partial<GqlLoginData | null>>(
+      graphql: string,
+      args: GqlLoginArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'login', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+query Login(
+  $usernameEmail: String!, $passwordHash: String!
+) {
+  login(
+    usernameEmail: $usernameEmail, passwordHash: $passwordHash
+  ) ${graphql}
+}
+          `,
+            operationName: 'Login',
+            variables: {
+              usernameEmail: args.usernameEmail,
+              passwordHash: args.passwordHash,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['login'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async loginRefresh<T extends Partial<GqlLoginData | null>>(
+      graphql: string,
+      args: GqlLoginRefreshArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'loginRefresh', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+query LoginRefresh(
+  $refreshToken: String!
+) {
+  loginRefresh(
+    refreshToken: $refreshToken
+  ) ${graphql}
+}
+          `,
+            operationName: 'LoginRefresh',
+            variables: {
+              refreshToken: args.refreshToken,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['loginRefresh'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async recentlyAddedEpisodes<T extends Partial<Array<GqlEpisode> | null>>(
+      graphql: string,
+      args: GqlRecentlyAddedEpisodesArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'recentlyAddedEpisodes', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+query RecentlyAddedEpisodes(
+  $limit: Int, $offset: Int
+) {
+  recentlyAddedEpisodes(
+    limit: $limit, offset: $offset
+  ) ${graphql}
+}
+          `,
+            operationName: 'RecentlyAddedEpisodes',
+            variables: {
+              limit: args.limit,
+              offset: args.offset,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['recentlyAddedEpisodes'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async searchEpisodes<T extends Partial<Array<GqlEpisode> | null>>(
+      graphql: string,
+      args: GqlSearchEpisodesArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'searchEpisodes', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+query SearchEpisodes(
+  $search: String, $showId: ID, $offset: Int, $limit: Int, $sort: String
+) {
+  searchEpisodes(
+    search: $search, showId: $showId, offset: $offset, limit: $limit, sort: $sort
+  ) ${graphql}
+}
+          `,
+            operationName: 'SearchEpisodes',
+            variables: {
+              search: args.search,
               showId: args.showId,
+              offset: args.offset,
+              limit: args.limit,
+              sort: args.sort,
             },
           },
           {
@@ -1587,7 +1586,7 @@ query FindTemplatesByShowId(
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
-        return response.data.data['findTemplatesByShowId'];
+        return response.data.data['searchEpisodes'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
@@ -1595,28 +1594,29 @@ query FindTemplatesByShowId(
         throw err;
       }
     },
-    async findTemplateByDetails<T extends Partial<GqlTemplate | null>>(
+    async searchShows<T extends Partial<Array<GqlShow> | null>>(
       graphql: string,
-      args: GqlFindTemplateByDetailsArgs,
+      args: GqlSearchShowsArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findTemplateByDetails', T> = await axios.post(
+        const response: GqlResponse<'searchShows', T> = await axios.post(
           '/graphql',
           {
             query: `
-query FindTemplateByDetails(
-  $episodeId: ID, $showName: String, $season: String
+query SearchShows(
+  $search: String, $offset: Int, $limit: Int, $sort: String
 ) {
-  findTemplateByDetails(
-    episodeId: $episodeId, showName: $showName, season: $season
+  searchShows(
+    search: $search, offset: $offset, limit: $limit, sort: $sort
   ) ${graphql}
 }
           `,
-            operationName: 'FindTemplateByDetails',
+            operationName: 'SearchShows',
             variables: {
-              episodeId: args.episodeId,
-              showName: args.showName,
-              season: args.season,
+              search: args.search,
+              offset: args.offset,
+              limit: args.limit,
+              sort: args.sort,
             },
           },
           {
@@ -1628,7 +1628,7 @@ query FindTemplateByDetails(
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
-        return response.data.data['findTemplateByDetails'];
+        return response.data.data['searchShows'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
@@ -1640,6 +1640,45 @@ query FindTemplateByDetails(
 
   // Initialize mutations
   const mutations: GqlMutation = {
+    async addTimestampToTemplate<T extends Partial<GqlTemplateTimestamp | null>>(
+      graphql: string,
+      args: GqlAddTimestampToTemplateArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'addTimestampToTemplate', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation AddTimestampToTemplate(
+  $templateTimestamp: InputTemplateTimestamp!
+) {
+  addTimestampToTemplate(
+    templateTimestamp: $templateTimestamp
+  ) ${graphql}
+}
+          `,
+            operationName: 'AddTimestampToTemplate',
+            variables: {
+              templateTimestamp: args.templateTimestamp,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['addTimestampToTemplate'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
     async createAccount<T extends Partial<GqlLoginData | null>>(
       graphql: string,
       args: GqlCreateAccountArgs,
@@ -1675,390 +1714,6 @@ mutation CreateAccount(
           throw new GqlError(response.status, response.data.errors);
         }
         return response.data.data['createAccount'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async resendVerificationEmail<T extends Partial<GqlBoolean | null>>(
-      graphql: string,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'resendVerificationEmail', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-mutation ResendVerificationEmail {
-  resendVerificationEmail ${graphql}
-}
-          `,
-            operationName: 'ResendVerificationEmail',
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['resendVerificationEmail'];
-      } catch (err) {
-        if (err.resposne != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async verifyEmailAddress<T extends Partial<GqlAccount | null>>(
-      graphql: string,
-      args: GqlVerifyEmailAddressArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'verifyEmailAddress', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-mutation VerifyEmailAddress(
-  $validationToken: String!
-) {
-  verifyEmailAddress(
-    validationToken: $validationToken
-  ) ${graphql}
-}
-          `,
-            operationName: 'VerifyEmailAddress',
-            variables: {
-              validationToken: args.validationToken,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['verifyEmailAddress'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async deleteAccountRequest<T extends Partial<GqlAccount | null>>(
-      graphql: string,
-      args: GqlDeleteAccountRequestArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'deleteAccountRequest', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-mutation DeleteAccountRequest(
-  $passwordHash: String!
-) {
-  deleteAccountRequest(
-    passwordHash: $passwordHash
-  ) ${graphql}
-}
-          `,
-            operationName: 'DeleteAccountRequest',
-            variables: {
-              passwordHash: args.passwordHash,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['deleteAccountRequest'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async deleteAccount<T extends Partial<GqlAccount | null>>(
-      graphql: string,
-      args: GqlDeleteAccountArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'deleteAccount', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-mutation DeleteAccount(
-  $deleteToken: String!
-) {
-  deleteAccount(
-    deleteToken: $deleteToken
-  ) ${graphql}
-}
-          `,
-            operationName: 'DeleteAccount',
-            variables: {
-              deleteToken: args.deleteToken,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['deleteAccount'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async savePreferences<T extends Partial<GqlPreferences | null>>(
-      graphql: string,
-      args: GqlSavePreferencesArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'savePreferences', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-mutation SavePreferences(
-  $preferences: InputPreferences!
-) {
-  savePreferences(
-    preferences: $preferences
-  ) ${graphql}
-}
-          `,
-            operationName: 'SavePreferences',
-            variables: {
-              preferences: args.preferences,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['savePreferences'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async createShow<T extends Partial<GqlShow | null>>(
-      graphql: string,
-      args: GqlCreateShowArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'createShow', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-mutation CreateShow(
-  $showInput: InputShow!, $becomeAdmin: Boolean!
-) {
-  createShow(
-    showInput: $showInput, becomeAdmin: $becomeAdmin
-  ) ${graphql}
-}
-          `,
-            operationName: 'CreateShow',
-            variables: {
-              showInput: args.showInput,
-              becomeAdmin: args.becomeAdmin,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['createShow'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async updateShow<T extends Partial<GqlShow | null>>(
-      graphql: string,
-      args: GqlUpdateShowArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'updateShow', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-mutation UpdateShow(
-  $showId: ID!, $newShow: InputShow!
-) {
-  updateShow(
-    showId: $showId, newShow: $newShow
-  ) ${graphql}
-}
-          `,
-            operationName: 'UpdateShow',
-            variables: {
-              showId: args.showId,
-              newShow: args.newShow,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['updateShow'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async deleteShow<T extends Partial<GqlShow | null>>(
-      graphql: string,
-      args: GqlDeleteShowArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'deleteShow', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-mutation DeleteShow(
-  $showId: ID!
-) {
-  deleteShow(
-    showId: $showId
-  ) ${graphql}
-}
-          `,
-            operationName: 'DeleteShow',
-            variables: {
-              showId: args.showId,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['deleteShow'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async createShowAdmin<T extends Partial<GqlShowAdmin | null>>(
-      graphql: string,
-      args: GqlCreateShowAdminArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'createShowAdmin', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-mutation CreateShowAdmin(
-  $showAdminInput: InputShowAdmin!
-) {
-  createShowAdmin(
-    showAdminInput: $showAdminInput
-  ) ${graphql}
-}
-          `,
-            operationName: 'CreateShowAdmin',
-            variables: {
-              showAdminInput: args.showAdminInput,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['createShowAdmin'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async deleteShowAdmin<T extends Partial<GqlShowAdmin | null>>(
-      graphql: string,
-      args: GqlDeleteShowAdminArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'deleteShowAdmin', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-mutation DeleteShowAdmin(
-  $showAdminId: ID!
-) {
-  deleteShowAdmin(
-    showAdminId: $showAdminId
-  ) ${graphql}
-}
-          `,
-            operationName: 'DeleteShowAdmin',
-            variables: {
-              showAdminId: args.showAdminId,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['deleteShowAdmin'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
@@ -2106,85 +1761,6 @@ mutation CreateEpisode(
         throw err;
       }
     },
-    async updateEpisode<T extends Partial<GqlEpisode | null>>(
-      graphql: string,
-      args: GqlUpdateEpisodeArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'updateEpisode', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-mutation UpdateEpisode(
-  $episodeId: ID!, $newEpisode: InputEpisode!
-) {
-  updateEpisode(
-    episodeId: $episodeId, newEpisode: $newEpisode
-  ) ${graphql}
-}
-          `,
-            operationName: 'UpdateEpisode',
-            variables: {
-              episodeId: args.episodeId,
-              newEpisode: args.newEpisode,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['updateEpisode'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async deleteEpisode<T extends Partial<GqlEpisode | null>>(
-      graphql: string,
-      args: GqlDeleteEpisodeArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'deleteEpisode', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-mutation DeleteEpisode(
-  $episodeId: ID!
-) {
-  deleteEpisode(
-    episodeId: $episodeId
-  ) ${graphql}
-}
-          `,
-            operationName: 'DeleteEpisode',
-            variables: {
-              episodeId: args.episodeId,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['deleteEpisode'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
     async createEpisodeUrl<T extends Partial<GqlEpisodeUrl | null>>(
       graphql: string,
       args: GqlCreateEpisodeUrlArgs,
@@ -2225,26 +1801,27 @@ mutation CreateEpisodeUrl(
         throw err;
       }
     },
-    async deleteEpisodeUrl<T extends Partial<GqlEpisodeUrl | null>>(
+    async createShow<T extends Partial<GqlShow | null>>(
       graphql: string,
-      args: GqlDeleteEpisodeUrlArgs,
+      args: GqlCreateShowArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'deleteEpisodeUrl', T> = await axios.post(
+        const response: GqlResponse<'createShow', T> = await axios.post(
           '/graphql',
           {
             query: `
-mutation DeleteEpisodeUrl(
-  $episodeUrl: String!
+mutation CreateShow(
+  $showInput: InputShow!, $becomeAdmin: Boolean!
 ) {
-  deleteEpisodeUrl(
-    episodeUrl: $episodeUrl
+  createShow(
+    showInput: $showInput, becomeAdmin: $becomeAdmin
   ) ${graphql}
 }
           `,
-            operationName: 'DeleteEpisodeUrl',
+            operationName: 'CreateShow',
             variables: {
-              episodeUrl: args.episodeUrl,
+              showInput: args.showInput,
+              becomeAdmin: args.becomeAdmin,
             },
           },
           {
@@ -2256,7 +1833,7 @@ mutation DeleteEpisodeUrl(
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
-        return response.data.data['deleteEpisodeUrl'];
+        return response.data.data['createShow'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
@@ -2264,27 +1841,26 @@ mutation DeleteEpisodeUrl(
         throw err;
       }
     },
-    async updateEpisodeUrl<T extends Partial<GqlEpisodeUrl | null>>(
+    async createShowAdmin<T extends Partial<GqlShowAdmin | null>>(
       graphql: string,
-      args: GqlUpdateEpisodeUrlArgs,
+      args: GqlCreateShowAdminArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'updateEpisodeUrl', T> = await axios.post(
+        const response: GqlResponse<'createShowAdmin', T> = await axios.post(
           '/graphql',
           {
             query: `
-mutation UpdateEpisodeUrl(
-  $episodeUrl: String!, $newEpisodeUrl: InputEpisodeUrl!
+mutation CreateShowAdmin(
+  $showAdminInput: InputShowAdmin!
 ) {
-  updateEpisodeUrl(
-    episodeUrl: $episodeUrl, newEpisodeUrl: $newEpisodeUrl
+  createShowAdmin(
+    showAdminInput: $showAdminInput
   ) ${graphql}
 }
           `,
-            operationName: 'UpdateEpisodeUrl',
+            operationName: 'CreateShowAdmin',
             variables: {
-              episodeUrl: args.episodeUrl,
-              newEpisodeUrl: args.newEpisodeUrl,
+              showAdminInput: args.showAdminInput,
             },
           },
           {
@@ -2296,7 +1872,46 @@ mutation UpdateEpisodeUrl(
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
-        return response.data.data['updateEpisodeUrl'];
+        return response.data.data['createShowAdmin'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async createTemplate<T extends Partial<GqlTemplate | null>>(
+      graphql: string,
+      args: GqlCreateTemplateArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'createTemplate', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation CreateTemplate(
+  $newTemplate: InputTemplate!
+) {
+  createTemplate(
+    newTemplate: $newTemplate
+  ) ${graphql}
+}
+          `,
+            operationName: 'CreateTemplate',
+            variables: {
+              newTemplate: args.newTemplate,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['createTemplate'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
@@ -2344,27 +1959,26 @@ mutation CreateTimestamp(
         throw err;
       }
     },
-    async updateTimestamp<T extends Partial<GqlTimestamp | null>>(
+    async createTimestampType<T extends Partial<GqlTimestampType | null>>(
       graphql: string,
-      args: GqlUpdateTimestampArgs,
+      args: GqlCreateTimestampTypeArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'updateTimestamp', T> = await axios.post(
+        const response: GqlResponse<'createTimestampType', T> = await axios.post(
           '/graphql',
           {
             query: `
-mutation UpdateTimestamp(
-  $timestampId: ID!, $newTimestamp: InputTimestamp!
+mutation CreateTimestampType(
+  $timestampTypeInput: InputTimestampType!
 ) {
-  updateTimestamp(
-    timestampId: $timestampId, newTimestamp: $newTimestamp
+  createTimestampType(
+    timestampTypeInput: $timestampTypeInput
   ) ${graphql}
 }
           `,
-            operationName: 'UpdateTimestamp',
+            operationName: 'CreateTimestampType',
             variables: {
-              timestampId: args.timestampId,
-              newTimestamp: args.newTimestamp,
+              timestampTypeInput: args.timestampTypeInput,
             },
           },
           {
@@ -2376,7 +1990,280 @@ mutation UpdateTimestamp(
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
-        return response.data.data['updateTimestamp'];
+        return response.data.data['createTimestampType'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async deleteAccount<T extends Partial<GqlAccount | null>>(
+      graphql: string,
+      args: GqlDeleteAccountArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'deleteAccount', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation DeleteAccount(
+  $deleteToken: String!
+) {
+  deleteAccount(
+    deleteToken: $deleteToken
+  ) ${graphql}
+}
+          `,
+            operationName: 'DeleteAccount',
+            variables: {
+              deleteToken: args.deleteToken,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['deleteAccount'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async deleteAccountRequest<T extends Partial<GqlAccount | null>>(
+      graphql: string,
+      args: GqlDeleteAccountRequestArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'deleteAccountRequest', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation DeleteAccountRequest(
+  $passwordHash: String!
+) {
+  deleteAccountRequest(
+    passwordHash: $passwordHash
+  ) ${graphql}
+}
+          `,
+            operationName: 'DeleteAccountRequest',
+            variables: {
+              passwordHash: args.passwordHash,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['deleteAccountRequest'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async deleteEpisode<T extends Partial<GqlEpisode | null>>(
+      graphql: string,
+      args: GqlDeleteEpisodeArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'deleteEpisode', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation DeleteEpisode(
+  $episodeId: ID!
+) {
+  deleteEpisode(
+    episodeId: $episodeId
+  ) ${graphql}
+}
+          `,
+            operationName: 'DeleteEpisode',
+            variables: {
+              episodeId: args.episodeId,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['deleteEpisode'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async deleteEpisodeUrl<T extends Partial<GqlEpisodeUrl | null>>(
+      graphql: string,
+      args: GqlDeleteEpisodeUrlArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'deleteEpisodeUrl', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation DeleteEpisodeUrl(
+  $episodeUrl: String!
+) {
+  deleteEpisodeUrl(
+    episodeUrl: $episodeUrl
+  ) ${graphql}
+}
+          `,
+            operationName: 'DeleteEpisodeUrl',
+            variables: {
+              episodeUrl: args.episodeUrl,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['deleteEpisodeUrl'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async deleteShow<T extends Partial<GqlShow | null>>(
+      graphql: string,
+      args: GqlDeleteShowArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'deleteShow', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation DeleteShow(
+  $showId: ID!
+) {
+  deleteShow(
+    showId: $showId
+  ) ${graphql}
+}
+          `,
+            operationName: 'DeleteShow',
+            variables: {
+              showId: args.showId,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['deleteShow'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async deleteShowAdmin<T extends Partial<GqlShowAdmin | null>>(
+      graphql: string,
+      args: GqlDeleteShowAdminArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'deleteShowAdmin', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation DeleteShowAdmin(
+  $showAdminId: ID!
+) {
+  deleteShowAdmin(
+    showAdminId: $showAdminId
+  ) ${graphql}
+}
+          `,
+            operationName: 'DeleteShowAdmin',
+            variables: {
+              showAdminId: args.showAdminId,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['deleteShowAdmin'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async deleteTemplate<T extends Partial<GqlTemplate | null>>(
+      graphql: string,
+      args: GqlDeleteTemplateArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'deleteTemplate', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation DeleteTemplate(
+  $templateId: ID!
+) {
+  deleteTemplate(
+    templateId: $templateId
+  ) ${graphql}
+}
+          `,
+            operationName: 'DeleteTemplate',
+            variables: {
+              templateId: args.templateId,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['deleteTemplate'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
@@ -2416,6 +2303,354 @@ mutation DeleteTimestamp(
           throw new GqlError(response.status, response.data.errors);
         }
         return response.data.data['deleteTimestamp'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async deleteTimestampType<T extends Partial<GqlTimestampType | null>>(
+      graphql: string,
+      args: GqlDeleteTimestampTypeArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'deleteTimestampType', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation DeleteTimestampType(
+  $timestampTypeId: ID!
+) {
+  deleteTimestampType(
+    timestampTypeId: $timestampTypeId
+  ) ${graphql}
+}
+          `,
+            operationName: 'DeleteTimestampType',
+            variables: {
+              timestampTypeId: args.timestampTypeId,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['deleteTimestampType'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async removeTimestampFromTemplate<T extends Partial<GqlTemplateTimestamp | null>>(
+      graphql: string,
+      args: GqlRemoveTimestampFromTemplateArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'removeTimestampFromTemplate', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation RemoveTimestampFromTemplate(
+  $templateTimestamp: InputTemplateTimestamp!
+) {
+  removeTimestampFromTemplate(
+    templateTimestamp: $templateTimestamp
+  ) ${graphql}
+}
+          `,
+            operationName: 'RemoveTimestampFromTemplate',
+            variables: {
+              templateTimestamp: args.templateTimestamp,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['removeTimestampFromTemplate'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async resendVerificationEmail<T extends Partial<GqlBoolean | null>>(
+      graphql: string,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'resendVerificationEmail', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation ResendVerificationEmail {
+  resendVerificationEmail ${graphql}
+}
+          `,
+            operationName: 'ResendVerificationEmail',
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['resendVerificationEmail'];
+      } catch (err) {
+        if (err.resposne != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async savePreferences<T extends Partial<GqlPreferences | null>>(
+      graphql: string,
+      args: GqlSavePreferencesArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'savePreferences', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation SavePreferences(
+  $preferences: InputPreferences!
+) {
+  savePreferences(
+    preferences: $preferences
+  ) ${graphql}
+}
+          `,
+            operationName: 'SavePreferences',
+            variables: {
+              preferences: args.preferences,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['savePreferences'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async updateEpisode<T extends Partial<GqlEpisode | null>>(
+      graphql: string,
+      args: GqlUpdateEpisodeArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'updateEpisode', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation UpdateEpisode(
+  $episodeId: ID!, $newEpisode: InputEpisode!
+) {
+  updateEpisode(
+    episodeId: $episodeId, newEpisode: $newEpisode
+  ) ${graphql}
+}
+          `,
+            operationName: 'UpdateEpisode',
+            variables: {
+              episodeId: args.episodeId,
+              newEpisode: args.newEpisode,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['updateEpisode'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async updateEpisodeUrl<T extends Partial<GqlEpisodeUrl | null>>(
+      graphql: string,
+      args: GqlUpdateEpisodeUrlArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'updateEpisodeUrl', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation UpdateEpisodeUrl(
+  $episodeUrl: String!, $newEpisodeUrl: InputEpisodeUrl!
+) {
+  updateEpisodeUrl(
+    episodeUrl: $episodeUrl, newEpisodeUrl: $newEpisodeUrl
+  ) ${graphql}
+}
+          `,
+            operationName: 'UpdateEpisodeUrl',
+            variables: {
+              episodeUrl: args.episodeUrl,
+              newEpisodeUrl: args.newEpisodeUrl,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['updateEpisodeUrl'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async updateShow<T extends Partial<GqlShow | null>>(
+      graphql: string,
+      args: GqlUpdateShowArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'updateShow', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation UpdateShow(
+  $showId: ID!, $newShow: InputShow!
+) {
+  updateShow(
+    showId: $showId, newShow: $newShow
+  ) ${graphql}
+}
+          `,
+            operationName: 'UpdateShow',
+            variables: {
+              showId: args.showId,
+              newShow: args.newShow,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['updateShow'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async updateTemplate<T extends Partial<GqlTemplate | null>>(
+      graphql: string,
+      args: GqlUpdateTemplateArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'updateTemplate', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation UpdateTemplate(
+  $templateId: ID!, $newTemplate: InputTemplate!
+) {
+  updateTemplate(
+    templateId: $templateId, newTemplate: $newTemplate
+  ) ${graphql}
+}
+          `,
+            operationName: 'UpdateTemplate',
+            variables: {
+              templateId: args.templateId,
+              newTemplate: args.newTemplate,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['updateTemplate'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async updateTimestamp<T extends Partial<GqlTimestamp | null>>(
+      graphql: string,
+      args: GqlUpdateTimestampArgs,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'updateTimestamp', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation UpdateTimestamp(
+  $timestampId: ID!, $newTimestamp: InputTimestamp!
+) {
+  updateTimestamp(
+    timestampId: $timestampId, newTimestamp: $newTimestamp
+  ) ${graphql}
+}
+          `,
+            operationName: 'UpdateTimestamp',
+            variables: {
+              timestampId: args.timestampId,
+              newTimestamp: args.newTimestamp,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['updateTimestamp'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
@@ -2464,45 +2699,6 @@ mutation UpdateTimestamps(
         throw err;
       }
     },
-    async createTimestampType<T extends Partial<GqlTimestampType | null>>(
-      graphql: string,
-      args: GqlCreateTimestampTypeArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'createTimestampType', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-mutation CreateTimestampType(
-  $timestampTypeInput: InputTimestampType!
-) {
-  createTimestampType(
-    timestampTypeInput: $timestampTypeInput
-  ) ${graphql}
-}
-          `,
-            operationName: 'CreateTimestampType',
-            variables: {
-              timestampTypeInput: args.timestampTypeInput,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['createTimestampType'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
     async updateTimestampType<T extends Partial<GqlTimestampType | null>>(
       graphql: string,
       args: GqlUpdateTimestampTypeArgs,
@@ -2543,26 +2739,26 @@ mutation UpdateTimestampType(
         throw err;
       }
     },
-    async deleteTimestampType<T extends Partial<GqlTimestampType | null>>(
+    async verifyEmailAddress<T extends Partial<GqlAccount | null>>(
       graphql: string,
-      args: GqlDeleteTimestampTypeArgs,
+      args: GqlVerifyEmailAddressArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'deleteTimestampType', T> = await axios.post(
+        const response: GqlResponse<'verifyEmailAddress', T> = await axios.post(
           '/graphql',
           {
             query: `
-mutation DeleteTimestampType(
-  $timestampTypeId: ID!
+mutation VerifyEmailAddress(
+  $validationToken: String!
 ) {
-  deleteTimestampType(
-    timestampTypeId: $timestampTypeId
+  verifyEmailAddress(
+    validationToken: $validationToken
   ) ${graphql}
 }
           `,
-            operationName: 'DeleteTimestampType',
+            operationName: 'VerifyEmailAddress',
             variables: {
-              timestampTypeId: args.timestampTypeId,
+              validationToken: args.validationToken,
             },
           },
           {
@@ -2574,203 +2770,7 @@ mutation DeleteTimestampType(
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
-        return response.data.data['deleteTimestampType'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async createTemplate<T extends Partial<GqlTemplate | null>>(
-      graphql: string,
-      args: GqlCreateTemplateArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'createTemplate', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-mutation CreateTemplate(
-  $newTemplate: InputTemplate!
-) {
-  createTemplate(
-    newTemplate: $newTemplate
-  ) ${graphql}
-}
-          `,
-            operationName: 'CreateTemplate',
-            variables: {
-              newTemplate: args.newTemplate,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['createTemplate'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async updateTemplate<T extends Partial<GqlTemplate | null>>(
-      graphql: string,
-      args: GqlUpdateTemplateArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'updateTemplate', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-mutation UpdateTemplate(
-  $templateId: ID!, $newTemplate: InputTemplate!
-) {
-  updateTemplate(
-    templateId: $templateId, newTemplate: $newTemplate
-  ) ${graphql}
-}
-          `,
-            operationName: 'UpdateTemplate',
-            variables: {
-              templateId: args.templateId,
-              newTemplate: args.newTemplate,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['updateTemplate'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async deleteTemplate<T extends Partial<GqlTemplate | null>>(
-      graphql: string,
-      args: GqlDeleteTemplateArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'deleteTemplate', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-mutation DeleteTemplate(
-  $templateId: ID!
-) {
-  deleteTemplate(
-    templateId: $templateId
-  ) ${graphql}
-}
-          `,
-            operationName: 'DeleteTemplate',
-            variables: {
-              templateId: args.templateId,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['deleteTemplate'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async addTimestampToTemplate<T extends Partial<GqlTemplateTimestamp | null>>(
-      graphql: string,
-      args: GqlAddTimestampToTemplateArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'addTimestampToTemplate', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-mutation AddTimestampToTemplate(
-  $templateTimestamp: InputTemplateTimestamp!
-) {
-  addTimestampToTemplate(
-    templateTimestamp: $templateTimestamp
-  ) ${graphql}
-}
-          `,
-            operationName: 'AddTimestampToTemplate',
-            variables: {
-              templateTimestamp: args.templateTimestamp,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['addTimestampToTemplate'];
-      } catch (err) {
-        if (err.response != null) {
-          throw new GqlError(err.response.status, err.response.data.errors);
-        }
-        throw err;
-      }
-    },
-    async removeTimestampFromTemplate<T extends Partial<GqlTemplateTimestamp | null>>(
-      graphql: string,
-      args: GqlRemoveTimestampFromTemplateArgs,
-    ): Promise<T> {
-      try {
-        const response: GqlResponse<'removeTimestampFromTemplate', T> = await axios.post(
-          '/graphql',
-          {
-            query: `
-mutation RemoveTimestampFromTemplate(
-  $templateTimestamp: InputTemplateTimestamp!
-) {
-  removeTimestampFromTemplate(
-    templateTimestamp: $templateTimestamp
-  ) ${graphql}
-}
-          `,
-            operationName: 'RemoveTimestampFromTemplate',
-            variables: {
-              templateTimestamp: args.templateTimestamp,
-            },
-          },
-          {
-            headers: {
-              'X-Client-ID': clientId,
-            },
-          },
-        );
-        if (response.data.errors != null) {
-          throw new GqlError(response.status, response.data.errors);
-        }
-        return response.data.data['removeTimestampFromTemplate'];
+        return response.data.data['verifyEmailAddress'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
