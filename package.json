@@ -17,8 +17,8 @@
     "lint:no-fix": "eslint . --ext .js,.ts --max-warnings 0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "gen": "ts-node src/generate/index.ts && yarn format src/index.ts",
-    "build": "tsc",
+    "gen": "ts-node src/generate/index.ts && prettier --write src/index.ts",
+    "build": "yarn gen && yarn compile && tsc -p tsconfig.build.json",
     "test:e2e": "yarn gen && COMPOSE_TARGET=prod mocha"
   },
   "devDependencies": {
