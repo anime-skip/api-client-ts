@@ -28,274 +28,6 @@ export class GqlError {
   }
 }
 
-export interface GqlTemplate {
-  id: GqlID;
-  createdAt: GqlTime;
-  createdByUserId: GqlID;
-  createdBy: GqlUser;
-  updatedAt: GqlTime;
-  updatedByUserId: GqlID;
-  updatedBy: GqlUser;
-  deletedAt?: GqlTime;
-  deletedByUserId?: GqlID;
-  deletedBy?: GqlUser;
-  showId: GqlID;
-  show: GqlShow;
-  type: GqlTemplateType;
-  seasons?: Array<GqlString>;
-  sourceEpisodeId: GqlID;
-  sourceEpisode: GqlEpisode;
-  timestamps: Array<GqlTimestamp>;
-  timestampIds: Array<GqlID>;
-}
-
-export enum GqlRole {
-  DEV = 'DEV',
-  ADMIN = 'ADMIN',
-  USER = 'USER',
-}
-
-export enum GqlTemplateType {
-  SHOW = 'SHOW',
-  SEASONS = 'SEASONS',
-}
-
-export interface GqlLoginArgs {
-  usernameEmail: GqlString;
-  passwordHash: GqlString;
-}
-
-export interface GqlLoginRefreshArgs {
-  refreshToken: GqlString;
-}
-
-export interface GqlFindUserArgs {
-  userId: GqlID;
-}
-
-export interface GqlFindUserByUsernameArgs {
-  username: GqlString;
-}
-
-export interface GqlFindShowArgs {
-  showId: GqlID;
-}
-
-export interface GqlSearchShowsArgs {
-  search?: GqlString;
-  offset?: GqlInt;
-  limit?: GqlInt;
-  sort?: GqlString;
-}
-
-export interface GqlFindShowAdminArgs {
-  showAdminId: GqlID;
-}
-
-export interface GqlFindShowAdminsByShowIdArgs {
-  showId: GqlID;
-}
-
-export interface GqlFindShowAdminsByUserIdArgs {
-  userId: GqlID;
-}
-
-export interface GqlRecentlyAddedEpisodesArgs {
-  limit?: GqlInt;
-  offset?: GqlInt;
-}
-
-export interface GqlFindEpisodeArgs {
-  episodeId: GqlID;
-}
-
-export interface GqlFindEpisodesByShowIdArgs {
-  showId: GqlID;
-}
-
-export interface GqlSearchEpisodesArgs {
-  search?: GqlString;
-  showId?: GqlID;
-  offset?: GqlInt;
-  limit?: GqlInt;
-  sort?: GqlString;
-}
-
-export interface GqlFindEpisodeByNameArgs {
-  name: GqlString;
-}
-
-export interface GqlFindEpisodeUrlArgs {
-  episodeUrl: GqlString;
-}
-
-export interface GqlFindEpisodeUrlsByEpisodeIdArgs {
-  episodeId: GqlID;
-}
-
-export interface GqlFindTimestampArgs {
-  timestampId: GqlID;
-}
-
-export interface GqlFindTimestampsByEpisodeIdArgs {
-  episodeId: GqlID;
-}
-
-export interface GqlFindTimestampTypeArgs {
-  timestampTypeId: GqlID;
-}
-
-export interface GqlFindTemplateArgs {
-  templateId: GqlID;
-}
-
-export interface GqlFindTemplatesByShowIdArgs {
-  showId: GqlID;
-}
-
-export interface GqlFindTemplateByDetailsArgs {
-  episodeId?: GqlID;
-  showName?: GqlString;
-  season?: GqlString;
-}
-
-export interface GqlQuery {
-  account(query: string): Promise<GqlAccount | null>;
-  login(query: string, args: GqlLoginArgs): Promise<GqlLoginData | null>;
-  loginRefresh(query: string, args: GqlLoginRefreshArgs): Promise<GqlLoginData | null>;
-  findUser(query: string, args: GqlFindUserArgs): Promise<GqlUser | null>;
-  findUserByUsername(query: string, args: GqlFindUserByUsernameArgs): Promise<GqlUser | null>;
-  findShow(query: string, args: GqlFindShowArgs): Promise<GqlShow | null>;
-  searchShows(query: string, args: GqlSearchShowsArgs): Promise<Array<GqlShow> | null>;
-  findShowAdmin(query: string, args: GqlFindShowAdminArgs): Promise<GqlShowAdmin | null>;
-  findShowAdminsByShowId(
-    query: string,
-    args: GqlFindShowAdminsByShowIdArgs,
-  ): Promise<Array<GqlShowAdmin> | null>;
-  findShowAdminsByUserId(
-    query: string,
-    args: GqlFindShowAdminsByUserIdArgs,
-  ): Promise<Array<GqlShowAdmin> | null>;
-  recentlyAddedEpisodes(
-    query: string,
-    args: GqlRecentlyAddedEpisodesArgs,
-  ): Promise<Array<GqlEpisode> | null>;
-  findEpisode(query: string, args: GqlFindEpisodeArgs): Promise<GqlEpisode | null>;
-  findEpisodesByShowId(
-    query: string,
-    args: GqlFindEpisodesByShowIdArgs,
-  ): Promise<Array<GqlEpisode> | null>;
-  searchEpisodes(query: string, args: GqlSearchEpisodesArgs): Promise<Array<GqlEpisode> | null>;
-  findEpisodeByName(
-    query: string,
-    args: GqlFindEpisodeByNameArgs,
-  ): Promise<Array<GqlThirdPartyEpisode | null> | null>;
-  findEpisodeUrl(query: string, args: GqlFindEpisodeUrlArgs): Promise<GqlEpisodeUrl | null>;
-  findEpisodeUrlsByEpisodeId(
-    query: string,
-    args: GqlFindEpisodeUrlsByEpisodeIdArgs,
-  ): Promise<Array<GqlEpisodeUrl> | null>;
-  findTimestamp(query: string, args: GqlFindTimestampArgs): Promise<GqlTimestamp | null>;
-  findTimestampsByEpisodeId(
-    query: string,
-    args: GqlFindTimestampsByEpisodeIdArgs,
-  ): Promise<Array<GqlTimestamp> | null>;
-  findTimestampType(
-    query: string,
-    args: GqlFindTimestampTypeArgs,
-  ): Promise<GqlTimestampType | null>;
-  allTimestampTypes(query: string): Promise<Array<GqlTimestampType> | null>;
-  findTemplate(query: string, args: GqlFindTemplateArgs): Promise<GqlTemplate | null>;
-  findTemplatesByShowId(
-    query: string,
-    args: GqlFindTemplatesByShowIdArgs,
-  ): Promise<Array<GqlTemplate>>;
-  findTemplateByDetails(
-    query: string,
-    args: GqlFindTemplateByDetailsArgs,
-  ): Promise<GqlTemplate | null>;
-}
-
-export interface GqlInputTemplate {
-  showId: GqlID;
-  type: GqlTemplateType;
-  seasons?: Array<GqlString>;
-  sourceEpisodeId: GqlID;
-}
-
-export interface GqlTemplateTimestamp {
-  templateId: GqlID;
-  template: GqlTemplate;
-  timestampId: GqlID;
-  timestamp: GqlTimestamp;
-}
-
-export interface GqlInputTimestampOn {
-  episodeId: GqlID;
-  timestamp: GqlInputTimestamp;
-}
-
-export interface GqlAccount {
-  id: GqlID;
-  createdAt: GqlTime;
-  deletedAt?: GqlTime;
-  username: GqlString;
-  email: GqlString;
-  profileUrl: GqlString;
-  adminOfShows: Array<GqlShowAdmin>;
-  emailVerified: GqlBoolean;
-  role: GqlRole;
-  preferences: GqlPreferences;
-}
-
-export interface GqlShow {
-  id: GqlID;
-  createdAt: GqlTime;
-  createdByUserId: GqlID;
-  createdBy: GqlUser;
-  updatedAt: GqlTime;
-  updatedByUserId: GqlID;
-  updatedBy: GqlUser;
-  deletedAt?: GqlTime;
-  deletedByUserId?: GqlID;
-  deletedBy?: GqlUser;
-  name: GqlString;
-  originalName?: GqlString;
-  website?: GqlString;
-  image?: GqlString;
-  admins: Array<GqlShowAdmin>;
-  episodes: Array<GqlEpisode>;
-  templates: Array<GqlTemplate>;
-}
-
-export interface GqlThirdPartyTimestamp {
-  id?: GqlID;
-  at: GqlFloat;
-  typeId: GqlID;
-  type: GqlTimestampType;
-}
-
-export interface GqlInputTemplateTimestamp {
-  templateId: GqlID;
-  timestampId: GqlID;
-}
-
-export type GqlTime = string;
-
-export interface GqlInputEpisode {
-  season?: GqlString;
-  number?: GqlString;
-  absoluteNumber?: GqlString;
-  name?: GqlString;
-  baseDuration?: GqlFloat;
-}
-
-export interface GqlInputEpisodeUrl {
-  url: GqlString;
-  duration?: GqlFloat;
-  timestampsOffset?: GqlFloat;
-}
-
 export interface GqlShowAdmin {
   id: GqlID;
   createdAt: GqlTime;
@@ -319,24 +51,18 @@ export interface GqlInputTimestamp {
   source?: GqlTimestampSource;
 }
 
-export interface GqlEpisodeUrl {
-  url: GqlString;
-  createdAt: GqlTime;
-  createdByUserId: GqlID;
-  createdBy: GqlUser;
-  updatedAt: GqlTime;
-  updatedByUserId: GqlID;
-  updatedBy: GqlUser;
-  duration?: GqlFloat;
-  timestampsOffset?: GqlFloat;
-  episodeId: GqlID;
-  episode: GqlEpisode;
-  source: GqlEpisodeSource;
+export interface GqlInputEpisode {
+  season?: GqlString;
+  number?: GqlString;
+  absoluteNumber?: GqlString;
+  name?: GqlString;
+  baseDuration?: GqlFloat;
 }
 
-export interface GqlInputShowAdmin {
-  showId: GqlID;
-  userId: GqlID;
+export interface GqlInputEpisodeUrl {
+  url: GqlString;
+  duration?: GqlFloat;
+  timestampsOffset?: GqlFloat;
 }
 
 export interface GqlTimestamp {
@@ -362,6 +88,65 @@ export interface GqlLoginData {
   authToken: GqlString;
   refreshToken: GqlString;
   account: GqlAccount;
+}
+
+export interface GqlEpisodeUrl {
+  url: GqlString;
+  createdAt: GqlTime;
+  createdByUserId: GqlID;
+  createdBy: GqlUser;
+  updatedAt: GqlTime;
+  updatedByUserId: GqlID;
+  updatedBy: GqlUser;
+  duration?: GqlFloat;
+  timestampsOffset?: GqlFloat;
+  episodeId: GqlID;
+  episode: GqlEpisode;
+  source: GqlEpisodeSource;
+}
+
+export interface GqlInputShowAdmin {
+  showId: GqlID;
+  userId: GqlID;
+}
+
+export interface GqlPreferences {
+  id: GqlID;
+  createdAt: GqlTime;
+  updatedAt: GqlTime;
+  deletedAt?: GqlTime;
+  userId: GqlID;
+  user: GqlUser;
+  enableAutoSkip: GqlBoolean;
+  enableAutoPlay: GqlBoolean;
+  minimizeToolbarWhenEditing: GqlBoolean;
+  hideTimelineWhenMinimized: GqlBoolean;
+  skipBranding: GqlBoolean;
+  skipIntros: GqlBoolean;
+  skipNewIntros: GqlBoolean;
+  skipMixedIntros: GqlBoolean;
+  skipRecaps: GqlBoolean;
+  skipFiller: GqlBoolean;
+  skipCanon: GqlBoolean;
+  skipTransitions: GqlBoolean;
+  skipCredits: GqlBoolean;
+  skipNewCredits: GqlBoolean;
+  skipMixedCredits: GqlBoolean;
+  skipPreview: GqlBoolean;
+  skipTitleCard: GqlBoolean;
+}
+
+export interface GqlThirdPartyShow {
+  name: GqlString;
+  createdAt?: GqlTime;
+  updatedAt?: GqlTime;
+}
+
+export interface GqlInputShow {
+  name: GqlString;
+  originalName?: GqlString;
+  website?: GqlString;
+  image?: GqlString;
 }
 
 export interface GqlCreateAccountArgs {
@@ -562,43 +347,11 @@ export interface GqlThirdPartyEpisode {
   show: GqlThirdPartyShow;
 }
 
-export interface GqlPreferences {
+export type GqlID = string;
+
+export interface GqlInputExistingTimestamp {
   id: GqlID;
-  createdAt: GqlTime;
-  updatedAt: GqlTime;
-  deletedAt?: GqlTime;
-  userId: GqlID;
-  user: GqlUser;
-  enableAutoSkip: GqlBoolean;
-  enableAutoPlay: GqlBoolean;
-  minimizeToolbarWhenEditing: GqlBoolean;
-  hideTimelineWhenMinimized: GqlBoolean;
-  skipBranding: GqlBoolean;
-  skipIntros: GqlBoolean;
-  skipNewIntros: GqlBoolean;
-  skipMixedIntros: GqlBoolean;
-  skipRecaps: GqlBoolean;
-  skipFiller: GqlBoolean;
-  skipCanon: GqlBoolean;
-  skipTransitions: GqlBoolean;
-  skipCredits: GqlBoolean;
-  skipNewCredits: GqlBoolean;
-  skipMixedCredits: GqlBoolean;
-  skipPreview: GqlBoolean;
-  skipTitleCard: GqlBoolean;
-}
-
-export interface GqlThirdPartyShow {
-  name: GqlString;
-  createdAt?: GqlTime;
-  updatedAt?: GqlTime;
-}
-
-export interface GqlInputShow {
-  name: GqlString;
-  originalName?: GqlString;
-  website?: GqlString;
-  image?: GqlString;
+  timestamp: GqlInputTimestamp;
 }
 
 export interface GqlTimestampType {
@@ -627,13 +380,6 @@ export type GqlString = string;
 
 export type GqlBoolean = boolean;
 
-export type GqlID = string;
-
-export interface GqlInputExistingTimestamp {
-  id: GqlID;
-  timestamp: GqlInputTimestamp;
-}
-
 export interface GqlUser {
   id: GqlID;
   createdAt: GqlTime;
@@ -647,14 +393,6 @@ export interface GqlUpdatedTimestamps {
   created: Array<GqlTimestamp>;
   updated: Array<GqlTimestamp>;
   deleted: Array<GqlTimestamp>;
-}
-
-export type GqlInt = number;
-
-export enum GqlEpisodeSource {
-  UNKNOWN = 'UNKNOWN',
-  VRV = 'VRV',
-  FUNIMATION = 'FUNIMATION',
 }
 
 export interface GqlEpisode {
@@ -699,6 +437,268 @@ export interface GqlInputPreferences {
   skipPreview?: GqlBoolean;
   skipTitleCard?: GqlBoolean;
 }
+
+export type GqlInt = number;
+
+export enum GqlEpisodeSource {
+  UNKNOWN = 'UNKNOWN',
+  VRV = 'VRV',
+  FUNIMATION = 'FUNIMATION',
+}
+
+export interface GqlTemplate {
+  id: GqlID;
+  createdAt: GqlTime;
+  createdByUserId: GqlID;
+  createdBy: GqlUser;
+  updatedAt: GqlTime;
+  updatedByUserId: GqlID;
+  updatedBy: GqlUser;
+  deletedAt?: GqlTime;
+  deletedByUserId?: GqlID;
+  deletedBy?: GqlUser;
+  showId: GqlID;
+  show: GqlShow;
+  type: GqlTemplateType;
+  seasons?: Array<GqlString>;
+  sourceEpisodeId: GqlID;
+  sourceEpisode: GqlEpisode;
+  timestamps: Array<GqlTimestamp>;
+  timestampIds: Array<GqlID>;
+}
+
+export interface GqlLoginArgs {
+  usernameEmail: GqlString;
+  passwordHash: GqlString;
+}
+
+export interface GqlLoginRefreshArgs {
+  refreshToken: GqlString;
+}
+
+export interface GqlFindUserArgs {
+  userId: GqlID;
+}
+
+export interface GqlFindUserByUsernameArgs {
+  username: GqlString;
+}
+
+export interface GqlFindShowArgs {
+  showId: GqlID;
+}
+
+export interface GqlSearchShowsArgs {
+  search?: GqlString;
+  offset?: GqlInt;
+  limit?: GqlInt;
+  sort?: GqlString;
+}
+
+export interface GqlFindShowAdminArgs {
+  showAdminId: GqlID;
+}
+
+export interface GqlFindShowAdminsByShowIdArgs {
+  showId: GqlID;
+}
+
+export interface GqlFindShowAdminsByUserIdArgs {
+  userId: GqlID;
+}
+
+export interface GqlRecentlyAddedEpisodesArgs {
+  limit?: GqlInt;
+  offset?: GqlInt;
+}
+
+export interface GqlFindEpisodeArgs {
+  episodeId: GqlID;
+}
+
+export interface GqlFindEpisodesByShowIdArgs {
+  showId: GqlID;
+}
+
+export interface GqlSearchEpisodesArgs {
+  search?: GqlString;
+  showId?: GqlID;
+  offset?: GqlInt;
+  limit?: GqlInt;
+  sort?: GqlString;
+}
+
+export interface GqlFindEpisodeByNameArgs {
+  name: GqlString;
+}
+
+export interface GqlFindEpisodeUrlArgs {
+  episodeUrl: GqlString;
+}
+
+export interface GqlFindEpisodeUrlsByEpisodeIdArgs {
+  episodeId: GqlID;
+}
+
+export interface GqlFindTimestampArgs {
+  timestampId: GqlID;
+}
+
+export interface GqlFindTimestampsByEpisodeIdArgs {
+  episodeId: GqlID;
+}
+
+export interface GqlFindTimestampTypeArgs {
+  timestampTypeId: GqlID;
+}
+
+export interface GqlFindTemplateArgs {
+  templateId: GqlID;
+}
+
+export interface GqlFindTemplatesByShowIdArgs {
+  showId: GqlID;
+}
+
+export interface GqlFindTemplateByDetailsArgs {
+  episodeId?: GqlID;
+  showName?: GqlString;
+  season?: GqlString;
+}
+
+export interface GqlQuery {
+  account(query: string): Promise<GqlAccount | null>;
+  login(query: string, args: GqlLoginArgs): Promise<GqlLoginData | null>;
+  loginRefresh(query: string, args: GqlLoginRefreshArgs): Promise<GqlLoginData | null>;
+  findUser(query: string, args: GqlFindUserArgs): Promise<GqlUser | null>;
+  findUserByUsername(query: string, args: GqlFindUserByUsernameArgs): Promise<GqlUser | null>;
+  findShow(query: string, args: GqlFindShowArgs): Promise<GqlShow | null>;
+  searchShows(query: string, args: GqlSearchShowsArgs): Promise<Array<GqlShow> | null>;
+  findShowAdmin(query: string, args: GqlFindShowAdminArgs): Promise<GqlShowAdmin | null>;
+  findShowAdminsByShowId(
+    query: string,
+    args: GqlFindShowAdminsByShowIdArgs,
+  ): Promise<Array<GqlShowAdmin> | null>;
+  findShowAdminsByUserId(
+    query: string,
+    args: GqlFindShowAdminsByUserIdArgs,
+  ): Promise<Array<GqlShowAdmin> | null>;
+  recentlyAddedEpisodes(
+    query: string,
+    args: GqlRecentlyAddedEpisodesArgs,
+  ): Promise<Array<GqlEpisode> | null>;
+  findEpisode(query: string, args: GqlFindEpisodeArgs): Promise<GqlEpisode | null>;
+  findEpisodesByShowId(
+    query: string,
+    args: GqlFindEpisodesByShowIdArgs,
+  ): Promise<Array<GqlEpisode> | null>;
+  searchEpisodes(query: string, args: GqlSearchEpisodesArgs): Promise<Array<GqlEpisode> | null>;
+  findEpisodeByName(
+    query: string,
+    args: GqlFindEpisodeByNameArgs,
+  ): Promise<Array<GqlThirdPartyEpisode | null> | null>;
+  findEpisodeUrl(query: string, args: GqlFindEpisodeUrlArgs): Promise<GqlEpisodeUrl | null>;
+  findEpisodeUrlsByEpisodeId(
+    query: string,
+    args: GqlFindEpisodeUrlsByEpisodeIdArgs,
+  ): Promise<Array<GqlEpisodeUrl> | null>;
+  findTimestamp(query: string, args: GqlFindTimestampArgs): Promise<GqlTimestamp | null>;
+  findTimestampsByEpisodeId(
+    query: string,
+    args: GqlFindTimestampsByEpisodeIdArgs,
+  ): Promise<Array<GqlTimestamp> | null>;
+  findTimestampType(
+    query: string,
+    args: GqlFindTimestampTypeArgs,
+  ): Promise<GqlTimestampType | null>;
+  allTimestampTypes(query: string): Promise<Array<GqlTimestampType> | null>;
+  findTemplate(query: string, args: GqlFindTemplateArgs): Promise<GqlTemplate | null>;
+  findTemplatesByShowId(
+    query: string,
+    args: GqlFindTemplatesByShowIdArgs,
+  ): Promise<Array<GqlTemplate>>;
+  findTemplateByDetails(
+    query: string,
+    args: GqlFindTemplateByDetailsArgs,
+  ): Promise<GqlTemplate | null>;
+}
+
+export enum GqlRole {
+  DEV = 'DEV',
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+}
+
+export enum GqlTemplateType {
+  SHOW = 'SHOW',
+  SEASONS = 'SEASONS',
+}
+
+export interface GqlAccount {
+  id: GqlID;
+  createdAt: GqlTime;
+  deletedAt?: GqlTime;
+  username: GqlString;
+  email: GqlString;
+  profileUrl: GqlString;
+  adminOfShows: Array<GqlShowAdmin>;
+  emailVerified: GqlBoolean;
+  role: GqlRole;
+  preferences: GqlPreferences;
+}
+
+export interface GqlShow {
+  id: GqlID;
+  createdAt: GqlTime;
+  createdByUserId: GqlID;
+  createdBy: GqlUser;
+  updatedAt: GqlTime;
+  updatedByUserId: GqlID;
+  updatedBy: GqlUser;
+  deletedAt?: GqlTime;
+  deletedByUserId?: GqlID;
+  deletedBy?: GqlUser;
+  name: GqlString;
+  originalName?: GqlString;
+  website?: GqlString;
+  image?: GqlString;
+  admins: Array<GqlShowAdmin>;
+  episodes: Array<GqlEpisode>;
+  templates: Array<GqlTemplate>;
+}
+
+export interface GqlThirdPartyTimestamp {
+  id?: GqlID;
+  at: GqlFloat;
+  typeId: GqlID;
+  type: GqlTimestampType;
+}
+
+export interface GqlInputTemplate {
+  showId: GqlID;
+  type: GqlTemplateType;
+  seasons?: Array<GqlString>;
+  sourceEpisodeId: GqlID;
+}
+
+export interface GqlTemplateTimestamp {
+  templateId: GqlID;
+  template: GqlTemplate;
+  timestampId: GqlID;
+  timestamp: GqlTimestamp;
+}
+
+export interface GqlInputTimestampOn {
+  episodeId: GqlID;
+  timestamp: GqlInputTimestamp;
+}
+
+export interface GqlInputTemplateTimestamp {
+  templateId: GqlID;
+  timestampId: GqlID;
+}
+
+export type GqlTime = string;
 
 export default function createAnimeSkipClient(baseUrl: string, clientId: string) {
   const axios = Axios.create({
