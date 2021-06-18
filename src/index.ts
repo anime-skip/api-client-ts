@@ -28,17 +28,224 @@ export class GqlError {
   }
 }
 
-export interface GqlThirdPartyEpisode {
-  id?: GqlID;
+export interface GqlTemplate {
+  id: GqlID;
+  createdAt: GqlTime;
+  createdByUserId: GqlID;
+  createdBy: GqlUser;
+  updatedAt: GqlTime;
+  updatedByUserId: GqlID;
+  updatedBy: GqlUser;
+  deletedAt?: GqlTime;
+  deletedByUserId?: GqlID;
+  deletedBy?: GqlUser;
+  showId: GqlID;
+  show: GqlShow;
+  type: GqlTemplateType;
+  seasons?: Array<GqlString>;
+  sourceEpisodeId: GqlID;
+  sourceEpisode: GqlEpisode;
+  timestamps: Array<GqlTimestamp>;
+  timestampIds: Array<GqlID>;
+}
+
+export enum GqlRole {
+  DEV = 'DEV',
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+}
+
+export enum GqlTemplateType {
+  SHOW = 'SHOW',
+  SEASONS = 'SEASONS',
+}
+
+export interface GqlLoginArgs {
+  usernameEmail: GqlString;
+  passwordHash: GqlString;
+}
+
+export interface GqlLoginRefreshArgs {
+  refreshToken: GqlString;
+}
+
+export interface GqlFindUserArgs {
+  userId: GqlID;
+}
+
+export interface GqlFindUserByUsernameArgs {
+  username: GqlString;
+}
+
+export interface GqlFindShowArgs {
+  showId: GqlID;
+}
+
+export interface GqlSearchShowsArgs {
+  search?: GqlString;
+  offset?: GqlInt;
+  limit?: GqlInt;
+  sort?: GqlString;
+}
+
+export interface GqlFindShowAdminArgs {
+  showAdminId: GqlID;
+}
+
+export interface GqlFindShowAdminsByShowIdArgs {
+  showId: GqlID;
+}
+
+export interface GqlFindShowAdminsByUserIdArgs {
+  userId: GqlID;
+}
+
+export interface GqlRecentlyAddedEpisodesArgs {
+  limit?: GqlInt;
+  offset?: GqlInt;
+}
+
+export interface GqlFindEpisodeArgs {
+  episodeId: GqlID;
+}
+
+export interface GqlFindEpisodesByShowIdArgs {
+  showId: GqlID;
+}
+
+export interface GqlSearchEpisodesArgs {
+  search?: GqlString;
+  showId?: GqlID;
+  offset?: GqlInt;
+  limit?: GqlInt;
+  sort?: GqlString;
+}
+
+export interface GqlFindEpisodeByNameArgs {
+  name: GqlString;
+}
+
+export interface GqlFindEpisodeUrlArgs {
+  episodeUrl: GqlString;
+}
+
+export interface GqlFindEpisodeUrlsByEpisodeIdArgs {
+  episodeId: GqlID;
+}
+
+export interface GqlFindTimestampArgs {
+  timestampId: GqlID;
+}
+
+export interface GqlFindTimestampsByEpisodeIdArgs {
+  episodeId: GqlID;
+}
+
+export interface GqlFindTimestampTypeArgs {
+  timestampTypeId: GqlID;
+}
+
+export interface GqlFindTemplateArgs {
+  templateId: GqlID;
+}
+
+export interface GqlFindTemplatesByShowIdArgs {
+  showId: GqlID;
+}
+
+export interface GqlFindTemplateByDetailsArgs {
+  episodeId?: GqlID;
+  showName?: GqlString;
   season?: GqlString;
-  number?: GqlString;
-  absoluteNumber?: GqlString;
-  baseDuration?: GqlFloat;
-  name?: GqlString;
-  source?: GqlTimestampSource;
-  timestamps: Array<GqlThirdPartyTimestamp>;
-  showId: GqlString;
-  show: GqlThirdPartyShow;
+}
+
+export interface GqlQuery {
+  account(query: string): Promise<GqlAccount | null>;
+  login(query: string, args: GqlLoginArgs): Promise<GqlLoginData | null>;
+  loginRefresh(query: string, args: GqlLoginRefreshArgs): Promise<GqlLoginData | null>;
+  findUser(query: string, args: GqlFindUserArgs): Promise<GqlUser | null>;
+  findUserByUsername(query: string, args: GqlFindUserByUsernameArgs): Promise<GqlUser | null>;
+  findShow(query: string, args: GqlFindShowArgs): Promise<GqlShow | null>;
+  searchShows(query: string, args: GqlSearchShowsArgs): Promise<Array<GqlShow> | null>;
+  findShowAdmin(query: string, args: GqlFindShowAdminArgs): Promise<GqlShowAdmin | null>;
+  findShowAdminsByShowId(
+    query: string,
+    args: GqlFindShowAdminsByShowIdArgs,
+  ): Promise<Array<GqlShowAdmin> | null>;
+  findShowAdminsByUserId(
+    query: string,
+    args: GqlFindShowAdminsByUserIdArgs,
+  ): Promise<Array<GqlShowAdmin> | null>;
+  recentlyAddedEpisodes(
+    query: string,
+    args: GqlRecentlyAddedEpisodesArgs,
+  ): Promise<Array<GqlEpisode> | null>;
+  findEpisode(query: string, args: GqlFindEpisodeArgs): Promise<GqlEpisode | null>;
+  findEpisodesByShowId(
+    query: string,
+    args: GqlFindEpisodesByShowIdArgs,
+  ): Promise<Array<GqlEpisode> | null>;
+  searchEpisodes(query: string, args: GqlSearchEpisodesArgs): Promise<Array<GqlEpisode> | null>;
+  findEpisodeByName(
+    query: string,
+    args: GqlFindEpisodeByNameArgs,
+  ): Promise<Array<GqlThirdPartyEpisode | null> | null>;
+  findEpisodeUrl(query: string, args: GqlFindEpisodeUrlArgs): Promise<GqlEpisodeUrl | null>;
+  findEpisodeUrlsByEpisodeId(
+    query: string,
+    args: GqlFindEpisodeUrlsByEpisodeIdArgs,
+  ): Promise<Array<GqlEpisodeUrl> | null>;
+  findTimestamp(query: string, args: GqlFindTimestampArgs): Promise<GqlTimestamp | null>;
+  findTimestampsByEpisodeId(
+    query: string,
+    args: GqlFindTimestampsByEpisodeIdArgs,
+  ): Promise<Array<GqlTimestamp> | null>;
+  findTimestampType(
+    query: string,
+    args: GqlFindTimestampTypeArgs,
+  ): Promise<GqlTimestampType | null>;
+  allTimestampTypes(query: string): Promise<Array<GqlTimestampType> | null>;
+  findTemplate(query: string, args: GqlFindTemplateArgs): Promise<GqlTemplate | null>;
+  findTemplatesByShowId(
+    query: string,
+    args: GqlFindTemplatesByShowIdArgs,
+  ): Promise<Array<GqlTemplate>>;
+  findTemplateByDetails(
+    query: string,
+    args: GqlFindTemplateByDetailsArgs,
+  ): Promise<GqlTemplate | null>;
+}
+
+export interface GqlInputTemplate {
+  showId: GqlID;
+  type: GqlTemplateType;
+  seasons?: Array<GqlString>;
+  sourceEpisodeId: GqlID;
+}
+
+export interface GqlTemplateTimestamp {
+  templateId: GqlID;
+  template: GqlTemplate;
+  timestampId: GqlID;
+  timestamp: GqlTimestamp;
+}
+
+export interface GqlInputTimestampOn {
+  episodeId: GqlID;
+  timestamp: GqlInputTimestamp;
+}
+
+export interface GqlAccount {
+  id: GqlID;
+  createdAt: GqlTime;
+  deletedAt?: GqlTime;
+  username: GqlString;
+  email: GqlString;
+  profileUrl: GqlString;
+  adminOfShows: Array<GqlShowAdmin>;
+  emailVerified: GqlBoolean;
+  role: GqlRole;
+  preferences: GqlPreferences;
 }
 
 export interface GqlShow {
@@ -61,13 +268,6 @@ export interface GqlShow {
   templates: Array<GqlTemplate>;
 }
 
-export interface GqlInputShow {
-  name: GqlString;
-  originalName?: GqlString;
-  website?: GqlString;
-  image?: GqlString;
-}
-
 export interface GqlThirdPartyTimestamp {
   id?: GqlID;
   at: GqlFloat;
@@ -75,39 +275,28 @@ export interface GqlThirdPartyTimestamp {
   type: GqlTimestampType;
 }
 
-export type GqlFloat = number;
-
-export type GqlString = string;
-
-export interface GqlInputExistingTimestamp {
-  id: GqlID;
-  timestamp: GqlInputTimestamp;
+export interface GqlInputTemplateTimestamp {
+  templateId: GqlID;
+  timestampId: GqlID;
 }
 
-export interface GqlEpisode {
-  id: GqlID;
-  createdAt: GqlTime;
-  createdByUserId: GqlID;
-  createdBy: GqlUser;
-  updatedAt: GqlTime;
-  updatedByUserId: GqlID;
-  updatedBy: GqlUser;
-  deletedAt?: GqlTime;
-  deletedByUserId?: GqlID;
-  deletedBy?: GqlUser;
+export type GqlTime = string;
+
+export interface GqlInputEpisode {
   season?: GqlString;
   number?: GqlString;
   absoluteNumber?: GqlString;
-  baseDuration?: GqlFloat;
   name?: GqlString;
-  show: GqlShow;
-  showId: GqlID;
-  timestamps: Array<GqlTimestamp>;
-  urls: Array<GqlEpisodeUrl>;
-  template?: GqlTemplate;
+  baseDuration?: GqlFloat;
 }
 
-export interface GqlTemplate {
+export interface GqlInputEpisodeUrl {
+  url: GqlString;
+  duration?: GqlFloat;
+  timestampsOffset?: GqlFloat;
+}
+
+export interface GqlShowAdmin {
   id: GqlID;
   createdAt: GqlTime;
   createdByUserId: GqlID;
@@ -120,18 +309,34 @@ export interface GqlTemplate {
   deletedBy?: GqlUser;
   showId: GqlID;
   show: GqlShow;
-  type: GqlTemplateType;
-  seasons?: Array<GqlString>;
-  sourceEpisodeId: GqlID;
-  sourceEpisode: GqlEpisode;
-  timestamps: Array<GqlTimestamp>;
-  timestampIds: Array<GqlID>;
+  userId: GqlID;
+  user: GqlUser;
 }
 
-export interface GqlLoginData {
-  authToken: GqlString;
-  refreshToken: GqlString;
-  account: GqlAccount;
+export interface GqlInputTimestamp {
+  at: GqlFloat;
+  typeId: GqlID;
+  source?: GqlTimestampSource;
+}
+
+export interface GqlEpisodeUrl {
+  url: GqlString;
+  createdAt: GqlTime;
+  createdByUserId: GqlID;
+  createdBy: GqlUser;
+  updatedAt: GqlTime;
+  updatedByUserId: GqlID;
+  updatedBy: GqlUser;
+  duration?: GqlFloat;
+  timestampsOffset?: GqlFloat;
+  episodeId: GqlID;
+  episode: GqlEpisode;
+  source: GqlEpisodeSource;
+}
+
+export interface GqlInputShowAdmin {
+  showId: GqlID;
+  userId: GqlID;
 }
 
 export interface GqlTimestamp {
@@ -153,76 +358,10 @@ export interface GqlTimestamp {
   episode: GqlEpisode;
 }
 
-export type GqlTime = string;
-
-export enum GqlEpisodeSource {
-  UNKNOWN = 'UNKNOWN',
-  VRV = 'VRV',
-  FUNIMATION = 'FUNIMATION',
-}
-
-export interface GqlThirdPartyShow {
-  name: GqlString;
-  createdAt?: GqlTime;
-  updatedAt?: GqlTime;
-}
-
-export interface GqlInputTimestamp {
-  at: GqlFloat;
-  typeId: GqlID;
-  source?: GqlTimestampSource;
-}
-
-export interface GqlInputShowAdmin {
-  showId: GqlID;
-  userId: GqlID;
-}
-
-export interface GqlUser {
-  id: GqlID;
-  createdAt: GqlTime;
-  deletedAt?: GqlTime;
-  username: GqlString;
-  profileUrl: GqlString;
-  adminOfShows: Array<GqlShowAdmin>;
-}
-
-export interface GqlInputTimestampOn {
-  episodeId: GqlID;
-  timestamp: GqlInputTimestamp;
-}
-
-export enum GqlTemplateType {
-  SHOW = 'SHOW',
-  SEASONS = 'SEASONS',
-}
-
-export interface GqlInputEpisodeUrl {
-  url: GqlString;
-  duration?: GqlFloat;
-  timestampsOffset?: GqlFloat;
-}
-
-export interface GqlEpisodeUrl {
-  url: GqlString;
-  createdAt: GqlTime;
-  createdByUserId: GqlID;
-  createdBy: GqlUser;
-  updatedAt: GqlTime;
-  updatedByUserId: GqlID;
-  updatedBy: GqlUser;
-  duration?: GqlFloat;
-  timestampsOffset?: GqlFloat;
-  episodeId: GqlID;
-  episode: GqlEpisode;
-  source: GqlEpisodeSource;
-}
-
-export interface GqlTemplateTimestamp {
-  templateId: GqlID;
-  template: GqlTemplate;
-  timestampId: GqlID;
-  timestamp: GqlTimestamp;
+export interface GqlLoginData {
+  authToken: GqlString;
+  refreshToken: GqlString;
+  account: GqlAccount;
 }
 
 export interface GqlCreateAccountArgs {
@@ -405,37 +544,23 @@ export interface GqlMutation {
   ): Promise<GqlTemplateTimestamp | null>;
 }
 
-export interface GqlUpdatedTimestamps {
-  created: Array<GqlTimestamp>;
-  updated: Array<GqlTimestamp>;
-  deleted: Array<GqlTimestamp>;
-}
-
-export enum GqlRole {
-  DEV = 'DEV',
-  ADMIN = 'ADMIN',
-  USER = 'USER',
-}
-
 export enum GqlTimestampSource {
   ANIME_SKIP = 'ANIME_SKIP',
   BETTER_VRV = 'BETTER_VRV',
 }
 
-export interface GqlAccount {
-  id: GqlID;
-  createdAt: GqlTime;
-  deletedAt?: GqlTime;
-  username: GqlString;
-  email: GqlString;
-  profileUrl: GqlString;
-  adminOfShows: Array<GqlShowAdmin>;
-  emailVerified: GqlBoolean;
-  role: GqlRole;
-  preferences: GqlPreferences;
+export interface GqlThirdPartyEpisode {
+  id?: GqlID;
+  season?: GqlString;
+  number?: GqlString;
+  absoluteNumber?: GqlString;
+  baseDuration?: GqlFloat;
+  name?: GqlString;
+  source?: GqlTimestampSource;
+  timestamps: Array<GqlThirdPartyTimestamp>;
+  showId: GqlString;
+  show: GqlThirdPartyShow;
 }
-
-export type GqlBoolean = boolean;
 
 export interface GqlPreferences {
   id: GqlID;
@@ -463,32 +588,18 @@ export interface GqlPreferences {
   skipTitleCard: GqlBoolean;
 }
 
-export interface GqlInputPreferences {
-  enableAutoSkip?: GqlBoolean;
-  enableAutoPlay?: GqlBoolean;
-  minimizeToolbarWhenEditing?: GqlBoolean;
-  hideTimelineWhenMinimized?: GqlBoolean;
-  skipBranding?: GqlBoolean;
-  skipIntros?: GqlBoolean;
-  skipNewIntros?: GqlBoolean;
-  skipMixedIntros?: GqlBoolean;
-  skipRecaps?: GqlBoolean;
-  skipFiller?: GqlBoolean;
-  skipCanon?: GqlBoolean;
-  skipTransitions?: GqlBoolean;
-  skipCredits?: GqlBoolean;
-  skipNewCredits?: GqlBoolean;
-  skipMixedCredits?: GqlBoolean;
-  skipPreview?: GqlBoolean;
-  skipTitleCard?: GqlBoolean;
+export interface GqlThirdPartyShow {
+  name: GqlString;
+  createdAt?: GqlTime;
+  updatedAt?: GqlTime;
 }
 
-export interface GqlInputTemplateTimestamp {
-  templateId: GqlID;
-  timestampId: GqlID;
+export interface GqlInputShow {
+  name: GqlString;
+  originalName?: GqlString;
+  website?: GqlString;
+  image?: GqlString;
 }
-
-export type GqlID = string;
 
 export interface GqlTimestampType {
   id: GqlID;
@@ -510,180 +621,43 @@ export interface GqlInputTimestampType {
   description: GqlString;
 }
 
-export interface GqlLoginArgs {
-  usernameEmail: GqlString;
-  passwordHash: GqlString;
+export type GqlFloat = number;
+
+export type GqlString = string;
+
+export type GqlBoolean = boolean;
+
+export type GqlID = string;
+
+export interface GqlInputExistingTimestamp {
+  id: GqlID;
+  timestamp: GqlInputTimestamp;
 }
 
-export interface GqlLoginRefreshArgs {
-  refreshToken: GqlString;
-}
-
-export interface GqlFindUserArgs {
-  userId: GqlID;
-}
-
-export interface GqlFindUserByUsernameArgs {
+export interface GqlUser {
+  id: GqlID;
+  createdAt: GqlTime;
+  deletedAt?: GqlTime;
   username: GqlString;
+  profileUrl: GqlString;
+  adminOfShows: Array<GqlShowAdmin>;
 }
 
-export interface GqlFindShowArgs {
-  showId: GqlID;
-}
-
-export interface GqlSearchShowsArgs {
-  search?: GqlString;
-  offset?: GqlInt;
-  limit?: GqlInt;
-  sort?: GqlString;
-}
-
-export interface GqlFindShowAdminArgs {
-  showAdminId: GqlID;
-}
-
-export interface GqlFindShowAdminsByShowIdArgs {
-  showId: GqlID;
-}
-
-export interface GqlFindShowAdminsByUserIdArgs {
-  userId: GqlID;
-}
-
-export interface GqlRecentlyAddedEpisodesArgs {
-  limit?: GqlInt;
-  offset?: GqlInt;
-}
-
-export interface GqlFindEpisodeArgs {
-  episodeId: GqlID;
-}
-
-export interface GqlFindEpisodesByShowIdArgs {
-  showId: GqlID;
-}
-
-export interface GqlSearchEpisodesArgs {
-  search?: GqlString;
-  showId?: GqlID;
-  offset?: GqlInt;
-  limit?: GqlInt;
-  sort?: GqlString;
-}
-
-export interface GqlFindEpisodeByNameArgs {
-  name: GqlString;
-}
-
-export interface GqlFindEpisodeUrlArgs {
-  episodeUrl: GqlString;
-}
-
-export interface GqlFindEpisodeUrlsByEpisodeIdArgs {
-  episodeId: GqlID;
-}
-
-export interface GqlFindTimestampArgs {
-  timestampId: GqlID;
-}
-
-export interface GqlFindTimestampsByEpisodeIdArgs {
-  episodeId: GqlID;
-}
-
-export interface GqlFindTimestampTypeArgs {
-  timestampTypeId: GqlID;
-}
-
-export interface GqlFindTemplateArgs {
-  templateId: GqlID;
-}
-
-export interface GqlFindTemplatesByShowIdArgs {
-  showId: GqlID;
-}
-
-export interface GqlFindTemplateByDetailsArgs {
-  episodeId?: GqlID;
-  showName?: GqlString;
-  season?: GqlString;
-}
-
-export interface GqlQuery {
-  account(query: string): Promise<GqlAccount | null>;
-  login(query: string, args: GqlLoginArgs): Promise<GqlLoginData | null>;
-  loginRefresh(query: string, args: GqlLoginRefreshArgs): Promise<GqlLoginData | null>;
-  findUser(query: string, args: GqlFindUserArgs): Promise<GqlUser | null>;
-  findUserByUsername(query: string, args: GqlFindUserByUsernameArgs): Promise<GqlUser | null>;
-  findShow(query: string, args: GqlFindShowArgs): Promise<GqlShow | null>;
-  searchShows(query: string, args: GqlSearchShowsArgs): Promise<Array<GqlShow> | null>;
-  findShowAdmin(query: string, args: GqlFindShowAdminArgs): Promise<GqlShowAdmin | null>;
-  findShowAdminsByShowId(
-    query: string,
-    args: GqlFindShowAdminsByShowIdArgs,
-  ): Promise<Array<GqlShowAdmin> | null>;
-  findShowAdminsByUserId(
-    query: string,
-    args: GqlFindShowAdminsByUserIdArgs,
-  ): Promise<Array<GqlShowAdmin> | null>;
-  recentlyAddedEpisodes(
-    query: string,
-    args: GqlRecentlyAddedEpisodesArgs,
-  ): Promise<Array<GqlEpisode> | null>;
-  findEpisode(query: string, args: GqlFindEpisodeArgs): Promise<GqlEpisode | null>;
-  findEpisodesByShowId(
-    query: string,
-    args: GqlFindEpisodesByShowIdArgs,
-  ): Promise<Array<GqlEpisode> | null>;
-  searchEpisodes(query: string, args: GqlSearchEpisodesArgs): Promise<Array<GqlEpisode> | null>;
-  findEpisodeByName(
-    query: string,
-    args: GqlFindEpisodeByNameArgs,
-  ): Promise<Array<GqlThirdPartyEpisode | null> | null>;
-  findEpisodeUrl(query: string, args: GqlFindEpisodeUrlArgs): Promise<GqlEpisodeUrl | null>;
-  findEpisodeUrlsByEpisodeId(
-    query: string,
-    args: GqlFindEpisodeUrlsByEpisodeIdArgs,
-  ): Promise<Array<GqlEpisodeUrl> | null>;
-  findTimestamp(query: string, args: GqlFindTimestampArgs): Promise<GqlTimestamp | null>;
-  findTimestampsByEpisodeId(
-    query: string,
-    args: GqlFindTimestampsByEpisodeIdArgs,
-  ): Promise<Array<GqlTimestamp> | null>;
-  findTimestampType(
-    query: string,
-    args: GqlFindTimestampTypeArgs,
-  ): Promise<GqlTimestampType | null>;
-  allTimestampTypes(query: string): Promise<Array<GqlTimestampType> | null>;
-  findTemplate(query: string, args: GqlFindTemplateArgs): Promise<GqlTemplate | null>;
-  findTemplatesByShowId(
-    query: string,
-    args: GqlFindTemplatesByShowIdArgs,
-  ): Promise<Array<GqlTemplate>>;
-  findTemplateByDetails(
-    query: string,
-    args: GqlFindTemplateByDetailsArgs,
-  ): Promise<GqlTemplate | null>;
-}
-
-export interface GqlInputTemplate {
-  showId: GqlID;
-  type: GqlTemplateType;
-  seasons?: Array<GqlString>;
-  sourceEpisodeId: GqlID;
+export interface GqlUpdatedTimestamps {
+  created: Array<GqlTimestamp>;
+  updated: Array<GqlTimestamp>;
+  deleted: Array<GqlTimestamp>;
 }
 
 export type GqlInt = number;
 
-export interface GqlInputEpisode {
-  season?: GqlString;
-  number?: GqlString;
-  absoluteNumber?: GqlString;
-  name?: GqlString;
-  baseDuration?: GqlFloat;
+export enum GqlEpisodeSource {
+  UNKNOWN = 'UNKNOWN',
+  VRV = 'VRV',
+  FUNIMATION = 'FUNIMATION',
 }
 
-export interface GqlShowAdmin {
+export interface GqlEpisode {
   id: GqlID;
   createdAt: GqlTime;
   createdByUserId: GqlID;
@@ -694,13 +668,39 @@ export interface GqlShowAdmin {
   deletedAt?: GqlTime;
   deletedByUserId?: GqlID;
   deletedBy?: GqlUser;
-  showId: GqlID;
+  season?: GqlString;
+  number?: GqlString;
+  absoluteNumber?: GqlString;
+  baseDuration?: GqlFloat;
+  name?: GqlString;
   show: GqlShow;
-  userId: GqlID;
-  user: GqlUser;
+  showId: GqlID;
+  timestamps: Array<GqlTimestamp>;
+  urls: Array<GqlEpisodeUrl>;
+  template?: GqlTemplate;
 }
 
-export default function createAnimeSkipClient(baseUrl: string) {
+export interface GqlInputPreferences {
+  enableAutoSkip?: GqlBoolean;
+  enableAutoPlay?: GqlBoolean;
+  minimizeToolbarWhenEditing?: GqlBoolean;
+  hideTimelineWhenMinimized?: GqlBoolean;
+  skipBranding?: GqlBoolean;
+  skipIntros?: GqlBoolean;
+  skipNewIntros?: GqlBoolean;
+  skipMixedIntros?: GqlBoolean;
+  skipRecaps?: GqlBoolean;
+  skipFiller?: GqlBoolean;
+  skipCanon?: GqlBoolean;
+  skipTransitions?: GqlBoolean;
+  skipCredits?: GqlBoolean;
+  skipNewCredits?: GqlBoolean;
+  skipMixedCredits?: GqlBoolean;
+  skipPreview?: GqlBoolean;
+  skipTitleCard?: GqlBoolean;
+}
+
+export default function createAnimeSkipClient(baseUrl: string, clientId: string) {
   const axios = Axios.create({
     baseURL: baseUrl,
   });
@@ -709,14 +709,22 @@ export default function createAnimeSkipClient(baseUrl: string) {
   const queries: GqlQuery = {
     async account<T extends Partial<GqlAccount | null>>(graphql: string): Promise<T> {
       try {
-        const response: GqlResponse<'account', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'account', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query Account {
   account ${graphql}
 }
           `,
-          operationName: 'Account',
-        });
+            operationName: 'Account',
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -733,8 +741,10 @@ query Account {
       args: GqlLoginArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'login', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'login', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query Login(
   $usernameEmail: String!, $passwordHash: String!
 ) {
@@ -743,12 +753,18 @@ query Login(
   ) ${graphql}
 }
           `,
-          operationName: 'Login',
-          variables: {
-            usernameEmail: args.usernameEmail,
-            passwordHash: args.passwordHash,
+            operationName: 'Login',
+            variables: {
+              usernameEmail: args.usernameEmail,
+              passwordHash: args.passwordHash,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -765,8 +781,10 @@ query Login(
       args: GqlLoginRefreshArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'loginRefresh', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'loginRefresh', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query LoginRefresh(
   $refreshToken: String!
 ) {
@@ -775,11 +793,17 @@ query LoginRefresh(
   ) ${graphql}
 }
           `,
-          operationName: 'LoginRefresh',
-          variables: {
-            refreshToken: args.refreshToken,
+            operationName: 'LoginRefresh',
+            variables: {
+              refreshToken: args.refreshToken,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -796,8 +820,10 @@ query LoginRefresh(
       args: GqlFindUserArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findUser', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'findUser', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query FindUser(
   $userId: ID!
 ) {
@@ -806,11 +832,17 @@ query FindUser(
   ) ${graphql}
 }
           `,
-          operationName: 'FindUser',
-          variables: {
-            userId: args.userId,
+            operationName: 'FindUser',
+            variables: {
+              userId: args.userId,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -827,8 +859,10 @@ query FindUser(
       args: GqlFindUserByUsernameArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findUserByUsername', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'findUserByUsername', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query FindUserByUsername(
   $username: String!
 ) {
@@ -837,11 +871,17 @@ query FindUserByUsername(
   ) ${graphql}
 }
           `,
-          operationName: 'FindUserByUsername',
-          variables: {
-            username: args.username,
+            operationName: 'FindUserByUsername',
+            variables: {
+              username: args.username,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -858,8 +898,10 @@ query FindUserByUsername(
       args: GqlFindShowArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findShow', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'findShow', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query FindShow(
   $showId: ID!
 ) {
@@ -868,11 +910,17 @@ query FindShow(
   ) ${graphql}
 }
           `,
-          operationName: 'FindShow',
-          variables: {
-            showId: args.showId,
+            operationName: 'FindShow',
+            variables: {
+              showId: args.showId,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -889,8 +937,10 @@ query FindShow(
       args: GqlSearchShowsArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'searchShows', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'searchShows', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query SearchShows(
   $search: String, $offset: Int, $limit: Int, $sort: String
 ) {
@@ -899,14 +949,20 @@ query SearchShows(
   ) ${graphql}
 }
           `,
-          operationName: 'SearchShows',
-          variables: {
-            search: args.search,
-            offset: args.offset,
-            limit: args.limit,
-            sort: args.sort,
+            operationName: 'SearchShows',
+            variables: {
+              search: args.search,
+              offset: args.offset,
+              limit: args.limit,
+              sort: args.sort,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -923,8 +979,10 @@ query SearchShows(
       args: GqlFindShowAdminArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findShowAdmin', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'findShowAdmin', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query FindShowAdmin(
   $showAdminId: ID!
 ) {
@@ -933,11 +991,17 @@ query FindShowAdmin(
   ) ${graphql}
 }
           `,
-          operationName: 'FindShowAdmin',
-          variables: {
-            showAdminId: args.showAdminId,
+            operationName: 'FindShowAdmin',
+            variables: {
+              showAdminId: args.showAdminId,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -954,8 +1018,10 @@ query FindShowAdmin(
       args: GqlFindShowAdminsByShowIdArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findShowAdminsByShowId', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'findShowAdminsByShowId', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query FindShowAdminsByShowId(
   $showId: ID!
 ) {
@@ -964,11 +1030,17 @@ query FindShowAdminsByShowId(
   ) ${graphql}
 }
           `,
-          operationName: 'FindShowAdminsByShowId',
-          variables: {
-            showId: args.showId,
+            operationName: 'FindShowAdminsByShowId',
+            variables: {
+              showId: args.showId,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -985,8 +1057,10 @@ query FindShowAdminsByShowId(
       args: GqlFindShowAdminsByUserIdArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findShowAdminsByUserId', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'findShowAdminsByUserId', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query FindShowAdminsByUserId(
   $userId: ID!
 ) {
@@ -995,11 +1069,17 @@ query FindShowAdminsByUserId(
   ) ${graphql}
 }
           `,
-          operationName: 'FindShowAdminsByUserId',
-          variables: {
-            userId: args.userId,
+            operationName: 'FindShowAdminsByUserId',
+            variables: {
+              userId: args.userId,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1016,8 +1096,10 @@ query FindShowAdminsByUserId(
       args: GqlRecentlyAddedEpisodesArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'recentlyAddedEpisodes', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'recentlyAddedEpisodes', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query RecentlyAddedEpisodes(
   $limit: Int, $offset: Int
 ) {
@@ -1026,12 +1108,18 @@ query RecentlyAddedEpisodes(
   ) ${graphql}
 }
           `,
-          operationName: 'RecentlyAddedEpisodes',
-          variables: {
-            limit: args.limit,
-            offset: args.offset,
+            operationName: 'RecentlyAddedEpisodes',
+            variables: {
+              limit: args.limit,
+              offset: args.offset,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1048,8 +1136,10 @@ query RecentlyAddedEpisodes(
       args: GqlFindEpisodeArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findEpisode', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'findEpisode', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query FindEpisode(
   $episodeId: ID!
 ) {
@@ -1058,11 +1148,17 @@ query FindEpisode(
   ) ${graphql}
 }
           `,
-          operationName: 'FindEpisode',
-          variables: {
-            episodeId: args.episodeId,
+            operationName: 'FindEpisode',
+            variables: {
+              episodeId: args.episodeId,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1079,8 +1175,10 @@ query FindEpisode(
       args: GqlFindEpisodesByShowIdArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findEpisodesByShowId', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'findEpisodesByShowId', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query FindEpisodesByShowId(
   $showId: ID!
 ) {
@@ -1089,11 +1187,17 @@ query FindEpisodesByShowId(
   ) ${graphql}
 }
           `,
-          operationName: 'FindEpisodesByShowId',
-          variables: {
-            showId: args.showId,
+            operationName: 'FindEpisodesByShowId',
+            variables: {
+              showId: args.showId,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1110,8 +1214,10 @@ query FindEpisodesByShowId(
       args: GqlSearchEpisodesArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'searchEpisodes', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'searchEpisodes', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query SearchEpisodes(
   $search: String, $showId: ID, $offset: Int, $limit: Int, $sort: String
 ) {
@@ -1120,15 +1226,21 @@ query SearchEpisodes(
   ) ${graphql}
 }
           `,
-          operationName: 'SearchEpisodes',
-          variables: {
-            search: args.search,
-            showId: args.showId,
-            offset: args.offset,
-            limit: args.limit,
-            sort: args.sort,
+            operationName: 'SearchEpisodes',
+            variables: {
+              search: args.search,
+              showId: args.showId,
+              offset: args.offset,
+              limit: args.limit,
+              sort: args.sort,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1145,8 +1257,10 @@ query SearchEpisodes(
       args: GqlFindEpisodeByNameArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findEpisodeByName', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'findEpisodeByName', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query FindEpisodeByName(
   $name: String!
 ) {
@@ -1155,11 +1269,17 @@ query FindEpisodeByName(
   ) ${graphql}
 }
           `,
-          operationName: 'FindEpisodeByName',
-          variables: {
-            name: args.name,
+            operationName: 'FindEpisodeByName',
+            variables: {
+              name: args.name,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1176,8 +1296,10 @@ query FindEpisodeByName(
       args: GqlFindEpisodeUrlArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findEpisodeUrl', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'findEpisodeUrl', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query FindEpisodeUrl(
   $episodeUrl: String!
 ) {
@@ -1186,11 +1308,17 @@ query FindEpisodeUrl(
   ) ${graphql}
 }
           `,
-          operationName: 'FindEpisodeUrl',
-          variables: {
-            episodeUrl: args.episodeUrl,
+            operationName: 'FindEpisodeUrl',
+            variables: {
+              episodeUrl: args.episodeUrl,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1224,6 +1352,11 @@ query FindEpisodeUrlsByEpisodeId(
               episodeId: args.episodeId,
             },
           },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
         );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
@@ -1241,8 +1374,10 @@ query FindEpisodeUrlsByEpisodeId(
       args: GqlFindTimestampArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findTimestamp', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'findTimestamp', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query FindTimestamp(
   $timestampId: ID!
 ) {
@@ -1251,11 +1386,17 @@ query FindTimestamp(
   ) ${graphql}
 }
           `,
-          operationName: 'FindTimestamp',
-          variables: {
-            timestampId: args.timestampId,
+            operationName: 'FindTimestamp',
+            variables: {
+              timestampId: args.timestampId,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1272,8 +1413,10 @@ query FindTimestamp(
       args: GqlFindTimestampsByEpisodeIdArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findTimestampsByEpisodeId', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'findTimestampsByEpisodeId', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query FindTimestampsByEpisodeId(
   $episodeId: ID!
 ) {
@@ -1282,11 +1425,17 @@ query FindTimestampsByEpisodeId(
   ) ${graphql}
 }
           `,
-          operationName: 'FindTimestampsByEpisodeId',
-          variables: {
-            episodeId: args.episodeId,
+            operationName: 'FindTimestampsByEpisodeId',
+            variables: {
+              episodeId: args.episodeId,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1303,8 +1452,10 @@ query FindTimestampsByEpisodeId(
       args: GqlFindTimestampTypeArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findTimestampType', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'findTimestampType', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query FindTimestampType(
   $timestampTypeId: ID!
 ) {
@@ -1313,11 +1464,17 @@ query FindTimestampType(
   ) ${graphql}
 }
           `,
-          operationName: 'FindTimestampType',
-          variables: {
-            timestampTypeId: args.timestampTypeId,
+            operationName: 'FindTimestampType',
+            variables: {
+              timestampTypeId: args.timestampTypeId,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1333,14 +1490,22 @@ query FindTimestampType(
       graphql: string,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'allTimestampTypes', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'allTimestampTypes', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query AllTimestampTypes {
   allTimestampTypes ${graphql}
 }
           `,
-          operationName: 'AllTimestampTypes',
-        });
+            operationName: 'AllTimestampTypes',
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1357,8 +1522,10 @@ query AllTimestampTypes {
       args: GqlFindTemplateArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findTemplate', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'findTemplate', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query FindTemplate(
   $templateId: ID!
 ) {
@@ -1367,11 +1534,17 @@ query FindTemplate(
   ) ${graphql}
 }
           `,
-          operationName: 'FindTemplate',
-          variables: {
-            templateId: args.templateId,
+            operationName: 'FindTemplate',
+            variables: {
+              templateId: args.templateId,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1388,8 +1561,10 @@ query FindTemplate(
       args: GqlFindTemplatesByShowIdArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findTemplatesByShowId', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'findTemplatesByShowId', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query FindTemplatesByShowId(
   $showId: ID!
 ) {
@@ -1398,11 +1573,17 @@ query FindTemplatesByShowId(
   ) ${graphql}
 }
           `,
-          operationName: 'FindTemplatesByShowId',
-          variables: {
-            showId: args.showId,
+            operationName: 'FindTemplatesByShowId',
+            variables: {
+              showId: args.showId,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1419,8 +1600,10 @@ query FindTemplatesByShowId(
       args: GqlFindTemplateByDetailsArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'findTemplateByDetails', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'findTemplateByDetails', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 query FindTemplateByDetails(
   $episodeId: ID, $showName: String, $season: String
 ) {
@@ -1429,13 +1612,19 @@ query FindTemplateByDetails(
   ) ${graphql}
 }
           `,
-          operationName: 'FindTemplateByDetails',
-          variables: {
-            episodeId: args.episodeId,
-            showName: args.showName,
-            season: args.season,
+            operationName: 'FindTemplateByDetails',
+            variables: {
+              episodeId: args.episodeId,
+              showName: args.showName,
+              season: args.season,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1456,8 +1645,10 @@ query FindTemplateByDetails(
       args: GqlCreateAccountArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'createAccount', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'createAccount', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation CreateAccount(
   $username: String!, $email: String!, $passwordHash: String!, $recaptchaResponse: String!
 ) {
@@ -1466,14 +1657,20 @@ mutation CreateAccount(
   ) ${graphql}
 }
           `,
-          operationName: 'CreateAccount',
-          variables: {
-            username: args.username,
-            email: args.email,
-            passwordHash: args.passwordHash,
-            recaptchaResponse: args.recaptchaResponse,
+            operationName: 'CreateAccount',
+            variables: {
+              username: args.username,
+              email: args.email,
+              passwordHash: args.passwordHash,
+              recaptchaResponse: args.recaptchaResponse,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1489,14 +1686,22 @@ mutation CreateAccount(
       graphql: string,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'resendVerificationEmail', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'resendVerificationEmail', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation ResendVerificationEmail {
   resendVerificationEmail ${graphql}
 }
           `,
-          operationName: 'ResendVerificationEmail',
-        });
+            operationName: 'ResendVerificationEmail',
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1513,8 +1718,10 @@ mutation ResendVerificationEmail {
       args: GqlVerifyEmailAddressArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'verifyEmailAddress', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'verifyEmailAddress', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation VerifyEmailAddress(
   $validationToken: String!
 ) {
@@ -1523,11 +1730,17 @@ mutation VerifyEmailAddress(
   ) ${graphql}
 }
           `,
-          operationName: 'VerifyEmailAddress',
-          variables: {
-            validationToken: args.validationToken,
+            operationName: 'VerifyEmailAddress',
+            variables: {
+              validationToken: args.validationToken,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1544,8 +1757,10 @@ mutation VerifyEmailAddress(
       args: GqlDeleteAccountRequestArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'deleteAccountRequest', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'deleteAccountRequest', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation DeleteAccountRequest(
   $passwordHash: String!
 ) {
@@ -1554,11 +1769,17 @@ mutation DeleteAccountRequest(
   ) ${graphql}
 }
           `,
-          operationName: 'DeleteAccountRequest',
-          variables: {
-            passwordHash: args.passwordHash,
+            operationName: 'DeleteAccountRequest',
+            variables: {
+              passwordHash: args.passwordHash,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1575,8 +1796,10 @@ mutation DeleteAccountRequest(
       args: GqlDeleteAccountArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'deleteAccount', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'deleteAccount', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation DeleteAccount(
   $deleteToken: String!
 ) {
@@ -1585,11 +1808,17 @@ mutation DeleteAccount(
   ) ${graphql}
 }
           `,
-          operationName: 'DeleteAccount',
-          variables: {
-            deleteToken: args.deleteToken,
+            operationName: 'DeleteAccount',
+            variables: {
+              deleteToken: args.deleteToken,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1606,8 +1835,10 @@ mutation DeleteAccount(
       args: GqlSavePreferencesArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'savePreferences', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'savePreferences', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation SavePreferences(
   $preferences: InputPreferences!
 ) {
@@ -1616,11 +1847,17 @@ mutation SavePreferences(
   ) ${graphql}
 }
           `,
-          operationName: 'SavePreferences',
-          variables: {
-            preferences: args.preferences,
+            operationName: 'SavePreferences',
+            variables: {
+              preferences: args.preferences,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1637,8 +1874,10 @@ mutation SavePreferences(
       args: GqlCreateShowArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'createShow', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'createShow', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation CreateShow(
   $showInput: InputShow!, $becomeAdmin: Boolean!
 ) {
@@ -1647,12 +1886,18 @@ mutation CreateShow(
   ) ${graphql}
 }
           `,
-          operationName: 'CreateShow',
-          variables: {
-            showInput: args.showInput,
-            becomeAdmin: args.becomeAdmin,
+            operationName: 'CreateShow',
+            variables: {
+              showInput: args.showInput,
+              becomeAdmin: args.becomeAdmin,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1669,8 +1914,10 @@ mutation CreateShow(
       args: GqlUpdateShowArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'updateShow', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'updateShow', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation UpdateShow(
   $showId: ID!, $newShow: InputShow!
 ) {
@@ -1679,12 +1926,18 @@ mutation UpdateShow(
   ) ${graphql}
 }
           `,
-          operationName: 'UpdateShow',
-          variables: {
-            showId: args.showId,
-            newShow: args.newShow,
+            operationName: 'UpdateShow',
+            variables: {
+              showId: args.showId,
+              newShow: args.newShow,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1701,8 +1954,10 @@ mutation UpdateShow(
       args: GqlDeleteShowArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'deleteShow', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'deleteShow', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation DeleteShow(
   $showId: ID!
 ) {
@@ -1711,11 +1966,17 @@ mutation DeleteShow(
   ) ${graphql}
 }
           `,
-          operationName: 'DeleteShow',
-          variables: {
-            showId: args.showId,
+            operationName: 'DeleteShow',
+            variables: {
+              showId: args.showId,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1732,8 +1993,10 @@ mutation DeleteShow(
       args: GqlCreateShowAdminArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'createShowAdmin', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'createShowAdmin', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation CreateShowAdmin(
   $showAdminInput: InputShowAdmin!
 ) {
@@ -1742,11 +2005,17 @@ mutation CreateShowAdmin(
   ) ${graphql}
 }
           `,
-          operationName: 'CreateShowAdmin',
-          variables: {
-            showAdminInput: args.showAdminInput,
+            operationName: 'CreateShowAdmin',
+            variables: {
+              showAdminInput: args.showAdminInput,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1763,8 +2032,10 @@ mutation CreateShowAdmin(
       args: GqlDeleteShowAdminArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'deleteShowAdmin', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'deleteShowAdmin', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation DeleteShowAdmin(
   $showAdminId: ID!
 ) {
@@ -1773,11 +2044,17 @@ mutation DeleteShowAdmin(
   ) ${graphql}
 }
           `,
-          operationName: 'DeleteShowAdmin',
-          variables: {
-            showAdminId: args.showAdminId,
+            operationName: 'DeleteShowAdmin',
+            variables: {
+              showAdminId: args.showAdminId,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1794,8 +2071,10 @@ mutation DeleteShowAdmin(
       args: GqlCreateEpisodeArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'createEpisode', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'createEpisode', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation CreateEpisode(
   $showId: ID!, $episodeInput: InputEpisode!
 ) {
@@ -1804,12 +2083,18 @@ mutation CreateEpisode(
   ) ${graphql}
 }
           `,
-          operationName: 'CreateEpisode',
-          variables: {
-            showId: args.showId,
-            episodeInput: args.episodeInput,
+            operationName: 'CreateEpisode',
+            variables: {
+              showId: args.showId,
+              episodeInput: args.episodeInput,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1826,8 +2111,10 @@ mutation CreateEpisode(
       args: GqlUpdateEpisodeArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'updateEpisode', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'updateEpisode', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation UpdateEpisode(
   $episodeId: ID!, $newEpisode: InputEpisode!
 ) {
@@ -1836,12 +2123,18 @@ mutation UpdateEpisode(
   ) ${graphql}
 }
           `,
-          operationName: 'UpdateEpisode',
-          variables: {
-            episodeId: args.episodeId,
-            newEpisode: args.newEpisode,
+            operationName: 'UpdateEpisode',
+            variables: {
+              episodeId: args.episodeId,
+              newEpisode: args.newEpisode,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1858,8 +2151,10 @@ mutation UpdateEpisode(
       args: GqlDeleteEpisodeArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'deleteEpisode', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'deleteEpisode', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation DeleteEpisode(
   $episodeId: ID!
 ) {
@@ -1868,11 +2163,17 @@ mutation DeleteEpisode(
   ) ${graphql}
 }
           `,
-          operationName: 'DeleteEpisode',
-          variables: {
-            episodeId: args.episodeId,
+            operationName: 'DeleteEpisode',
+            variables: {
+              episodeId: args.episodeId,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1889,8 +2190,10 @@ mutation DeleteEpisode(
       args: GqlCreateEpisodeUrlArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'createEpisodeUrl', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'createEpisodeUrl', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation CreateEpisodeUrl(
   $episodeId: ID!, $episodeUrlInput: InputEpisodeUrl!
 ) {
@@ -1899,12 +2202,18 @@ mutation CreateEpisodeUrl(
   ) ${graphql}
 }
           `,
-          operationName: 'CreateEpisodeUrl',
-          variables: {
-            episodeId: args.episodeId,
-            episodeUrlInput: args.episodeUrlInput,
+            operationName: 'CreateEpisodeUrl',
+            variables: {
+              episodeId: args.episodeId,
+              episodeUrlInput: args.episodeUrlInput,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1921,8 +2230,10 @@ mutation CreateEpisodeUrl(
       args: GqlDeleteEpisodeUrlArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'deleteEpisodeUrl', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'deleteEpisodeUrl', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation DeleteEpisodeUrl(
   $episodeUrl: String!
 ) {
@@ -1931,11 +2242,17 @@ mutation DeleteEpisodeUrl(
   ) ${graphql}
 }
           `,
-          operationName: 'DeleteEpisodeUrl',
-          variables: {
-            episodeUrl: args.episodeUrl,
+            operationName: 'DeleteEpisodeUrl',
+            variables: {
+              episodeUrl: args.episodeUrl,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1952,8 +2269,10 @@ mutation DeleteEpisodeUrl(
       args: GqlUpdateEpisodeUrlArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'updateEpisodeUrl', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'updateEpisodeUrl', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation UpdateEpisodeUrl(
   $episodeUrl: String!, $newEpisodeUrl: InputEpisodeUrl!
 ) {
@@ -1962,12 +2281,18 @@ mutation UpdateEpisodeUrl(
   ) ${graphql}
 }
           `,
-          operationName: 'UpdateEpisodeUrl',
-          variables: {
-            episodeUrl: args.episodeUrl,
-            newEpisodeUrl: args.newEpisodeUrl,
+            operationName: 'UpdateEpisodeUrl',
+            variables: {
+              episodeUrl: args.episodeUrl,
+              newEpisodeUrl: args.newEpisodeUrl,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -1984,8 +2309,10 @@ mutation UpdateEpisodeUrl(
       args: GqlCreateTimestampArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'createTimestamp', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'createTimestamp', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation CreateTimestamp(
   $episodeId: ID!, $timestampInput: InputTimestamp!
 ) {
@@ -1994,12 +2321,18 @@ mutation CreateTimestamp(
   ) ${graphql}
 }
           `,
-          operationName: 'CreateTimestamp',
-          variables: {
-            episodeId: args.episodeId,
-            timestampInput: args.timestampInput,
+            operationName: 'CreateTimestamp',
+            variables: {
+              episodeId: args.episodeId,
+              timestampInput: args.timestampInput,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -2016,8 +2349,10 @@ mutation CreateTimestamp(
       args: GqlUpdateTimestampArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'updateTimestamp', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'updateTimestamp', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation UpdateTimestamp(
   $timestampId: ID!, $newTimestamp: InputTimestamp!
 ) {
@@ -2026,12 +2361,18 @@ mutation UpdateTimestamp(
   ) ${graphql}
 }
           `,
-          operationName: 'UpdateTimestamp',
-          variables: {
-            timestampId: args.timestampId,
-            newTimestamp: args.newTimestamp,
+            operationName: 'UpdateTimestamp',
+            variables: {
+              timestampId: args.timestampId,
+              newTimestamp: args.newTimestamp,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -2048,8 +2389,10 @@ mutation UpdateTimestamp(
       args: GqlDeleteTimestampArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'deleteTimestamp', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'deleteTimestamp', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation DeleteTimestamp(
   $timestampId: ID!
 ) {
@@ -2058,11 +2401,17 @@ mutation DeleteTimestamp(
   ) ${graphql}
 }
           `,
-          operationName: 'DeleteTimestamp',
-          variables: {
-            timestampId: args.timestampId,
+            operationName: 'DeleteTimestamp',
+            variables: {
+              timestampId: args.timestampId,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -2079,8 +2428,10 @@ mutation DeleteTimestamp(
       args: GqlUpdateTimestampsArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'updateTimestamps', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'updateTimestamps', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation UpdateTimestamps(
   $create: Array<InputTimestampOn>!, $update: Array<InputExistingTimestamp>!, $delete: Array<ID>!
 ) {
@@ -2089,13 +2440,19 @@ mutation UpdateTimestamps(
   ) ${graphql}
 }
           `,
-          operationName: 'UpdateTimestamps',
-          variables: {
-            create: args.create,
-            update: args.update,
-            delete: args.delete,
+            operationName: 'UpdateTimestamps',
+            variables: {
+              create: args.create,
+              update: args.update,
+              delete: args.delete,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -2112,8 +2469,10 @@ mutation UpdateTimestamps(
       args: GqlCreateTimestampTypeArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'createTimestampType', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'createTimestampType', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation CreateTimestampType(
   $timestampTypeInput: InputTimestampType!
 ) {
@@ -2122,11 +2481,17 @@ mutation CreateTimestampType(
   ) ${graphql}
 }
           `,
-          operationName: 'CreateTimestampType',
-          variables: {
-            timestampTypeInput: args.timestampTypeInput,
+            operationName: 'CreateTimestampType',
+            variables: {
+              timestampTypeInput: args.timestampTypeInput,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -2143,8 +2508,10 @@ mutation CreateTimestampType(
       args: GqlUpdateTimestampTypeArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'updateTimestampType', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'updateTimestampType', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation UpdateTimestampType(
   $timestampTypeId: ID!, $newTimestampType: InputTimestampType!
 ) {
@@ -2153,12 +2520,18 @@ mutation UpdateTimestampType(
   ) ${graphql}
 }
           `,
-          operationName: 'UpdateTimestampType',
-          variables: {
-            timestampTypeId: args.timestampTypeId,
-            newTimestampType: args.newTimestampType,
+            operationName: 'UpdateTimestampType',
+            variables: {
+              timestampTypeId: args.timestampTypeId,
+              newTimestampType: args.newTimestampType,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -2175,8 +2548,10 @@ mutation UpdateTimestampType(
       args: GqlDeleteTimestampTypeArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'deleteTimestampType', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'deleteTimestampType', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation DeleteTimestampType(
   $timestampTypeId: ID!
 ) {
@@ -2185,11 +2560,17 @@ mutation DeleteTimestampType(
   ) ${graphql}
 }
           `,
-          operationName: 'DeleteTimestampType',
-          variables: {
-            timestampTypeId: args.timestampTypeId,
+            operationName: 'DeleteTimestampType',
+            variables: {
+              timestampTypeId: args.timestampTypeId,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -2206,8 +2587,10 @@ mutation DeleteTimestampType(
       args: GqlCreateTemplateArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'createTemplate', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'createTemplate', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation CreateTemplate(
   $newTemplate: InputTemplate!
 ) {
@@ -2216,11 +2599,17 @@ mutation CreateTemplate(
   ) ${graphql}
 }
           `,
-          operationName: 'CreateTemplate',
-          variables: {
-            newTemplate: args.newTemplate,
+            operationName: 'CreateTemplate',
+            variables: {
+              newTemplate: args.newTemplate,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -2237,8 +2626,10 @@ mutation CreateTemplate(
       args: GqlUpdateTemplateArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'updateTemplate', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'updateTemplate', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation UpdateTemplate(
   $templateId: ID!, $newTemplate: InputTemplate!
 ) {
@@ -2247,12 +2638,18 @@ mutation UpdateTemplate(
   ) ${graphql}
 }
           `,
-          operationName: 'UpdateTemplate',
-          variables: {
-            templateId: args.templateId,
-            newTemplate: args.newTemplate,
+            operationName: 'UpdateTemplate',
+            variables: {
+              templateId: args.templateId,
+              newTemplate: args.newTemplate,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -2269,8 +2666,10 @@ mutation UpdateTemplate(
       args: GqlDeleteTemplateArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'deleteTemplate', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'deleteTemplate', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation DeleteTemplate(
   $templateId: ID!
 ) {
@@ -2279,11 +2678,17 @@ mutation DeleteTemplate(
   ) ${graphql}
 }
           `,
-          operationName: 'DeleteTemplate',
-          variables: {
-            templateId: args.templateId,
+            operationName: 'DeleteTemplate',
+            variables: {
+              templateId: args.templateId,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -2300,8 +2705,10 @@ mutation DeleteTemplate(
       args: GqlAddTimestampToTemplateArgs,
     ): Promise<T> {
       try {
-        const response: GqlResponse<'addTimestampToTemplate', T> = await axios.post('/graphql', {
-          query: `
+        const response: GqlResponse<'addTimestampToTemplate', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
 mutation AddTimestampToTemplate(
   $templateTimestamp: InputTemplateTimestamp!
 ) {
@@ -2310,11 +2717,17 @@ mutation AddTimestampToTemplate(
   ) ${graphql}
 }
           `,
-          operationName: 'AddTimestampToTemplate',
-          variables: {
-            templateTimestamp: args.templateTimestamp,
+            operationName: 'AddTimestampToTemplate',
+            variables: {
+              templateTimestamp: args.templateTimestamp,
+            },
           },
-        });
+          {
+            headers: {
+              'X-Client-ID': clientId,
+            },
+          },
+        );
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors);
         }
@@ -2346,6 +2759,11 @@ mutation RemoveTimestampFromTemplate(
             operationName: 'RemoveTimestampFromTemplate',
             variables: {
               templateTimestamp: args.templateTimestamp,
+            },
+          },
+          {
+            headers: {
+              'X-Client-ID': clientId,
             },
           },
         );

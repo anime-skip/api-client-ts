@@ -41,7 +41,7 @@ export class GqlError {
 
 $TYPES$;
 
-export default function create$NAME$Client(baseUrl: string) {
+export default function create$NAME$Client(baseUrl: string, clientId: string) {
   const axios = Axios.create({
     baseURL: baseUrl
   });

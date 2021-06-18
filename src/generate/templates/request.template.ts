@@ -18,6 +18,10 @@ $TYPE$ $REQUEST_NAME_CAPITALIZED$ {
 }
           `,
           operationName: "$REQUEST_NAME_CAPITALIZED$",
+        }, {
+          headers: {
+            'X-Client-ID': clientId
+          }
         });
         if (response.data.errors != null) {
           throw new GqlError(response.status, response.data.errors)

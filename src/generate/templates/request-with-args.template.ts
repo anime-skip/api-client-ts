@@ -12,6 +12,7 @@ type $RETURN_TYPE$ = any;
 let axios: AxiosInstance;
 const $VARIABLE_JSON$ = '';
 type GqlResponse<K, T> = AxiosResponse<{ data?: { "$REQUEST_NAME$": T }, errors?: any }>
+let clientId: string;
 // TEMPLATE:
     async $REQUEST_NAME$<T extends Partial<$RETURN_TYPE$>>(
       graphql: string,
@@ -31,6 +32,10 @@ $TYPE$ $REQUEST_NAME_CAPITALIZED$(
           operationName: "$REQUEST_NAME_CAPITALIZED$",
           variables: {
             $VARIABLE_JSON$
+          }
+        }, {
+          headers: {
+            'X-Client-ID': clientId
           }
         });
         if (response.data.errors != null) {

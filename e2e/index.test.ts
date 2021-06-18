@@ -4,7 +4,9 @@ import { step } from 'mocha-steps';
 import createAnimeSkipClient from '../src';
 import md5 from 'md5';
 
-const { axios, ...client } = createAnimeSkipClient('http://localhost:8081');
+const endpoint = 'http://localhost:8081';
+const clientId = 'some-client-id';
+const { axios, ...client } = createAnimeSkipClient(endpoint, clientId);
 
 describe('E2E API Calls', function () {
   this.timeout('60s');
