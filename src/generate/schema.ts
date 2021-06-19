@@ -1,14 +1,19 @@
 import Axios from 'axios';
-import { IntrospectionSchema, IntrospectionFullType } from './types';
+import fs from 'fs';
+import { capitalize } from './capitalize';
 import { loadTemplate } from './load-template';
 import { mapType } from './map-type';
-import { capitalize } from './capitalize';
-import fs from 'fs';
+import { IntrospectionFullType, IntrospectionSchema } from './types';
+import axiosRetry from 'axios-retry';
 
 async function introspection(url: string): Promise<IntrospectionSchema> {
   console.log('Loading schema...');
+
+  const introspectionClient = Axios.create();
+  axiosRetry(introspectionClient, { retries: 5, retryDelay: () => 5000 });
+
   return (
-    await Axios.post(url, {
+    await introspectionClient.post(url, {
       query: `query IntrospectionQuery {
           __schema {
             queryType {

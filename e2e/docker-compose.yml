@@ -2,18 +2,20 @@ services:
   db:
     image: postgres:alpine
     command: -p 8080
-    ports:
-      - 8080:8080
+    # ports:
+    #   - 8080:8080
+    network_mode: host
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: anime_skip_e2e
-  prod_backend:
-    image: docker.pkg.github.com/anime-skip/backend/api:prod
+  backend:
+    image: '${COMPOSE_TARGET-docker.pkg.github.com/anime-skip/backend/api:prod}'
     depends_on:
       - db
-    ports:
-      - 8081:8081
+    # ports:
+    #   - 8081:8081
+    network_mode: host
     command: sh -c 'sleep 2; /app/api-service'
     env_file: .env.backend
   # staged_backend:

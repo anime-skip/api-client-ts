@@ -8,6 +8,7 @@ async function tryCatch(executor: () => Promise<void>): Promise<void> {
   } catch (err) {
     console.error('Failed');
     console.error(err);
+    process.exit(1);
   }
 }
 
