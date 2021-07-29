@@ -5,6 +5,7 @@ type Methods = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 interface RequestHistory {
   path: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: any;
   headers: Record<string, string | string[] | undefined>;
 }
