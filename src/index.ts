@@ -564,6 +564,8 @@ export interface GqlShow {
   admins: Array<GqlShowAdmin>;
   episodes: Array<GqlEpisode>;
   templates: Array<GqlTemplate>;
+  seasonCount: GqlInt;
+  episodeCount: GqlInt;
 }
 
 export interface GqlShowAdmin {
