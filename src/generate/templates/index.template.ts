@@ -13,7 +13,7 @@ const queries = {};
 const mutations = {};
 const subscriptions = {};
 // TEMPLATE:
-import Axios, { AxiosResponse } from 'axios';
+import Axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 
 export type GqlResponse<K extends string, T> = AxiosResponse<{
   data: { [requestName in K]: T };

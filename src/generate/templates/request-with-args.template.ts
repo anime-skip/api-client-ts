@@ -7,7 +7,7 @@
 // - VARIABLE_PASSED
 // - VARIABLE_JSON
 // VARS:
-import { AxiosInstance, AxiosResponse } from 'axios';
+import { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
 type $RETURN_TYPE$ = any;
 let axios: AxiosInstance;
 const $VARIABLE_JSON$ = '';
@@ -16,7 +16,8 @@ let clientId: string;
 // TEMPLATE:
     async $REQUEST_NAME$<T extends Partial<$RETURN_TYPE$>>(
       graphql: string,
-      args: Gql$REQUEST_NAME_CAPITALIZED$Args
+      args: Gql$REQUEST_NAME_CAPITALIZED$Args,
+      axiosConfig?: AxiosRequestConfig
     ): Promise<T> {
       try {
         const response: GqlResponse<"$REQUEST_NAME$", T> = await axios.post("/graphql", {
@@ -34,8 +35,10 @@ $TYPE$ $REQUEST_NAME_CAPITALIZED$(
             $VARIABLE_JSON$
           }
         }, {
+          ...axiosConfig,
           headers: {
-            'X-Client-ID': clientId
+            ...axiosConfig?.headers,
+            'X-Client-ID': clientId,
           }
         });
         if (response.data.errors != null) {

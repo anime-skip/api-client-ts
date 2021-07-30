@@ -4,12 +4,12 @@
 // - TYPE
 // - RETURN_TYPE
 // VARS:
-import { AxiosInstance, AxiosResponse } from 'axios';
+import { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
 type $RETURN_TYPE$ = any;
 let axios: AxiosInstance;
 type GqlResponse<K, T> = AxiosResponse<{ data?: { "$REQUEST_NAME$": T }, errors?: any }>
 // TEMPLATE:
-    async $REQUEST_NAME$<T extends Partial<$RETURN_TYPE$>>(graphql: string): Promise<T> {
+    async $REQUEST_NAME$<T extends Partial<$RETURN_TYPE$>>(graphql: string, axiosConfig?: AxiosRequestConfig): Promise<T> {
       try {
         const response: GqlResponse<"$REQUEST_NAME$", T> = await axios.post("/graphql", {
         query: `
@@ -19,7 +19,9 @@ $TYPE$ $REQUEST_NAME_CAPITALIZED$ {
           `,
           operationName: "$REQUEST_NAME_CAPITALIZED$",
         }, {
+          ...axiosConfig,
           headers: {
+            ...axiosConfig?.headers,
             'X-Client-ID': clientId
           }
         });

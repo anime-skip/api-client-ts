@@ -1,4 +1,4 @@
-import Axios, { AxiosResponse } from 'axios';
+import Axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 
 export type GqlResponse<K extends string, T> = AxiosResponse<{
   data: { [requestName in K]: T };
@@ -709,7 +709,10 @@ export default function createAnimeSkipClient(baseUrl: string, clientId: string)
 
   // Initialize queries
   const queries: GqlQuery = {
-    async account<T extends Partial<GqlAccount | null>>(graphql: string): Promise<T> {
+    async account<T extends Partial<GqlAccount | null>>(
+      graphql: string,
+      axiosConfig?: AxiosRequestConfig,
+    ): Promise<T> {
       try {
         const response: GqlResponse<'account', T> = await axios.post(
           '/graphql',
@@ -722,7 +725,9 @@ query Account {
             operationName: 'Account',
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -740,6 +745,7 @@ query Account {
     },
     async allTimestampTypes<T extends Partial<Array<GqlTimestampType> | null>>(
       graphql: string,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'allTimestampTypes', T> = await axios.post(
@@ -753,7 +759,9 @@ query AllTimestampTypes {
             operationName: 'AllTimestampTypes',
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -772,6 +780,7 @@ query AllTimestampTypes {
     async findEpisode<T extends Partial<GqlEpisode | null>>(
       graphql: string,
       args: GqlFindEpisodeArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'findEpisode', T> = await axios.post(
@@ -792,7 +801,9 @@ query FindEpisode(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -811,6 +822,7 @@ query FindEpisode(
     async findEpisodeByName<T extends Partial<Array<GqlThirdPartyEpisode | null> | null>>(
       graphql: string,
       args: GqlFindEpisodeByNameArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'findEpisodeByName', T> = await axios.post(
@@ -831,7 +843,9 @@ query FindEpisodeByName(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -850,6 +864,7 @@ query FindEpisodeByName(
     async findEpisodesByShowId<T extends Partial<Array<GqlEpisode> | null>>(
       graphql: string,
       args: GqlFindEpisodesByShowIdArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'findEpisodesByShowId', T> = await axios.post(
@@ -870,7 +885,9 @@ query FindEpisodesByShowId(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -889,6 +906,7 @@ query FindEpisodesByShowId(
     async findEpisodeUrl<T extends Partial<GqlEpisodeUrl | null>>(
       graphql: string,
       args: GqlFindEpisodeUrlArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'findEpisodeUrl', T> = await axios.post(
@@ -909,7 +927,9 @@ query FindEpisodeUrl(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -928,6 +948,7 @@ query FindEpisodeUrl(
     async findEpisodeUrlsByEpisodeId<T extends Partial<Array<GqlEpisodeUrl> | null>>(
       graphql: string,
       args: GqlFindEpisodeUrlsByEpisodeIdArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'findEpisodeUrlsByEpisodeId', T> = await axios.post(
@@ -948,7 +969,9 @@ query FindEpisodeUrlsByEpisodeId(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -967,6 +990,7 @@ query FindEpisodeUrlsByEpisodeId(
     async findShow<T extends Partial<GqlShow | null>>(
       graphql: string,
       args: GqlFindShowArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'findShow', T> = await axios.post(
@@ -987,7 +1011,9 @@ query FindShow(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1006,6 +1032,7 @@ query FindShow(
     async findShowAdmin<T extends Partial<GqlShowAdmin | null>>(
       graphql: string,
       args: GqlFindShowAdminArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'findShowAdmin', T> = await axios.post(
@@ -1026,7 +1053,9 @@ query FindShowAdmin(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1045,6 +1074,7 @@ query FindShowAdmin(
     async findShowAdminsByShowId<T extends Partial<Array<GqlShowAdmin> | null>>(
       graphql: string,
       args: GqlFindShowAdminsByShowIdArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'findShowAdminsByShowId', T> = await axios.post(
@@ -1065,7 +1095,9 @@ query FindShowAdminsByShowId(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1084,6 +1116,7 @@ query FindShowAdminsByShowId(
     async findShowAdminsByUserId<T extends Partial<Array<GqlShowAdmin> | null>>(
       graphql: string,
       args: GqlFindShowAdminsByUserIdArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'findShowAdminsByUserId', T> = await axios.post(
@@ -1104,7 +1137,9 @@ query FindShowAdminsByUserId(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1123,6 +1158,7 @@ query FindShowAdminsByUserId(
     async findTemplate<T extends Partial<GqlTemplate | null>>(
       graphql: string,
       args: GqlFindTemplateArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'findTemplate', T> = await axios.post(
@@ -1143,7 +1179,9 @@ query FindTemplate(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1162,6 +1200,7 @@ query FindTemplate(
     async findTemplateByDetails<T extends Partial<GqlTemplate | null>>(
       graphql: string,
       args: GqlFindTemplateByDetailsArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'findTemplateByDetails', T> = await axios.post(
@@ -1184,7 +1223,9 @@ query FindTemplateByDetails(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1203,6 +1244,7 @@ query FindTemplateByDetails(
     async findTemplatesByShowId<T extends Partial<Array<GqlTemplate>>>(
       graphql: string,
       args: GqlFindTemplatesByShowIdArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'findTemplatesByShowId', T> = await axios.post(
@@ -1223,7 +1265,9 @@ query FindTemplatesByShowId(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1242,6 +1286,7 @@ query FindTemplatesByShowId(
     async findTimestamp<T extends Partial<GqlTimestamp | null>>(
       graphql: string,
       args: GqlFindTimestampArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'findTimestamp', T> = await axios.post(
@@ -1262,7 +1307,9 @@ query FindTimestamp(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1281,6 +1328,7 @@ query FindTimestamp(
     async findTimestampsByEpisodeId<T extends Partial<Array<GqlTimestamp> | null>>(
       graphql: string,
       args: GqlFindTimestampsByEpisodeIdArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'findTimestampsByEpisodeId', T> = await axios.post(
@@ -1301,7 +1349,9 @@ query FindTimestampsByEpisodeId(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1320,6 +1370,7 @@ query FindTimestampsByEpisodeId(
     async findTimestampType<T extends Partial<GqlTimestampType | null>>(
       graphql: string,
       args: GqlFindTimestampTypeArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'findTimestampType', T> = await axios.post(
@@ -1340,7 +1391,9 @@ query FindTimestampType(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1359,6 +1412,7 @@ query FindTimestampType(
     async findUser<T extends Partial<GqlUser | null>>(
       graphql: string,
       args: GqlFindUserArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'findUser', T> = await axios.post(
@@ -1379,7 +1433,9 @@ query FindUser(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1398,6 +1454,7 @@ query FindUser(
     async findUserByUsername<T extends Partial<GqlUser | null>>(
       graphql: string,
       args: GqlFindUserByUsernameArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'findUserByUsername', T> = await axios.post(
@@ -1418,7 +1475,9 @@ query FindUserByUsername(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1437,6 +1496,7 @@ query FindUserByUsername(
     async login<T extends Partial<GqlLoginData | null>>(
       graphql: string,
       args: GqlLoginArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'login', T> = await axios.post(
@@ -1458,7 +1518,9 @@ query Login(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1477,6 +1539,7 @@ query Login(
     async loginRefresh<T extends Partial<GqlLoginData | null>>(
       graphql: string,
       args: GqlLoginRefreshArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'loginRefresh', T> = await axios.post(
@@ -1497,7 +1560,9 @@ query LoginRefresh(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1516,6 +1581,7 @@ query LoginRefresh(
     async recentlyAddedEpisodes<T extends Partial<Array<GqlEpisode> | null>>(
       graphql: string,
       args: GqlRecentlyAddedEpisodesArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'recentlyAddedEpisodes', T> = await axios.post(
@@ -1537,7 +1603,9 @@ query RecentlyAddedEpisodes(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1556,6 +1624,7 @@ query RecentlyAddedEpisodes(
     async searchEpisodes<T extends Partial<Array<GqlEpisode> | null>>(
       graphql: string,
       args: GqlSearchEpisodesArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'searchEpisodes', T> = await axios.post(
@@ -1580,7 +1649,9 @@ query SearchEpisodes(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1599,6 +1670,7 @@ query SearchEpisodes(
     async searchShows<T extends Partial<Array<GqlShow> | null>>(
       graphql: string,
       args: GqlSearchShowsArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'searchShows', T> = await axios.post(
@@ -1622,7 +1694,9 @@ query SearchShows(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1645,6 +1719,7 @@ query SearchShows(
     async addTimestampToTemplate<T extends Partial<GqlTemplateTimestamp | null>>(
       graphql: string,
       args: GqlAddTimestampToTemplateArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'addTimestampToTemplate', T> = await axios.post(
@@ -1665,7 +1740,9 @@ mutation AddTimestampToTemplate(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1684,6 +1761,7 @@ mutation AddTimestampToTemplate(
     async createAccount<T extends Partial<GqlLoginData | null>>(
       graphql: string,
       args: GqlCreateAccountArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'createAccount', T> = await axios.post(
@@ -1707,7 +1785,9 @@ mutation CreateAccount(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1726,6 +1806,7 @@ mutation CreateAccount(
     async createEpisode<T extends Partial<GqlEpisode | null>>(
       graphql: string,
       args: GqlCreateEpisodeArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'createEpisode', T> = await axios.post(
@@ -1747,7 +1828,9 @@ mutation CreateEpisode(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1766,6 +1849,7 @@ mutation CreateEpisode(
     async createEpisodeUrl<T extends Partial<GqlEpisodeUrl | null>>(
       graphql: string,
       args: GqlCreateEpisodeUrlArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'createEpisodeUrl', T> = await axios.post(
@@ -1787,7 +1871,9 @@ mutation CreateEpisodeUrl(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1806,6 +1892,7 @@ mutation CreateEpisodeUrl(
     async createShow<T extends Partial<GqlShow | null>>(
       graphql: string,
       args: GqlCreateShowArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'createShow', T> = await axios.post(
@@ -1827,7 +1914,9 @@ mutation CreateShow(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1846,6 +1935,7 @@ mutation CreateShow(
     async createShowAdmin<T extends Partial<GqlShowAdmin | null>>(
       graphql: string,
       args: GqlCreateShowAdminArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'createShowAdmin', T> = await axios.post(
@@ -1866,7 +1956,9 @@ mutation CreateShowAdmin(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1885,6 +1977,7 @@ mutation CreateShowAdmin(
     async createTemplate<T extends Partial<GqlTemplate | null>>(
       graphql: string,
       args: GqlCreateTemplateArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'createTemplate', T> = await axios.post(
@@ -1905,7 +1998,9 @@ mutation CreateTemplate(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1924,6 +2019,7 @@ mutation CreateTemplate(
     async createTimestamp<T extends Partial<GqlTimestamp | null>>(
       graphql: string,
       args: GqlCreateTimestampArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'createTimestamp', T> = await axios.post(
@@ -1945,7 +2041,9 @@ mutation CreateTimestamp(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -1964,6 +2062,7 @@ mutation CreateTimestamp(
     async createTimestampType<T extends Partial<GqlTimestampType | null>>(
       graphql: string,
       args: GqlCreateTimestampTypeArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'createTimestampType', T> = await axios.post(
@@ -1984,7 +2083,9 @@ mutation CreateTimestampType(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2003,6 +2104,7 @@ mutation CreateTimestampType(
     async deleteAccount<T extends Partial<GqlAccount | null>>(
       graphql: string,
       args: GqlDeleteAccountArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'deleteAccount', T> = await axios.post(
@@ -2023,7 +2125,9 @@ mutation DeleteAccount(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2042,6 +2146,7 @@ mutation DeleteAccount(
     async deleteAccountRequest<T extends Partial<GqlAccount | null>>(
       graphql: string,
       args: GqlDeleteAccountRequestArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'deleteAccountRequest', T> = await axios.post(
@@ -2062,7 +2167,9 @@ mutation DeleteAccountRequest(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2081,6 +2188,7 @@ mutation DeleteAccountRequest(
     async deleteEpisode<T extends Partial<GqlEpisode | null>>(
       graphql: string,
       args: GqlDeleteEpisodeArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'deleteEpisode', T> = await axios.post(
@@ -2101,7 +2209,9 @@ mutation DeleteEpisode(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2120,6 +2230,7 @@ mutation DeleteEpisode(
     async deleteEpisodeUrl<T extends Partial<GqlEpisodeUrl | null>>(
       graphql: string,
       args: GqlDeleteEpisodeUrlArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'deleteEpisodeUrl', T> = await axios.post(
@@ -2140,7 +2251,9 @@ mutation DeleteEpisodeUrl(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2159,6 +2272,7 @@ mutation DeleteEpisodeUrl(
     async deleteShow<T extends Partial<GqlShow | null>>(
       graphql: string,
       args: GqlDeleteShowArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'deleteShow', T> = await axios.post(
@@ -2179,7 +2293,9 @@ mutation DeleteShow(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2198,6 +2314,7 @@ mutation DeleteShow(
     async deleteShowAdmin<T extends Partial<GqlShowAdmin | null>>(
       graphql: string,
       args: GqlDeleteShowAdminArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'deleteShowAdmin', T> = await axios.post(
@@ -2218,7 +2335,9 @@ mutation DeleteShowAdmin(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2237,6 +2356,7 @@ mutation DeleteShowAdmin(
     async deleteTemplate<T extends Partial<GqlTemplate | null>>(
       graphql: string,
       args: GqlDeleteTemplateArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'deleteTemplate', T> = await axios.post(
@@ -2257,7 +2377,9 @@ mutation DeleteTemplate(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2276,6 +2398,7 @@ mutation DeleteTemplate(
     async deleteTimestamp<T extends Partial<GqlTimestamp | null>>(
       graphql: string,
       args: GqlDeleteTimestampArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'deleteTimestamp', T> = await axios.post(
@@ -2296,7 +2419,9 @@ mutation DeleteTimestamp(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2315,6 +2440,7 @@ mutation DeleteTimestamp(
     async deleteTimestampType<T extends Partial<GqlTimestampType | null>>(
       graphql: string,
       args: GqlDeleteTimestampTypeArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'deleteTimestampType', T> = await axios.post(
@@ -2335,7 +2461,9 @@ mutation DeleteTimestampType(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2354,6 +2482,7 @@ mutation DeleteTimestampType(
     async removeTimestampFromTemplate<T extends Partial<GqlTemplateTimestamp | null>>(
       graphql: string,
       args: GqlRemoveTimestampFromTemplateArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'removeTimestampFromTemplate', T> = await axios.post(
@@ -2374,7 +2503,9 @@ mutation RemoveTimestampFromTemplate(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2392,6 +2523,7 @@ mutation RemoveTimestampFromTemplate(
     },
     async resendVerificationEmail<T extends Partial<GqlBoolean | null>>(
       graphql: string,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'resendVerificationEmail', T> = await axios.post(
@@ -2405,7 +2537,9 @@ mutation ResendVerificationEmail {
             operationName: 'ResendVerificationEmail',
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2424,6 +2558,7 @@ mutation ResendVerificationEmail {
     async savePreferences<T extends Partial<GqlPreferences | null>>(
       graphql: string,
       args: GqlSavePreferencesArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'savePreferences', T> = await axios.post(
@@ -2444,7 +2579,9 @@ mutation SavePreferences(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2463,6 +2600,7 @@ mutation SavePreferences(
     async updateEpisode<T extends Partial<GqlEpisode | null>>(
       graphql: string,
       args: GqlUpdateEpisodeArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'updateEpisode', T> = await axios.post(
@@ -2484,7 +2622,9 @@ mutation UpdateEpisode(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2503,6 +2643,7 @@ mutation UpdateEpisode(
     async updateEpisodeUrl<T extends Partial<GqlEpisodeUrl | null>>(
       graphql: string,
       args: GqlUpdateEpisodeUrlArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'updateEpisodeUrl', T> = await axios.post(
@@ -2524,7 +2665,9 @@ mutation UpdateEpisodeUrl(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2543,6 +2686,7 @@ mutation UpdateEpisodeUrl(
     async updateShow<T extends Partial<GqlShow | null>>(
       graphql: string,
       args: GqlUpdateShowArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'updateShow', T> = await axios.post(
@@ -2564,7 +2708,9 @@ mutation UpdateShow(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2583,6 +2729,7 @@ mutation UpdateShow(
     async updateTemplate<T extends Partial<GqlTemplate | null>>(
       graphql: string,
       args: GqlUpdateTemplateArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'updateTemplate', T> = await axios.post(
@@ -2604,7 +2751,9 @@ mutation UpdateTemplate(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2623,6 +2772,7 @@ mutation UpdateTemplate(
     async updateTimestamp<T extends Partial<GqlTimestamp | null>>(
       graphql: string,
       args: GqlUpdateTimestampArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'updateTimestamp', T> = await axios.post(
@@ -2644,7 +2794,9 @@ mutation UpdateTimestamp(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2663,6 +2815,7 @@ mutation UpdateTimestamp(
     async updateTimestamps<T extends Partial<GqlUpdatedTimestamps | null>>(
       graphql: string,
       args: GqlUpdateTimestampsArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'updateTimestamps', T> = await axios.post(
@@ -2685,7 +2838,9 @@ mutation UpdateTimestamps(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2704,6 +2859,7 @@ mutation UpdateTimestamps(
     async updateTimestampType<T extends Partial<GqlTimestampType | null>>(
       graphql: string,
       args: GqlUpdateTimestampTypeArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'updateTimestampType', T> = await axios.post(
@@ -2725,7 +2881,9 @@ mutation UpdateTimestampType(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
@@ -2744,6 +2902,7 @@ mutation UpdateTimestampType(
     async verifyEmailAddress<T extends Partial<GqlAccount | null>>(
       graphql: string,
       args: GqlVerifyEmailAddressArgs,
+      axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
         const response: GqlResponse<'verifyEmailAddress', T> = await axios.post(
@@ -2764,7 +2923,9 @@ mutation VerifyEmailAddress(
             },
           },
           {
+            ...axiosConfig,
             headers: {
+              ...axiosConfig?.headers,
               'X-Client-ID': clientId,
             },
           },
