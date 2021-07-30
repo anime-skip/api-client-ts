@@ -291,7 +291,9 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
                   .join(';\n  '),
               }),
             );
-            return `${f.name}(query: string, args: Gql${argsTypeName}): Promise<${type}${
+            return `${
+              f.name
+            }(query: string, args: Gql${argsTypeName}, axiosConfig?: AxiosRequestConfig): Promise<${type}${
               nullable ? ' | null' : ''
             }>`;
           })

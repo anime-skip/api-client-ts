@@ -309,53 +309,144 @@ export interface GqlMutation {
   addTimestampToTemplate(
     query: string,
     args: GqlAddTimestampToTemplateArgs,
+    axiosConfig?: AxiosRequestConfig,
   ): Promise<GqlTemplateTimestamp | null>;
-  createAccount(query: string, args: GqlCreateAccountArgs): Promise<GqlLoginData | null>;
-  createEpisode(query: string, args: GqlCreateEpisodeArgs): Promise<GqlEpisode | null>;
-  createEpisodeUrl(query: string, args: GqlCreateEpisodeUrlArgs): Promise<GqlEpisodeUrl | null>;
-  createShow(query: string, args: GqlCreateShowArgs): Promise<GqlShow | null>;
-  createShowAdmin(query: string, args: GqlCreateShowAdminArgs): Promise<GqlShowAdmin | null>;
-  createTemplate(query: string, args: GqlCreateTemplateArgs): Promise<GqlTemplate | null>;
-  createTimestamp(query: string, args: GqlCreateTimestampArgs): Promise<GqlTimestamp | null>;
+  createAccount(
+    query: string,
+    args: GqlCreateAccountArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlLoginData | null>;
+  createEpisode(
+    query: string,
+    args: GqlCreateEpisodeArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlEpisode | null>;
+  createEpisodeUrl(
+    query: string,
+    args: GqlCreateEpisodeUrlArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlEpisodeUrl | null>;
+  createShow(
+    query: string,
+    args: GqlCreateShowArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlShow | null>;
+  createShowAdmin(
+    query: string,
+    args: GqlCreateShowAdminArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlShowAdmin | null>;
+  createTemplate(
+    query: string,
+    args: GqlCreateTemplateArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlTemplate | null>;
+  createTimestamp(
+    query: string,
+    args: GqlCreateTimestampArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlTimestamp | null>;
   createTimestampType(
     query: string,
     args: GqlCreateTimestampTypeArgs,
+    axiosConfig?: AxiosRequestConfig,
   ): Promise<GqlTimestampType | null>;
-  deleteAccount(query: string, args: GqlDeleteAccountArgs): Promise<GqlAccount | null>;
+  deleteAccount(
+    query: string,
+    args: GqlDeleteAccountArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlAccount | null>;
   deleteAccountRequest(
     query: string,
     args: GqlDeleteAccountRequestArgs,
+    axiosConfig?: AxiosRequestConfig,
   ): Promise<GqlAccount | null>;
-  deleteEpisode(query: string, args: GqlDeleteEpisodeArgs): Promise<GqlEpisode | null>;
-  deleteEpisodeUrl(query: string, args: GqlDeleteEpisodeUrlArgs): Promise<GqlEpisodeUrl | null>;
-  deleteShow(query: string, args: GqlDeleteShowArgs): Promise<GqlShow | null>;
-  deleteShowAdmin(query: string, args: GqlDeleteShowAdminArgs): Promise<GqlShowAdmin | null>;
-  deleteTemplate(query: string, args: GqlDeleteTemplateArgs): Promise<GqlTemplate | null>;
-  deleteTimestamp(query: string, args: GqlDeleteTimestampArgs): Promise<GqlTimestamp | null>;
+  deleteEpisode(
+    query: string,
+    args: GqlDeleteEpisodeArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlEpisode | null>;
+  deleteEpisodeUrl(
+    query: string,
+    args: GqlDeleteEpisodeUrlArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlEpisodeUrl | null>;
+  deleteShow(
+    query: string,
+    args: GqlDeleteShowArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlShow | null>;
+  deleteShowAdmin(
+    query: string,
+    args: GqlDeleteShowAdminArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlShowAdmin | null>;
+  deleteTemplate(
+    query: string,
+    args: GqlDeleteTemplateArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlTemplate | null>;
+  deleteTimestamp(
+    query: string,
+    args: GqlDeleteTimestampArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlTimestamp | null>;
   deleteTimestampType(
     query: string,
     args: GqlDeleteTimestampTypeArgs,
+    axiosConfig?: AxiosRequestConfig,
   ): Promise<GqlTimestampType | null>;
   removeTimestampFromTemplate(
     query: string,
     args: GqlRemoveTimestampFromTemplateArgs,
+    axiosConfig?: AxiosRequestConfig,
   ): Promise<GqlTemplateTimestamp | null>;
   resendVerificationEmail(query: string): Promise<GqlBoolean | null>;
-  savePreferences(query: string, args: GqlSavePreferencesArgs): Promise<GqlPreferences | null>;
-  updateEpisode(query: string, args: GqlUpdateEpisodeArgs): Promise<GqlEpisode | null>;
-  updateEpisodeUrl(query: string, args: GqlUpdateEpisodeUrlArgs): Promise<GqlEpisodeUrl | null>;
-  updateShow(query: string, args: GqlUpdateShowArgs): Promise<GqlShow | null>;
-  updateTemplate(query: string, args: GqlUpdateTemplateArgs): Promise<GqlTemplate | null>;
-  updateTimestamp(query: string, args: GqlUpdateTimestampArgs): Promise<GqlTimestamp | null>;
+  savePreferences(
+    query: string,
+    args: GqlSavePreferencesArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlPreferences | null>;
+  updateEpisode(
+    query: string,
+    args: GqlUpdateEpisodeArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlEpisode | null>;
+  updateEpisodeUrl(
+    query: string,
+    args: GqlUpdateEpisodeUrlArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlEpisodeUrl | null>;
+  updateShow(
+    query: string,
+    args: GqlUpdateShowArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlShow | null>;
+  updateTemplate(
+    query: string,
+    args: GqlUpdateTemplateArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlTemplate | null>;
+  updateTimestamp(
+    query: string,
+    args: GqlUpdateTimestampArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlTimestamp | null>;
   updateTimestamps(
     query: string,
     args: GqlUpdateTimestampsArgs,
+    axiosConfig?: AxiosRequestConfig,
   ): Promise<GqlUpdatedTimestamps | null>;
   updateTimestampType(
     query: string,
     args: GqlUpdateTimestampTypeArgs,
+    axiosConfig?: AxiosRequestConfig,
   ): Promise<GqlTimestampType | null>;
-  verifyEmailAddress(query: string, args: GqlVerifyEmailAddressArgs): Promise<GqlAccount | null>;
+  verifyEmailAddress(
+    query: string,
+    args: GqlVerifyEmailAddressArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlAccount | null>;
 }
 
 export interface GqlPreferences {
@@ -486,58 +577,116 @@ export interface GqlSearchShowsArgs {
 export interface GqlQuery {
   account(query: string): Promise<GqlAccount | null>;
   allTimestampTypes(query: string): Promise<Array<GqlTimestampType> | null>;
-  findEpisode(query: string, args: GqlFindEpisodeArgs): Promise<GqlEpisode | null>;
+  findEpisode(
+    query: string,
+    args: GqlFindEpisodeArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlEpisode | null>;
   findEpisodeByName(
     query: string,
     args: GqlFindEpisodeByNameArgs,
+    axiosConfig?: AxiosRequestConfig,
   ): Promise<Array<GqlThirdPartyEpisode | null> | null>;
   findEpisodesByShowId(
     query: string,
     args: GqlFindEpisodesByShowIdArgs,
+    axiosConfig?: AxiosRequestConfig,
   ): Promise<Array<GqlEpisode> | null>;
-  findEpisodeUrl(query: string, args: GqlFindEpisodeUrlArgs): Promise<GqlEpisodeUrl | null>;
+  findEpisodeUrl(
+    query: string,
+    args: GqlFindEpisodeUrlArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlEpisodeUrl | null>;
   findEpisodeUrlsByEpisodeId(
     query: string,
     args: GqlFindEpisodeUrlsByEpisodeIdArgs,
+    axiosConfig?: AxiosRequestConfig,
   ): Promise<Array<GqlEpisodeUrl> | null>;
-  findShow(query: string, args: GqlFindShowArgs): Promise<GqlShow | null>;
-  findShowAdmin(query: string, args: GqlFindShowAdminArgs): Promise<GqlShowAdmin | null>;
+  findShow(
+    query: string,
+    args: GqlFindShowArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlShow | null>;
+  findShowAdmin(
+    query: string,
+    args: GqlFindShowAdminArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlShowAdmin | null>;
   findShowAdminsByShowId(
     query: string,
     args: GqlFindShowAdminsByShowIdArgs,
+    axiosConfig?: AxiosRequestConfig,
   ): Promise<Array<GqlShowAdmin> | null>;
   findShowAdminsByUserId(
     query: string,
     args: GqlFindShowAdminsByUserIdArgs,
+    axiosConfig?: AxiosRequestConfig,
   ): Promise<Array<GqlShowAdmin> | null>;
-  findTemplate(query: string, args: GqlFindTemplateArgs): Promise<GqlTemplate | null>;
+  findTemplate(
+    query: string,
+    args: GqlFindTemplateArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlTemplate | null>;
   findTemplateByDetails(
     query: string,
     args: GqlFindTemplateByDetailsArgs,
+    axiosConfig?: AxiosRequestConfig,
   ): Promise<GqlTemplate | null>;
   findTemplatesByShowId(
     query: string,
     args: GqlFindTemplatesByShowIdArgs,
+    axiosConfig?: AxiosRequestConfig,
   ): Promise<Array<GqlTemplate>>;
-  findTimestamp(query: string, args: GqlFindTimestampArgs): Promise<GqlTimestamp | null>;
+  findTimestamp(
+    query: string,
+    args: GqlFindTimestampArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlTimestamp | null>;
   findTimestampsByEpisodeId(
     query: string,
     args: GqlFindTimestampsByEpisodeIdArgs,
+    axiosConfig?: AxiosRequestConfig,
   ): Promise<Array<GqlTimestamp> | null>;
   findTimestampType(
     query: string,
     args: GqlFindTimestampTypeArgs,
+    axiosConfig?: AxiosRequestConfig,
   ): Promise<GqlTimestampType | null>;
-  findUser(query: string, args: GqlFindUserArgs): Promise<GqlUser | null>;
-  findUserByUsername(query: string, args: GqlFindUserByUsernameArgs): Promise<GqlUser | null>;
-  login(query: string, args: GqlLoginArgs): Promise<GqlLoginData | null>;
-  loginRefresh(query: string, args: GqlLoginRefreshArgs): Promise<GqlLoginData | null>;
+  findUser(
+    query: string,
+    args: GqlFindUserArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlUser | null>;
+  findUserByUsername(
+    query: string,
+    args: GqlFindUserByUsernameArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlUser | null>;
+  login(
+    query: string,
+    args: GqlLoginArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlLoginData | null>;
+  loginRefresh(
+    query: string,
+    args: GqlLoginRefreshArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlLoginData | null>;
   recentlyAddedEpisodes(
     query: string,
     args: GqlRecentlyAddedEpisodesArgs,
+    axiosConfig?: AxiosRequestConfig,
   ): Promise<Array<GqlEpisode> | null>;
-  searchEpisodes(query: string, args: GqlSearchEpisodesArgs): Promise<Array<GqlEpisode> | null>;
-  searchShows(query: string, args: GqlSearchShowsArgs): Promise<Array<GqlShow> | null>;
+  searchEpisodes(
+    query: string,
+    args: GqlSearchEpisodesArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<Array<GqlEpisode> | null>;
+  searchShows(
+    query: string,
+    args: GqlSearchShowsArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<Array<GqlShow> | null>;
 }
 
 export enum GqlRole {
