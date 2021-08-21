@@ -310,143 +310,143 @@ export interface GqlMutation {
     query: string,
     args: GqlAddTimestampToTemplateArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlTemplateTimestamp | null>;
+  ): Promise<GqlTemplateTimestamp>;
   createAccount(
     query: string,
     args: GqlCreateAccountArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlLoginData | null>;
+  ): Promise<GqlLoginData>;
   createEpisode(
     query: string,
     args: GqlCreateEpisodeArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlEpisode | null>;
+  ): Promise<GqlEpisode>;
   createEpisodeUrl(
     query: string,
     args: GqlCreateEpisodeUrlArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlEpisodeUrl | null>;
+  ): Promise<GqlEpisodeUrl>;
   createShow(
     query: string,
     args: GqlCreateShowArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlShow | null>;
+  ): Promise<GqlShow>;
   createShowAdmin(
     query: string,
     args: GqlCreateShowAdminArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlShowAdmin | null>;
+  ): Promise<GqlShowAdmin>;
   createTemplate(
     query: string,
     args: GqlCreateTemplateArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlTemplate | null>;
+  ): Promise<GqlTemplate>;
   createTimestamp(
     query: string,
     args: GqlCreateTimestampArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlTimestamp | null>;
+  ): Promise<GqlTimestamp>;
   createTimestampType(
     query: string,
     args: GqlCreateTimestampTypeArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlTimestampType | null>;
+  ): Promise<GqlTimestampType>;
   deleteAccount(
     query: string,
     args: GqlDeleteAccountArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlAccount | null>;
+  ): Promise<GqlAccount>;
   deleteAccountRequest(
     query: string,
     args: GqlDeleteAccountRequestArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlAccount | null>;
+  ): Promise<GqlAccount>;
   deleteEpisode(
     query: string,
     args: GqlDeleteEpisodeArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlEpisode | null>;
+  ): Promise<GqlEpisode>;
   deleteEpisodeUrl(
     query: string,
     args: GqlDeleteEpisodeUrlArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlEpisodeUrl | null>;
+  ): Promise<GqlEpisodeUrl>;
   deleteShow(
     query: string,
     args: GqlDeleteShowArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlShow | null>;
+  ): Promise<GqlShow>;
   deleteShowAdmin(
     query: string,
     args: GqlDeleteShowAdminArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlShowAdmin | null>;
+  ): Promise<GqlShowAdmin>;
   deleteTemplate(
     query: string,
     args: GqlDeleteTemplateArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlTemplate | null>;
+  ): Promise<GqlTemplate>;
   deleteTimestamp(
     query: string,
     args: GqlDeleteTimestampArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlTimestamp | null>;
+  ): Promise<GqlTimestamp>;
   deleteTimestampType(
     query: string,
     args: GqlDeleteTimestampTypeArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlTimestampType | null>;
+  ): Promise<GqlTimestampType>;
   removeTimestampFromTemplate(
     query: string,
     args: GqlRemoveTimestampFromTemplateArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlTemplateTimestamp | null>;
+  ): Promise<GqlTemplateTimestamp>;
   resendVerificationEmail(query: string): Promise<GqlBoolean | null>;
   savePreferences(
     query: string,
     args: GqlSavePreferencesArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlPreferences | null>;
+  ): Promise<GqlPreferences>;
   updateEpisode(
     query: string,
     args: GqlUpdateEpisodeArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlEpisode | null>;
+  ): Promise<GqlEpisode>;
   updateEpisodeUrl(
     query: string,
     args: GqlUpdateEpisodeUrlArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlEpisodeUrl | null>;
+  ): Promise<GqlEpisodeUrl>;
   updateShow(
     query: string,
     args: GqlUpdateShowArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlShow | null>;
+  ): Promise<GqlShow>;
   updateTemplate(
     query: string,
     args: GqlUpdateTemplateArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlTemplate | null>;
+  ): Promise<GqlTemplate>;
   updateTimestamp(
     query: string,
     args: GqlUpdateTimestampArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlTimestamp | null>;
+  ): Promise<GqlTimestamp>;
   updateTimestamps(
     query: string,
     args: GqlUpdateTimestampsArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlUpdatedTimestamps | null>;
+  ): Promise<GqlUpdatedTimestamps>;
   updateTimestampType(
     query: string,
     args: GqlUpdateTimestampTypeArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlTimestampType | null>;
+  ): Promise<GqlTimestampType>;
   verifyEmailAddress(
     query: string,
     args: GqlVerifyEmailAddressArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlAccount | null>;
+  ): Promise<GqlAccount>;
 }
 
 export interface GqlPreferences {
@@ -575,63 +575,63 @@ export interface GqlSearchShowsArgs {
 }
 
 export interface GqlQuery {
-  account(query: string): Promise<GqlAccount | null>;
-  allTimestampTypes(query: string): Promise<Array<GqlTimestampType> | null>;
+  account(query: string): Promise<GqlAccount>;
+  allTimestampTypes(query: string): Promise<Array<GqlTimestampType>>;
   findEpisode(
     query: string,
     args: GqlFindEpisodeArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlEpisode | null>;
+  ): Promise<GqlEpisode>;
   findEpisodeByName(
     query: string,
     args: GqlFindEpisodeByNameArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<Array<GqlThirdPartyEpisode | null> | null>;
+  ): Promise<Array<GqlThirdPartyEpisode>>;
   findEpisodesByShowId(
     query: string,
     args: GqlFindEpisodesByShowIdArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<Array<GqlEpisode> | null>;
+  ): Promise<Array<GqlEpisode>>;
   findEpisodeUrl(
     query: string,
     args: GqlFindEpisodeUrlArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlEpisodeUrl | null>;
+  ): Promise<GqlEpisodeUrl>;
   findEpisodeUrlsByEpisodeId(
     query: string,
     args: GqlFindEpisodeUrlsByEpisodeIdArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<Array<GqlEpisodeUrl> | null>;
+  ): Promise<Array<GqlEpisodeUrl>>;
   findShow(
     query: string,
     args: GqlFindShowArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlShow | null>;
+  ): Promise<GqlShow>;
   findShowAdmin(
     query: string,
     args: GqlFindShowAdminArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlShowAdmin | null>;
+  ): Promise<GqlShowAdmin>;
   findShowAdminsByShowId(
     query: string,
     args: GqlFindShowAdminsByShowIdArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<Array<GqlShowAdmin> | null>;
+  ): Promise<Array<GqlShowAdmin>>;
   findShowAdminsByUserId(
     query: string,
     args: GqlFindShowAdminsByUserIdArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<Array<GqlShowAdmin> | null>;
+  ): Promise<Array<GqlShowAdmin>>;
   findTemplate(
     query: string,
     args: GqlFindTemplateArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlTemplate | null>;
+  ): Promise<GqlTemplate>;
   findTemplateByDetails(
     query: string,
     args: GqlFindTemplateByDetailsArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlTemplate | null>;
+  ): Promise<GqlTemplate>;
   findTemplatesByShowId(
     query: string,
     args: GqlFindTemplatesByShowIdArgs,
@@ -641,52 +641,48 @@ export interface GqlQuery {
     query: string,
     args: GqlFindTimestampArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlTimestamp | null>;
+  ): Promise<GqlTimestamp>;
   findTimestampsByEpisodeId(
     query: string,
     args: GqlFindTimestampsByEpisodeIdArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<Array<GqlTimestamp> | null>;
+  ): Promise<Array<GqlTimestamp>>;
   findTimestampType(
     query: string,
     args: GqlFindTimestampTypeArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlTimestampType | null>;
+  ): Promise<GqlTimestampType>;
   findUser(
     query: string,
     args: GqlFindUserArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlUser | null>;
+  ): Promise<GqlUser>;
   findUserByUsername(
     query: string,
     args: GqlFindUserByUsernameArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlUser | null>;
-  login(
-    query: string,
-    args: GqlLoginArgs,
-    axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlLoginData | null>;
+  ): Promise<GqlUser>;
+  login(query: string, args: GqlLoginArgs, axiosConfig?: AxiosRequestConfig): Promise<GqlLoginData>;
   loginRefresh(
     query: string,
     args: GqlLoginRefreshArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<GqlLoginData | null>;
+  ): Promise<GqlLoginData>;
   recentlyAddedEpisodes(
     query: string,
     args: GqlRecentlyAddedEpisodesArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<Array<GqlEpisode> | null>;
+  ): Promise<Array<GqlEpisode>>;
   searchEpisodes(
     query: string,
     args: GqlSearchEpisodesArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<Array<GqlEpisode> | null>;
+  ): Promise<Array<GqlEpisode>>;
   searchShows(
     query: string,
     args: GqlSearchShowsArgs,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<Array<GqlShow> | null>;
+  ): Promise<Array<GqlShow>>;
 }
 
 export enum GqlRole {
@@ -858,7 +854,7 @@ export default function createAnimeSkipClient(baseUrl: string, clientId: string)
 
   // Initialize queries
   const queries: GqlQuery = {
-    async account<T extends Partial<GqlAccount | null>>(
+    async account<T extends Partial<GqlAccount>>(
       graphql: string,
       axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
@@ -892,7 +888,7 @@ query Account {
         throw err;
       }
     },
-    async allTimestampTypes<T extends Partial<Array<GqlTimestampType> | null>>(
+    async allTimestampTypes<T extends Partial<Array<GqlTimestampType>>>(
       graphql: string,
       axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
@@ -926,7 +922,7 @@ query AllTimestampTypes {
         throw err;
       }
     },
-    async findEpisode<T extends Partial<GqlEpisode | null>>(
+    async findEpisode<T extends Partial<GqlEpisode>>(
       graphql: string,
       args: GqlFindEpisodeArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -968,7 +964,7 @@ query FindEpisode(
         throw err;
       }
     },
-    async findEpisodeByName<T extends Partial<Array<GqlThirdPartyEpisode | null> | null>>(
+    async findEpisodeByName<T extends Partial<Array<GqlThirdPartyEpisode>>>(
       graphql: string,
       args: GqlFindEpisodeByNameArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1010,7 +1006,7 @@ query FindEpisodeByName(
         throw err;
       }
     },
-    async findEpisodesByShowId<T extends Partial<Array<GqlEpisode> | null>>(
+    async findEpisodesByShowId<T extends Partial<Array<GqlEpisode>>>(
       graphql: string,
       args: GqlFindEpisodesByShowIdArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1052,7 +1048,7 @@ query FindEpisodesByShowId(
         throw err;
       }
     },
-    async findEpisodeUrl<T extends Partial<GqlEpisodeUrl | null>>(
+    async findEpisodeUrl<T extends Partial<GqlEpisodeUrl>>(
       graphql: string,
       args: GqlFindEpisodeUrlArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1094,7 +1090,7 @@ query FindEpisodeUrl(
         throw err;
       }
     },
-    async findEpisodeUrlsByEpisodeId<T extends Partial<Array<GqlEpisodeUrl> | null>>(
+    async findEpisodeUrlsByEpisodeId<T extends Partial<Array<GqlEpisodeUrl>>>(
       graphql: string,
       args: GqlFindEpisodeUrlsByEpisodeIdArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1136,7 +1132,7 @@ query FindEpisodeUrlsByEpisodeId(
         throw err;
       }
     },
-    async findShow<T extends Partial<GqlShow | null>>(
+    async findShow<T extends Partial<GqlShow>>(
       graphql: string,
       args: GqlFindShowArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1178,7 +1174,7 @@ query FindShow(
         throw err;
       }
     },
-    async findShowAdmin<T extends Partial<GqlShowAdmin | null>>(
+    async findShowAdmin<T extends Partial<GqlShowAdmin>>(
       graphql: string,
       args: GqlFindShowAdminArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1220,7 +1216,7 @@ query FindShowAdmin(
         throw err;
       }
     },
-    async findShowAdminsByShowId<T extends Partial<Array<GqlShowAdmin> | null>>(
+    async findShowAdminsByShowId<T extends Partial<Array<GqlShowAdmin>>>(
       graphql: string,
       args: GqlFindShowAdminsByShowIdArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1262,7 +1258,7 @@ query FindShowAdminsByShowId(
         throw err;
       }
     },
-    async findShowAdminsByUserId<T extends Partial<Array<GqlShowAdmin> | null>>(
+    async findShowAdminsByUserId<T extends Partial<Array<GqlShowAdmin>>>(
       graphql: string,
       args: GqlFindShowAdminsByUserIdArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1304,7 +1300,7 @@ query FindShowAdminsByUserId(
         throw err;
       }
     },
-    async findTemplate<T extends Partial<GqlTemplate | null>>(
+    async findTemplate<T extends Partial<GqlTemplate>>(
       graphql: string,
       args: GqlFindTemplateArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1346,7 +1342,7 @@ query FindTemplate(
         throw err;
       }
     },
-    async findTemplateByDetails<T extends Partial<GqlTemplate | null>>(
+    async findTemplateByDetails<T extends Partial<GqlTemplate>>(
       graphql: string,
       args: GqlFindTemplateByDetailsArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1432,7 +1428,7 @@ query FindTemplatesByShowId(
         throw err;
       }
     },
-    async findTimestamp<T extends Partial<GqlTimestamp | null>>(
+    async findTimestamp<T extends Partial<GqlTimestamp>>(
       graphql: string,
       args: GqlFindTimestampArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1474,7 +1470,7 @@ query FindTimestamp(
         throw err;
       }
     },
-    async findTimestampsByEpisodeId<T extends Partial<Array<GqlTimestamp> | null>>(
+    async findTimestampsByEpisodeId<T extends Partial<Array<GqlTimestamp>>>(
       graphql: string,
       args: GqlFindTimestampsByEpisodeIdArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1516,7 +1512,7 @@ query FindTimestampsByEpisodeId(
         throw err;
       }
     },
-    async findTimestampType<T extends Partial<GqlTimestampType | null>>(
+    async findTimestampType<T extends Partial<GqlTimestampType>>(
       graphql: string,
       args: GqlFindTimestampTypeArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1558,7 +1554,7 @@ query FindTimestampType(
         throw err;
       }
     },
-    async findUser<T extends Partial<GqlUser | null>>(
+    async findUser<T extends Partial<GqlUser>>(
       graphql: string,
       args: GqlFindUserArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1600,7 +1596,7 @@ query FindUser(
         throw err;
       }
     },
-    async findUserByUsername<T extends Partial<GqlUser | null>>(
+    async findUserByUsername<T extends Partial<GqlUser>>(
       graphql: string,
       args: GqlFindUserByUsernameArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1642,7 +1638,7 @@ query FindUserByUsername(
         throw err;
       }
     },
-    async login<T extends Partial<GqlLoginData | null>>(
+    async login<T extends Partial<GqlLoginData>>(
       graphql: string,
       args: GqlLoginArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1685,7 +1681,7 @@ query Login(
         throw err;
       }
     },
-    async loginRefresh<T extends Partial<GqlLoginData | null>>(
+    async loginRefresh<T extends Partial<GqlLoginData>>(
       graphql: string,
       args: GqlLoginRefreshArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1727,7 +1723,7 @@ query LoginRefresh(
         throw err;
       }
     },
-    async recentlyAddedEpisodes<T extends Partial<Array<GqlEpisode> | null>>(
+    async recentlyAddedEpisodes<T extends Partial<Array<GqlEpisode>>>(
       graphql: string,
       args: GqlRecentlyAddedEpisodesArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1770,7 +1766,7 @@ query RecentlyAddedEpisodes(
         throw err;
       }
     },
-    async searchEpisodes<T extends Partial<Array<GqlEpisode> | null>>(
+    async searchEpisodes<T extends Partial<Array<GqlEpisode>>>(
       graphql: string,
       args: GqlSearchEpisodesArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1816,7 +1812,7 @@ query SearchEpisodes(
         throw err;
       }
     },
-    async searchShows<T extends Partial<Array<GqlShow> | null>>(
+    async searchShows<T extends Partial<Array<GqlShow>>>(
       graphql: string,
       args: GqlSearchShowsArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1865,7 +1861,7 @@ query SearchShows(
 
   // Initialize mutations
   const mutations: GqlMutation = {
-    async addTimestampToTemplate<T extends Partial<GqlTemplateTimestamp | null>>(
+    async addTimestampToTemplate<T extends Partial<GqlTemplateTimestamp>>(
       graphql: string,
       args: GqlAddTimestampToTemplateArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1907,7 +1903,7 @@ mutation AddTimestampToTemplate(
         throw err;
       }
     },
-    async createAccount<T extends Partial<GqlLoginData | null>>(
+    async createAccount<T extends Partial<GqlLoginData>>(
       graphql: string,
       args: GqlCreateAccountArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1952,7 +1948,7 @@ mutation CreateAccount(
         throw err;
       }
     },
-    async createEpisode<T extends Partial<GqlEpisode | null>>(
+    async createEpisode<T extends Partial<GqlEpisode>>(
       graphql: string,
       args: GqlCreateEpisodeArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -1995,7 +1991,7 @@ mutation CreateEpisode(
         throw err;
       }
     },
-    async createEpisodeUrl<T extends Partial<GqlEpisodeUrl | null>>(
+    async createEpisodeUrl<T extends Partial<GqlEpisodeUrl>>(
       graphql: string,
       args: GqlCreateEpisodeUrlArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2038,7 +2034,7 @@ mutation CreateEpisodeUrl(
         throw err;
       }
     },
-    async createShow<T extends Partial<GqlShow | null>>(
+    async createShow<T extends Partial<GqlShow>>(
       graphql: string,
       args: GqlCreateShowArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2081,7 +2077,7 @@ mutation CreateShow(
         throw err;
       }
     },
-    async createShowAdmin<T extends Partial<GqlShowAdmin | null>>(
+    async createShowAdmin<T extends Partial<GqlShowAdmin>>(
       graphql: string,
       args: GqlCreateShowAdminArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2123,7 +2119,7 @@ mutation CreateShowAdmin(
         throw err;
       }
     },
-    async createTemplate<T extends Partial<GqlTemplate | null>>(
+    async createTemplate<T extends Partial<GqlTemplate>>(
       graphql: string,
       args: GqlCreateTemplateArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2165,7 +2161,7 @@ mutation CreateTemplate(
         throw err;
       }
     },
-    async createTimestamp<T extends Partial<GqlTimestamp | null>>(
+    async createTimestamp<T extends Partial<GqlTimestamp>>(
       graphql: string,
       args: GqlCreateTimestampArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2208,7 +2204,7 @@ mutation CreateTimestamp(
         throw err;
       }
     },
-    async createTimestampType<T extends Partial<GqlTimestampType | null>>(
+    async createTimestampType<T extends Partial<GqlTimestampType>>(
       graphql: string,
       args: GqlCreateTimestampTypeArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2250,7 +2246,7 @@ mutation CreateTimestampType(
         throw err;
       }
     },
-    async deleteAccount<T extends Partial<GqlAccount | null>>(
+    async deleteAccount<T extends Partial<GqlAccount>>(
       graphql: string,
       args: GqlDeleteAccountArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2292,7 +2288,7 @@ mutation DeleteAccount(
         throw err;
       }
     },
-    async deleteAccountRequest<T extends Partial<GqlAccount | null>>(
+    async deleteAccountRequest<T extends Partial<GqlAccount>>(
       graphql: string,
       args: GqlDeleteAccountRequestArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2334,7 +2330,7 @@ mutation DeleteAccountRequest(
         throw err;
       }
     },
-    async deleteEpisode<T extends Partial<GqlEpisode | null>>(
+    async deleteEpisode<T extends Partial<GqlEpisode>>(
       graphql: string,
       args: GqlDeleteEpisodeArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2376,7 +2372,7 @@ mutation DeleteEpisode(
         throw err;
       }
     },
-    async deleteEpisodeUrl<T extends Partial<GqlEpisodeUrl | null>>(
+    async deleteEpisodeUrl<T extends Partial<GqlEpisodeUrl>>(
       graphql: string,
       args: GqlDeleteEpisodeUrlArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2418,7 +2414,7 @@ mutation DeleteEpisodeUrl(
         throw err;
       }
     },
-    async deleteShow<T extends Partial<GqlShow | null>>(
+    async deleteShow<T extends Partial<GqlShow>>(
       graphql: string,
       args: GqlDeleteShowArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2460,7 +2456,7 @@ mutation DeleteShow(
         throw err;
       }
     },
-    async deleteShowAdmin<T extends Partial<GqlShowAdmin | null>>(
+    async deleteShowAdmin<T extends Partial<GqlShowAdmin>>(
       graphql: string,
       args: GqlDeleteShowAdminArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2502,7 +2498,7 @@ mutation DeleteShowAdmin(
         throw err;
       }
     },
-    async deleteTemplate<T extends Partial<GqlTemplate | null>>(
+    async deleteTemplate<T extends Partial<GqlTemplate>>(
       graphql: string,
       args: GqlDeleteTemplateArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2544,7 +2540,7 @@ mutation DeleteTemplate(
         throw err;
       }
     },
-    async deleteTimestamp<T extends Partial<GqlTimestamp | null>>(
+    async deleteTimestamp<T extends Partial<GqlTimestamp>>(
       graphql: string,
       args: GqlDeleteTimestampArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2586,7 +2582,7 @@ mutation DeleteTimestamp(
         throw err;
       }
     },
-    async deleteTimestampType<T extends Partial<GqlTimestampType | null>>(
+    async deleteTimestampType<T extends Partial<GqlTimestampType>>(
       graphql: string,
       args: GqlDeleteTimestampTypeArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2628,7 +2624,7 @@ mutation DeleteTimestampType(
         throw err;
       }
     },
-    async removeTimestampFromTemplate<T extends Partial<GqlTemplateTimestamp | null>>(
+    async removeTimestampFromTemplate<T extends Partial<GqlTemplateTimestamp>>(
       graphql: string,
       args: GqlRemoveTimestampFromTemplateArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2704,7 +2700,7 @@ mutation ResendVerificationEmail {
         throw err;
       }
     },
-    async savePreferences<T extends Partial<GqlPreferences | null>>(
+    async savePreferences<T extends Partial<GqlPreferences>>(
       graphql: string,
       args: GqlSavePreferencesArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2746,7 +2742,7 @@ mutation SavePreferences(
         throw err;
       }
     },
-    async updateEpisode<T extends Partial<GqlEpisode | null>>(
+    async updateEpisode<T extends Partial<GqlEpisode>>(
       graphql: string,
       args: GqlUpdateEpisodeArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2789,7 +2785,7 @@ mutation UpdateEpisode(
         throw err;
       }
     },
-    async updateEpisodeUrl<T extends Partial<GqlEpisodeUrl | null>>(
+    async updateEpisodeUrl<T extends Partial<GqlEpisodeUrl>>(
       graphql: string,
       args: GqlUpdateEpisodeUrlArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2832,7 +2828,7 @@ mutation UpdateEpisodeUrl(
         throw err;
       }
     },
-    async updateShow<T extends Partial<GqlShow | null>>(
+    async updateShow<T extends Partial<GqlShow>>(
       graphql: string,
       args: GqlUpdateShowArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2875,7 +2871,7 @@ mutation UpdateShow(
         throw err;
       }
     },
-    async updateTemplate<T extends Partial<GqlTemplate | null>>(
+    async updateTemplate<T extends Partial<GqlTemplate>>(
       graphql: string,
       args: GqlUpdateTemplateArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2918,7 +2914,7 @@ mutation UpdateTemplate(
         throw err;
       }
     },
-    async updateTimestamp<T extends Partial<GqlTimestamp | null>>(
+    async updateTimestamp<T extends Partial<GqlTimestamp>>(
       graphql: string,
       args: GqlUpdateTimestampArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -2961,7 +2957,7 @@ mutation UpdateTimestamp(
         throw err;
       }
     },
-    async updateTimestamps<T extends Partial<GqlUpdatedTimestamps | null>>(
+    async updateTimestamps<T extends Partial<GqlUpdatedTimestamps>>(
       graphql: string,
       args: GqlUpdateTimestampsArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -3005,7 +3001,7 @@ mutation UpdateTimestamps(
         throw err;
       }
     },
-    async updateTimestampType<T extends Partial<GqlTimestampType | null>>(
+    async updateTimestampType<T extends Partial<GqlTimestampType>>(
       graphql: string,
       args: GqlUpdateTimestampTypeArgs,
       axiosConfig?: AxiosRequestConfig,
@@ -3048,7 +3044,7 @@ mutation UpdateTimestampType(
         throw err;
       }
     },
-    async verifyEmailAddress<T extends Partial<GqlAccount | null>>(
+    async verifyEmailAddress<T extends Partial<GqlAccount>>(
       graphql: string,
       args: GqlVerifyEmailAddressArgs,
       axiosConfig?: AxiosRequestConfig,
