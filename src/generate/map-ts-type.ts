@@ -1,6 +1,6 @@
 import { IntrospectionType } from './types';
 
-export function mapType(type: IntrospectionType): { type: string; nullable: boolean } {
+export function mapTsType(type: IntrospectionType): { type: string; nullable: boolean } {
   if (
     type.kind === 'SCALAR' ||
     type.kind === 'OBJECT' ||
@@ -30,11 +30,11 @@ export function mapType(type: IntrospectionType): { type: string; nullable: bool
         nullable: true,
       };
     }
-    const { type: t } = mapType(type.ofType);
+    const { type: t } = mapTsType(type.ofType);
     return { type: t, nullable: false };
   }
   if (type.kind == 'LIST') {
-    const { type: t, nullable } = mapType(type.ofType);
+    const { type: t, nullable } = mapTsType(type.ofType);
     return {
       type: `Array<${t + (nullable ? ' | null' : '')}>`,
       nullable: true,

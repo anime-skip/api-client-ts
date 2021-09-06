@@ -2968,7 +2968,7 @@ mutation UpdateTimestamp(
           {
             query: `
 mutation UpdateTimestamps(
-  $create: Array<InputTimestampOn>!, $update: Array<InputExistingTimestamp>!, $delete: Array<ID>!
+  $create: [InputTimestampOn!]!, $update: [InputExistingTimestamp!]!, $delete: [ID!]!
 ) {
   updateTimestamps(
     create: $create, update: $update, delete: $delete

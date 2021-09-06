@@ -2,7 +2,8 @@ import Axios from 'axios';
 import fs from 'fs';
 import { capitalize } from './capitalize';
 import { loadTemplate } from './load-template';
-import { mapType } from './map-type';
+import { mapTsType } from './map-ts-type';
+import { mapGqlType } from './map-gql-type';
 import { IntrospectionFullType, IntrospectionSchema } from './types';
 import axiosRetry from 'axios-retry';
 
@@ -138,7 +139,7 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
           .find(type => type.name === schemaLocation?.name)
           ?.fields?.sort((l, r) => l.name.localeCompare(r.name))
           .map(query => {
-            const { type: returnType, nullable } = mapType(query.type);
+            const { type: returnType, nullable } = mapTsType(query.type);
             const templateValues = {
               REQUEST_NAME: query.name,
               REQUEST_NAME_CAPITALIZED: capitalize(query.name),
@@ -152,9 +153,8 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
               ...templateValues,
               VARIABLE_DECLARATIONS: query.args
                 .map(arg => {
-                  const { type, nullable } = mapType(arg.type);
                   return loadTemplate('variable-declaration.template.txt', {
-                    TYPE: `${type.replace('Gql', '')}${nullable ? '' : '!'}`,
+                    TYPE: mapGqlType(arg.type).type,
                     NAME: arg.name,
                   });
                 })
@@ -248,7 +248,7 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
         NAME: type.name,
         FIELDS: type.fields
           ?.map(f => {
-            const { type, nullable } = mapType(f.type);
+            const { type, nullable } = mapTsType(f.type);
             return `${f.name}${nullable ? '?' : ''}: ${type}`;
           })
           .join(';\n  '),
@@ -259,7 +259,7 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
         NAME: type.name,
         FIELDS: type.inputFields
           ?.map(f => {
-            const { type, nullable } = mapType(f.type);
+            const { type, nullable } = mapTsType(f.type);
             return `${f.name}${nullable ? '?' : ''}: ${type}`;
           })
           .join(';\n  '),
@@ -275,7 +275,7 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
         NAME: type.name,
         FIELDS: type.fields
           ?.map(f => {
-            const { type, nullable } = mapType(f.type);
+            const { type, nullable } = mapTsType(f.type);
             if (f.args.length === 0) {
               return `${f.name}(query: string): Promise<${type}${nullable ? ' | null' : ''}>`;
             }
@@ -285,7 +285,7 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
                 NAME: argsTypeName,
                 FIELDS: f.args
                   ?.map(f => {
-                    const { type, nullable } = mapType(f.type);
+                    const { type, nullable } = mapTsType(f.type);
                     return `${f.name}${nullable ? '?' : ''}: ${type}`;
                   })
                   .join(';\n  '),
