@@ -1,4 +1,0 @@
-extension:
-  - ts
-spec: e2e/**/*.test.ts
-require: ts-node/register

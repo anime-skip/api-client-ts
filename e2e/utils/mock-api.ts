@@ -1,5 +1,6 @@
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
+import { log } from './log';
 
 type Methods = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -12,27 +13,35 @@ interface RequestHistory {
 
 export interface MockApi {
   requests: Record<Methods | string, RequestHistory[] | undefined>;
-  mock(): void;
   clear(): void;
   // reset(): void;
-  stop(): void;
+  stop(): Promise<void>;
 }
 
-export async function mockApi(port: number): Promise<MockApi> {
+export async function mockApi(name: string, port: number): Promise<MockApi> {
   return new Promise(res => {
+    log(`Starting ${name} mock...`);
     const app = new Koa();
     app.use(bodyParser());
 
     const mocks: MockApi = {
       requests: {},
-      mock() {
-        return;
-      },
       clear() {
         this.requests = {};
       },
-      stop() {
-        server.close();
+      async stop() {
+        log(`Stopping ${name}...`);
+        return new Promise((res, rej) => {
+          server.close(err => {
+            if (err) {
+              log(`Stopped ${name} with error: ${err.message}`);
+              rej(err);
+            } else {
+              log(`Stopped ${name}!`);
+              res();
+            }
+          });
+        });
       },
     };
     app.use(ctx => {

@@ -1,4 +1,16 @@
 {
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS",
+      "noUnusedLocals": false,
+      "noImplicitOverride": false,
+      "noImplicitReturns": false,
+      "noImplicitThis": false,
+      "noFallthroughCasesInSwitch": false,
+      "noImplicitUseStrict": false,
+      "noUnusedParameters": false
+    }
+  },
   "compilerOptions": {
     "target": "ES5",
     "module": "commonjs",
@@ -8,8 +20,8 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "rootDir": ".",
-    "types": ["node", "mocha", "mocha-steps"]
+    "types": ["node", "jest"]
   },
-  "include": ["src", "e2e"],
+  "include": ["src/**/*", "e2e/**/*"],
   "exclude": ["node_modules", "src/generate/templates/*"]
 }

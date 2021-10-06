@@ -1,3 +1,5 @@
 /src/generate/templates
 /src/index.ts
 /lib
+e2e/jest.environment.js
+jest.config.js
