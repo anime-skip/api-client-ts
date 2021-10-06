@@ -13,7 +13,7 @@ rules:
     - warn
     - argsIgnorePattern: _.*
       varsIgnorePattern: _.*
-  generator-star-spacing: off
+  generator-star-spacing: 'off'
 
 overrides:
   - files: ['*.js']
@@ -21,3 +21,6 @@ overrides:
     excludedFiles: ['*.d.ts']
     extends:
       - plugin:@typescript-eslint/recommended
+  - files: ['e2e/**/*']
+    rules:
+      '@typescript-eslint/no-non-null-assertion': 'off'

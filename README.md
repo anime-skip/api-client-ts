@@ -54,3 +54,32 @@ $EDITOR package.json
 git commit -am "chore(release): vX.Y.Z"
 git tag vX.Y.Z
 ```
+
+## Testing
+
+All tests are E2E tests because all code is generated. It uses a script to setup, run, and teardown the tests (`e2e/index.ts`). Tests are ran using Jest.
+
+> Note that setup and teardown are not using jest. They are ran manually because the custom jest environment that skips the rest of the tests on a failure also skips the final teardown script, which is not what we want
+
+Docker compose is used to spin up a database and the actual backend application. It is a clean database for every test run, but the tests are cumulative per file.
+
+Jest can control the order the individual tests in a file are ran in, but the order of files cannot be controlled.
+
+If you want to test against a local image, run the following:
+
+```bash
+# build the "anime-skip/backend/api:dev" image
+cd /path/to/backend/repo
+make build
+
+# Use that image in the tests
+cd /path/to/this/repo
+yarn test:e2e:dev
+```
+
+To run tests against the current production application, just run:
+
+```bash
+# Pull down and run using the "anime-skip/backend/api:prod" image
+yarn test:e2e
+```
