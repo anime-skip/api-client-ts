@@ -182,6 +182,12 @@ export interface GqlAddTimestampToTemplateArgs {
   templateTimestamp: GqlInputTemplateTimestamp;
 }
 
+export interface GqlChangePasswordArgs {
+  oldPassword: GqlString;
+  confirmPassword: GqlString;
+  newPassword: GqlString;
+}
+
 export interface GqlCreateAccountArgs {
   username: GqlString;
   email: GqlString;
@@ -311,6 +317,11 @@ export interface GqlMutation {
     args: GqlAddTimestampToTemplateArgs,
     axiosConfig?: AxiosRequestConfig,
   ): Promise<GqlTemplateTimestamp>;
+  changePassword(
+    query: string,
+    args: GqlChangePasswordArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlLoginData>;
   createAccount(
     query: string,
     args: GqlCreateAccountArgs,
@@ -1896,6 +1907,50 @@ mutation AddTimestampToTemplate(
           throw new GqlError(response.status, response.data.errors);
         }
         return response.data.data['addTimestampToTemplate'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async changePassword<T extends Partial<GqlLoginData>>(
+      graphql: string,
+      args: GqlChangePasswordArgs,
+      axiosConfig?: AxiosRequestConfig,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'changePassword', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation ChangePassword(
+  $oldPassword: String!, $confirmPassword: String!, $newPassword: String!
+) {
+  changePassword(
+    oldPassword: $oldPassword, confirmPassword: $confirmPassword, newPassword: $newPassword
+  ) ${graphql}
+}
+          `,
+            operationName: 'ChangePassword',
+            variables: {
+              oldPassword: args.oldPassword,
+              confirmPassword: args.confirmPassword,
+              newPassword: args.newPassword,
+            },
+          },
+          {
+            ...axiosConfig,
+            headers: {
+              ...axiosConfig?.headers,
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['changePassword'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
