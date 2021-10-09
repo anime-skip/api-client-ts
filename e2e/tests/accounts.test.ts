@@ -5,6 +5,7 @@ import { healthCheck } from '../utils/connection';
 import { expectFailure, expectQueryResolves as expectSuccess } from '../utils/expectQuery';
 import {
   clientId,
+  ClientWithoutAxios,
   createAuthorizedClient,
   createClient,
   recaptchaResponse,
@@ -345,29 +346,104 @@ describe('E2E API Calls', () => {
     });
   });
 
-  // describe('change password', () => {
-  //   const changePassUser = {
-  //     ...validUser('change-pass'),
-  //     password: 'password1',
-  //     wrongPassword: 'not-password',
-  //     newPassword: 'password2',
-  //   };
-  //   let client: ClientWithoutAxios;
-  //
-  //   beforeAll(async () => {
-  //     ({ client } = await createAuthorizedClient(changePassUser));
-  //   });
-  //
-  //   it('should fail to change the password when a wrong password is entered first', () =>
-  //     expectFailure(client.changePassword()).toEqual({}));
-  //
-  //   it('should fail to change the password when a wrong password is entered second', () =>
-  //     expectFailure().toEqual({}));
-  //
-  //   it.each(['', ' '])("should not accept invalid passords '%s'", () => expectFailure().toEqual());
-  //
-  //   it('should change the password and allow logging in with the new password', async () => {});
-  //
-  //   it('should change the password and disallow logging in with the old password', async () => {});
-  // });
+  describe('change password', () => {
+    const changePassUser = {
+      ...validUser('change-pass'),
+      password: 'password1',
+      wrongPassword: 'not-password',
+      newPassword: 'password2',
+    };
+    let client: ClientWithoutAxios;
+
+    beforeAll(async () => {
+      ({ client } = await createAuthorizedClient(changePassUser));
+    });
+
+    it("should fail to change the password when the passwords don't match", () =>
+      expectFailure(
+        client.changePassword(`{ authToken }`, {
+          oldPassword: changePassUser.password,
+          confirmPassword: changePassUser.wrongPassword,
+          newPassword: changePassUser.newPassword,
+        }),
+      ).toEqual({
+        graphql: true,
+        status: 200,
+        errors: [
+          {
+            message: 'Passwords do not match',
+            path: ['changePassword'],
+          },
+        ],
+      }));
+
+    it('should fail to change the password when a wrong password is used', () =>
+      expectFailure(
+        client.changePassword(`{ authToken }`, {
+          oldPassword: changePassUser.wrongPassword,
+          confirmPassword: changePassUser.wrongPassword,
+          newPassword: changePassUser.newPassword,
+        }),
+      ).toEqual({
+        graphql: true,
+        status: 200,
+        errors: [
+          {
+            message: 'Old password is not correct',
+            path: ['changePassword'],
+          },
+        ],
+      }));
+
+    it('should not accept a blank password', () =>
+      expectFailure(
+        client.changePassword(`{ authToken }`, {
+          oldPassword: changePassUser.password,
+          confirmPassword: changePassUser.password,
+          newPassword: '',
+        }),
+      ).toEqual({
+        graphql: true,
+        status: 200,
+        errors: [
+          {
+            message: 'New password is not valid, it cannot be empty',
+            path: ['changePassword'],
+          },
+        ],
+      }));
+
+    it('should successfully change the password', async () => {
+      const { authToken } = await client.changePassword(`{ authToken }`, {
+        oldPassword: changePassUser.password,
+        confirmPassword: changePassUser.password,
+        newPassword: changePassUser.newPassword,
+      });
+      expect(authToken).toBeDefined();
+
+      await expectFailure(
+        client.login(`{ authToken }`, {
+          usernameEmail: changePassUser.username,
+          passwordHash: md5(changePassUser.password),
+        }),
+      ).toEqual({
+        graphql: true,
+        status: 200,
+        errors: [
+          {
+            message: 'Bad login credentials',
+            path: ['login'],
+          },
+        ],
+      });
+      await expectSuccess(
+        client.login(`{ authToken }`, {
+          usernameEmail: changePassUser.username,
+          passwordHash: md5(changePassUser.newPassword),
+        }),
+      ).toEqual({
+        authToken: expect.any(String),
+      });
+    });
+  });
 });
