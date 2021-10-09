@@ -10,7 +10,9 @@ import axiosRetry from 'axios-retry';
 async function introspection(url: string): Promise<IntrospectionSchema> {
   console.log('Loading schema...');
 
-  const introspectionClient = Axios.create();
+  const introspectionClient = Axios.create({
+    headers: { 'X-Client-ID': 'ZGfO0sMF3eCwLYf8yMSCJjlynwNGRXWE' },
+  });
   axiosRetry(introspectionClient, { retries: 5, retryDelay: () => 5000 });
 
   return (
