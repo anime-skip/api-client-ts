@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import Axios from 'axios';
 import fs from 'fs';
 import { capitalize } from './capitalize';
@@ -16,7 +18,7 @@ async function introspection(url: string): Promise<IntrospectionSchema> {
   axiosRetry(introspectionClient, { retries: 5, retryDelay: () => 5000 });
 
   return (
-    await introspectionClient.post(url, {
+    await introspectionClient.post<any>(url, {
       query: `query IntrospectionQuery {
           __schema {
             queryType {
