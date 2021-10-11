@@ -279,7 +279,9 @@ export async function parseSchema(url: string, customScalars?: Record<string, st
           ?.map(f => {
             const { type, nullable } = mapTsType(f.type);
             if (f.args.length === 0) {
-              return `${f.name}(query: string): Promise<${type}${nullable ? ' | null' : ''}>`;
+              return `${f.name}(query: string, axiosConfig?: AxiosRequestConfig): Promise<${type}${
+                nullable ? ' | null' : ''
+              }>`;
             }
             const argsTypeName = `${capitalize(f.name)}Args`;
             argTemplates.push(

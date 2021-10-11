@@ -412,7 +412,10 @@ export interface GqlMutation {
     args: GqlRemoveTimestampFromTemplateArgs,
     axiosConfig?: AxiosRequestConfig,
   ): Promise<GqlTemplateTimestamp>;
-  resendVerificationEmail(query: string): Promise<GqlBoolean | null>;
+  resendVerificationEmail(
+    query: string,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlBoolean | null>;
   savePreferences(
     query: string,
     args: GqlSavePreferencesArgs,
@@ -586,8 +589,11 @@ export interface GqlSearchShowsArgs {
 }
 
 export interface GqlQuery {
-  account(query: string): Promise<GqlAccount>;
-  allTimestampTypes(query: string): Promise<Array<GqlTimestampType>>;
+  account(query: string, axiosConfig?: AxiosRequestConfig): Promise<GqlAccount>;
+  allTimestampTypes(
+    query: string,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<Array<GqlTimestampType>>;
   findEpisode(
     query: string,
     args: GqlFindEpisodeArgs,
