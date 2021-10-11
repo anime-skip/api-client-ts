@@ -297,6 +297,25 @@ describe('E2E API Calls', () => {
       });
     });
 
+    it('Fail with an invalid recaptcha response', async () => {
+      const invalidRecaptchaUser = validUser('user-with-invalid-recaptcha');
+      const { client } = await createAuthorizedClient(invalidRecaptchaUser);
+      await expectFailure(
+        client.resendVerificationEmail('', {
+          recaptchaResponse: invalidRecaptchaResponse,
+        }),
+      ).toEqual({
+        graphql: true,
+        status: 200,
+        errors: [
+          {
+            message: 'Recaptcha validation failed',
+            path: ['resendVerificationEmail'],
+          },
+        ],
+      });
+    });
+
     it('Accounts can become verified', async () => {
       const userToValidate = validUser('user-to-validate');
       const emailToken = () => emailServer.requests.POST![0].body.token;
@@ -314,7 +333,7 @@ describe('E2E API Calls', () => {
       });
       emailServer.clear();
 
-      await expectSuccess(client.resendVerificationEmail('')).toBe(true);
+      await expectSuccess(client.resendVerificationEmail('', { recaptchaResponse })).toBe(true);
 
       expect(emailServer.requests.POST).toEqual([
         {

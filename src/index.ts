@@ -267,6 +267,10 @@ export interface GqlRemoveTimestampFromTemplateArgs {
   templateTimestamp: GqlInputTemplateTimestamp;
 }
 
+export interface GqlResendVerificationEmailArgs {
+  recaptchaResponse: GqlString;
+}
+
 export interface GqlSavePreferencesArgs {
   preferences: GqlInputPreferences;
 }
@@ -414,6 +418,7 @@ export interface GqlMutation {
   ): Promise<GqlTemplateTimestamp>;
   resendVerificationEmail(
     query: string,
+    args: GqlResendVerificationEmailArgs,
     axiosConfig?: AxiosRequestConfig,
   ): Promise<GqlBoolean | null>;
   savePreferences(
@@ -2729,6 +2734,7 @@ mutation RemoveTimestampFromTemplate(
     },
     async resendVerificationEmail<T extends Partial<GqlBoolean | null>>(
       graphql: string,
+      args: GqlResendVerificationEmailArgs,
       axiosConfig?: AxiosRequestConfig,
     ): Promise<T> {
       try {
@@ -2736,11 +2742,18 @@ mutation RemoveTimestampFromTemplate(
           '/graphql',
           {
             query: `
-mutation ResendVerificationEmail {
-  resendVerificationEmail ${graphql}
+mutation ResendVerificationEmail(
+  $recaptchaResponse: String!
+) {
+  resendVerificationEmail(
+    recaptchaResponse: $recaptchaResponse
+  ) ${graphql}
 }
           `,
             operationName: 'ResendVerificationEmail',
+            variables: {
+              recaptchaResponse: args.recaptchaResponse,
+            },
           },
           {
             ...axiosConfig,
@@ -2755,7 +2768,7 @@ mutation ResendVerificationEmail {
         }
         return response.data.data['resendVerificationEmail'];
       } catch (err) {
-        if (err.resposne != null) {
+        if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);
         }
         throw err;
