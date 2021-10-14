@@ -4,6 +4,7 @@ import { clearMockApis, emailServer, setupMockApis, stopMockApis } from '../util
 import { healthCheck } from '../utils/connection';
 import { expectFailure, expectQueryResolves as expectSuccess } from '../utils/expectQuery';
 import {
+  authorizeClient,
   clientId,
   ClientWithoutAxios,
   createAuthorizedClient,
@@ -331,7 +332,6 @@ describe('E2E API Calls', () => {
         email: userToValidate.email,
         emailVerified: false,
       });
-      emailServer.clear();
 
       await expectSuccess(client.resendVerificationEmail('', { recaptchaResponse })).toBe(true);
 
@@ -463,6 +463,171 @@ describe('E2E API Calls', () => {
         }),
       ).toEqual({
         authToken: expect.any(String),
+      });
+    });
+  });
+
+  describe('reset password', () => {
+    it('should fail for invalid emails', () => {
+      const invalidEmailUser = {
+        ...validUser('invalid-email'),
+        email: 'asdf',
+      };
+      const { client } = createClient();
+      return expectFailure(
+        client.requestPasswordReset('', {
+          recaptchaResponse,
+          email: invalidEmailUser.email,
+        }),
+      ).toEqual({
+        graphql: true,
+        status: 200,
+        errors: [
+          {
+            message: 'Email is not valid',
+            path: ['requestPasswordReset'],
+          },
+        ],
+      });
+    });
+
+    it('should fail for an invalid recaptcha', () => {
+      const user = validUser();
+      const { client } = createClient();
+      return expectFailure(
+        client.requestPasswordReset('', {
+          recaptchaResponse: invalidRecaptchaResponse,
+          email: user.email,
+        }),
+      ).toEqual({
+        graphql: true,
+        status: 200,
+        errors: [
+          {
+            message: 'Recaptcha validation failed',
+            path: ['requestPasswordReset'],
+          },
+        ],
+      });
+    });
+
+    describe('unregistered users', () => {
+      const unregisteredUser = validUser('unregistered');
+      const { client } = createClient();
+
+      it('should not throw an error when the email is not registered to a user', () =>
+        expectSuccess(
+          client.requestPasswordReset('', {
+            recaptchaResponse,
+            email: unregisteredUser.email,
+          }),
+        ).toEqual(true));
+
+      it('should not send the reset email to an email not registered to a user', async () => {
+        await client.requestPasswordReset('', {
+          recaptchaResponse,
+          email: unregisteredUser.email,
+        });
+        expect(emailServer.requests.POST).toBeUndefined();
+      });
+    });
+
+    describe('registered users', () => {
+      it('should send the email to a registered user', async () => {
+        const registeredUser = validUser('registered');
+        await createAuthorizedClient(registeredUser);
+        const { client } = createClient();
+
+        await expectSuccess(
+          client.requestPasswordReset('', {
+            recaptchaResponse,
+            email: registeredUser.email,
+          }),
+        ).toEqual(true);
+        expect(emailServer.requests.POST).toEqual([
+          {
+            path: '/reset-password',
+            body: {
+              emails: [registeredUser.email],
+              token: expect.any(String),
+            },
+            headers: expect.objectContaining({
+              authorization: 'Secret some-email-secret',
+            }),
+          },
+        ]);
+      });
+
+      it("should fail when the new passwords don't match", async () => {
+        const registeredUser = validUser('registered');
+        await createAuthorizedClient(registeredUser);
+        const { client } = createClient();
+
+        await client.requestPasswordReset('', {
+          recaptchaResponse,
+          email: registeredUser.email,
+        });
+        const { token } = emailServer.requests.POST![0].body;
+
+        await expectFailure(
+          client.resetPassword(`{ authToken }`, {
+            newPassword: 'new-pass',
+            confirmNewPassword: 'not-new-pass',
+            passwordResetToken: token,
+          }),
+        ).toEqual({
+          graphql: true,
+          status: 200,
+          errors: [
+            {
+              message: "New passwords don't match",
+              path: ['resetPassword'],
+            },
+          ],
+        });
+      });
+
+      it('should reset the password using the token from the email', async () => {
+        const registeredUser = validUser('registered');
+        await createAuthorizedClient(registeredUser);
+        const { client } = createClient();
+
+        await client.requestPasswordReset('', {
+          recaptchaResponse,
+          email: registeredUser.email,
+        });
+        const { token } = emailServer.requests.POST![0].body;
+
+        await expectSuccess(
+          client.resetPassword(`{ authToken }`, {
+            newPassword: 'new-pass',
+            confirmNewPassword: 'new-pass',
+            passwordResetToken: token,
+          }),
+        ).toEqual({ authToken: expect.any(String) });
+      });
+
+      it('should allow logging in with new password', async () => {
+        const registeredUser = validUser('registered');
+        await createAuthorizedClient(registeredUser);
+        const { axios, client } = createClient();
+        const newPassword = 'new-pass';
+
+        await client.requestPasswordReset('', {
+          recaptchaResponse,
+          email: registeredUser.email,
+        });
+        const { token } = emailServer.requests.POST![0].body;
+        const { authToken } = await client.resetPassword(`{ authToken }`, {
+          newPassword,
+          confirmNewPassword: newPassword,
+          passwordResetToken: token,
+        });
+
+        authorizeClient(axios, authToken);
+        expectSuccess(client.account('{ username }')).toEqual({
+          username: registeredUser.username,
+        });
       });
     });
   });

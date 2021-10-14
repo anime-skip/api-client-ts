@@ -267,8 +267,19 @@ export interface GqlRemoveTimestampFromTemplateArgs {
   templateTimestamp: GqlInputTemplateTimestamp;
 }
 
+export interface GqlRequestPasswordResetArgs {
+  recaptchaResponse: GqlString;
+  email: GqlString;
+}
+
 export interface GqlResendVerificationEmailArgs {
   recaptchaResponse: GqlString;
+}
+
+export interface GqlResetPasswordArgs {
+  passwordResetToken: GqlString;
+  newPassword: GqlString;
+  confirmNewPassword: GqlString;
 }
 
 export interface GqlSavePreferencesArgs {
@@ -416,11 +427,21 @@ export interface GqlMutation {
     args: GqlRemoveTimestampFromTemplateArgs,
     axiosConfig?: AxiosRequestConfig,
   ): Promise<GqlTemplateTimestamp>;
+  requestPasswordReset(
+    query: string,
+    args: GqlRequestPasswordResetArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlBoolean>;
   resendVerificationEmail(
     query: string,
     args: GqlResendVerificationEmailArgs,
     axiosConfig?: AxiosRequestConfig,
   ): Promise<GqlBoolean | null>;
+  resetPassword(
+    query: string,
+    args: GqlResetPasswordArgs,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<GqlLoginData>;
   savePreferences(
     query: string,
     args: GqlSavePreferencesArgs,
@@ -2732,6 +2753,49 @@ mutation RemoveTimestampFromTemplate(
         throw err;
       }
     },
+    async requestPasswordReset<T extends Partial<GqlBoolean>>(
+      graphql: string,
+      args: GqlRequestPasswordResetArgs,
+      axiosConfig?: AxiosRequestConfig,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'requestPasswordReset', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation RequestPasswordReset(
+  $recaptchaResponse: String!, $email: String!
+) {
+  requestPasswordReset(
+    recaptchaResponse: $recaptchaResponse, email: $email
+  ) ${graphql}
+}
+          `,
+            operationName: 'RequestPasswordReset',
+            variables: {
+              recaptchaResponse: args.recaptchaResponse,
+              email: args.email,
+            },
+          },
+          {
+            ...axiosConfig,
+            headers: {
+              ...axiosConfig?.headers,
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['requestPasswordReset'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
     async resendVerificationEmail<T extends Partial<GqlBoolean | null>>(
       graphql: string,
       args: GqlResendVerificationEmailArgs,
@@ -2767,6 +2831,50 @@ mutation ResendVerificationEmail(
           throw new GqlError(response.status, response.data.errors);
         }
         return response.data.data['resendVerificationEmail'];
+      } catch (err) {
+        if (err.response != null) {
+          throw new GqlError(err.response.status, err.response.data.errors);
+        }
+        throw err;
+      }
+    },
+    async resetPassword<T extends Partial<GqlLoginData>>(
+      graphql: string,
+      args: GqlResetPasswordArgs,
+      axiosConfig?: AxiosRequestConfig,
+    ): Promise<T> {
+      try {
+        const response: GqlResponse<'resetPassword', T> = await axios.post(
+          '/graphql',
+          {
+            query: `
+mutation ResetPassword(
+  $passwordResetToken: String!, $newPassword: String!, $confirmNewPassword: String!
+) {
+  resetPassword(
+    passwordResetToken: $passwordResetToken, newPassword: $newPassword, confirmNewPassword: $confirmNewPassword
+  ) ${graphql}
+}
+          `,
+            operationName: 'ResetPassword',
+            variables: {
+              passwordResetToken: args.passwordResetToken,
+              newPassword: args.newPassword,
+              confirmNewPassword: args.confirmNewPassword,
+            },
+          },
+          {
+            ...axiosConfig,
+            headers: {
+              ...axiosConfig?.headers,
+              'X-Client-ID': clientId,
+            },
+          },
+        );
+        if (response.data.errors != null) {
+          throw new GqlError(response.status, response.data.errors);
+        }
+        return response.data.data['resetPassword'];
       } catch (err) {
         if (err.response != null) {
           throw new GqlError(err.response.status, err.response.data.errors);

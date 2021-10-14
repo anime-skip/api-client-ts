@@ -2,6 +2,7 @@
 import { AxiosInstance } from 'axios';
 import md5 from 'md5';
 import createAnimeSkipClient from '../../src';
+import { emailServer } from './mock-apis';
 
 export const endpoint = 'http://localhost:8080';
 export const clientId = 'ZGfO0sMF3eCwLYf8yMSCJjlynwNGRXWE';
@@ -39,5 +40,6 @@ export async function createAuthorizedClient(user: {
     recaptchaResponse,
   });
   authorizeClient(axios, authToken);
+  emailServer.clear();
   return { axios, client };
 }

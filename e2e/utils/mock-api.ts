@@ -27,6 +27,7 @@ export async function mockApi(name: string, port: number): Promise<MockApi> {
     const mocks: MockApi = {
       requests: {},
       clear() {
+        log(`Clearing ${name} mock...`);
         this.requests = {};
       },
       async stop() {
