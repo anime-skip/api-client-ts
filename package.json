@@ -24,7 +24,8 @@
     "test:wrap": "ts-node e2e/index.ts",
     "test:base": "jest --runInBand --bail",
     "test:e2e": "yarn -s test:wrap \"yarn -s test:base\"",
-    "test:e2e:dev": "DONT_PULL=true COMPOSE_TARGET=anime-skip/backend/api:dev yarn -s test:wrap \"yarn -s test:base\""
+    "test:e2e:dev": "DONT_PULL=true COMPOSE_TARGET=anime-skip/backend/api:dev yarn -s test:wrap \"yarn -s test:base\"",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@types/chance": "^1.1.3",
