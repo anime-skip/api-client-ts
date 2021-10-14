@@ -184,8 +184,8 @@ export interface GqlAddTimestampToTemplateArgs {
 
 export interface GqlChangePasswordArgs {
   oldPassword: GqlString;
-  confirmPassword: GqlString;
   newPassword: GqlString;
+  confirmNewPassword: GqlString;
 }
 
 export interface GqlCreateAccountArgs {
@@ -1936,18 +1936,18 @@ mutation AddTimestampToTemplate(
           {
             query: `
 mutation ChangePassword(
-  $oldPassword: String!, $confirmPassword: String!, $newPassword: String!
+  $oldPassword: String!, $newPassword: String!, $confirmNewPassword: String!
 ) {
   changePassword(
-    oldPassword: $oldPassword, confirmPassword: $confirmPassword, newPassword: $newPassword
+    oldPassword: $oldPassword, newPassword: $newPassword, confirmNewPassword: $confirmNewPassword
   ) ${graphql}
 }
           `,
             operationName: 'ChangePassword',
             variables: {
               oldPassword: args.oldPassword,
-              confirmPassword: args.confirmPassword,
               newPassword: args.newPassword,
+              confirmNewPassword: args.confirmNewPassword,
             },
           },
           {

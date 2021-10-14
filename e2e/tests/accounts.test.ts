@@ -369,8 +369,9 @@ describe('E2E API Calls', () => {
     const changePassUser = {
       ...validUser('change-pass'),
       password: 'password1',
-      wrongPassword: 'not-password',
+      wrongPassword: 'not-password1',
       newPassword: 'password2',
+      wrongNewPassword: 'not-password2',
     };
     let client: ClientWithoutAxios;
 
@@ -378,19 +379,19 @@ describe('E2E API Calls', () => {
       ({ client } = await createAuthorizedClient(changePassUser));
     });
 
-    it("should fail to change the password when the passwords don't match", () =>
+    it("should fail to change the password when the new passwords don't match", () =>
       expectFailure(
         client.changePassword(`{ authToken }`, {
           oldPassword: changePassUser.password,
-          confirmPassword: changePassUser.wrongPassword,
           newPassword: changePassUser.newPassword,
+          confirmNewPassword: changePassUser.wrongNewPassword,
         }),
       ).toEqual({
         graphql: true,
         status: 200,
         errors: [
           {
-            message: 'Passwords do not match',
+            message: 'New passwords do not match',
             path: ['changePassword'],
           },
         ],
@@ -400,8 +401,8 @@ describe('E2E API Calls', () => {
       expectFailure(
         client.changePassword(`{ authToken }`, {
           oldPassword: changePassUser.wrongPassword,
-          confirmPassword: changePassUser.wrongPassword,
           newPassword: changePassUser.newPassword,
+          confirmNewPassword: changePassUser.newPassword,
         }),
       ).toEqual({
         graphql: true,
@@ -418,8 +419,8 @@ describe('E2E API Calls', () => {
       expectFailure(
         client.changePassword(`{ authToken }`, {
           oldPassword: changePassUser.password,
-          confirmPassword: changePassUser.password,
           newPassword: '',
+          confirmNewPassword: '',
         }),
       ).toEqual({
         graphql: true,
@@ -435,8 +436,8 @@ describe('E2E API Calls', () => {
     it('should successfully change the password', async () => {
       const { authToken } = await client.changePassword(`{ authToken }`, {
         oldPassword: changePassUser.password,
-        confirmPassword: changePassUser.password,
         newPassword: changePassUser.newPassword,
+        confirmNewPassword: changePassUser.newPassword,
       });
       expect(authToken).toBeDefined();
 
