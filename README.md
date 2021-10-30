@@ -1,85 +1,84 @@
-# `@anime-skip/axios-api`
+# Typescript API Client
 
-A function based api client library that has methods for all the queries and mutations available
-according to the current introspection result from `test.api.anime-skip.com`
+A simple, [axios](https://axios-http.com/) based API client that ships with types and powers all of Anime Skip!
+
+This library is generated based on the current introspection result from `test.api.anime-skip.com`.
+
+```bash
+echo "@anime-skip:registry=https://npm.pkg.github.com/" >> .npmrc
+npm i @anime-skip/api-client
+```
+
+> This is an alternative to Apollo or any other GraphQL client library out there! Use something else if you prefer
+
+<br/>
+
+## Contributing
+
+See the [contributing guidelines](https://github.com/anime-skip/docs/wiki) for all of Anime Skip
+
+<br/>
 
 ## Usage
 
-```ts
-// api.ts
-import { createAnimeSkipClient, GqlResponse } from '@anime-skip/axios-api';
-
-const { axios, ...queries } = createAnimeSkipClient();
-
-axios.interceptors.request.use(config => {
-  return {
-    ...config,
-    headers: {
-      ...config:
-      // Some function that returns the current token
-      Authorization: getToken(),
-    }
-  }
-});
-
-export {
-  axios,
-  ...queries,
-
-  someCustomQuery(): Promise<any> {
-    return axios.get(...);
-  },
-}
-```
+To call the api, you need a client id! Checkout the [API docs](https://www.anime-skip.com/api) to get one. The one used below is a shared one that anyone can use, but it is heavily rate limitted.
 
 ```ts
-// actions.ts
-import * as client from './api';
+import { createAnimeSkipClient } from '@anime-skip/axios-api';
+import md5 from 'md5';
 
-const actions = {
-  async someAction() {
-    await client.account();
+// Create the client
+
+const baseUrl = "https://test.api.anime-skip.com/";
+const clientId = "ZGfO0sMF3eCwLYf8yMSCJjlynwNGRXWE";
+const client = createAnimeSkipClient(baseUrl, clientId);
+
+// Call the API
+
+const { authToken } = await client.login(
+  `{ authToken }`, 
+  {
+    usernameEmail: "username",
+    passwordHash: md5("password")
   },
-};
+);
+
+// Access the axios instance to add interceptors, retries, etc
+
+client.axios
 ```
 
-## Publishing
+The methods exposed on the client match the queries and mutation names used in the graphql. For documentation checkout the [api playground](http://test.api.anime-skip.com/graphiql)! Types are also included as named exports all prefixed with `Gql`. Extend them, pick from them, or use them directly, whatever you prefer!
 
-Run the [publish]() workflow to bump the version, create the tag and release, and deploy to github packages
-
-For fully manual deployments, bump the version and tag the commit yourself, then force the deployment in the publish workflow popup.
-
-```bash
-$EDITOR package.json
-git commit -am "chore(release): vX.Y.Z"
-git tag vX.Y.Z
+```ts
+import { GqlAccount, GqlEpisode, GqlCreateTimestampArgs, ... } from '@anime-skip/axios-api';
 ```
 
-## Testing
+<br/>
 
-All tests are E2E tests because all code is generated. It uses a script to setup, run, and teardown the tests (`e2e/index.ts`). Tests are ran using Jest.
+## E2E Tests
 
-> Note that setup and teardown are not using jest. They are ran manually because the custom jest environment that skips the rest of the tests on a failure also skips the final teardown script, which is not what we want
+This is where the E2E tests of the API are located. They test both the API and this client library. Contributers should know how to run and update them, but making changes to the backend is not possible because it is private. 
 
-Docker compose is used to spin up a database and the actual backend application. It is a clean database for every test run, but the tests are cumulative per file.
+> If you think there's a problem with the API, head over to the support page to get help: <https://www.anime-skip.com/support>
 
-Jest can control the order the individual tests in a file are ran in, but the order of files cannot be controlled.
-
-If you want to test against a local image, run the following:
+All tests are ran inside a local docker environment. To start them, run the following command:
 
 ```bash
-# build the "anime-skip/backend/api:dev" image
-cd /path/to/backend/repo
-make build
-
-# Use that image in the tests
-cd /path/to/this/repo
-yarn test:e2e:dev
+pnpm test:e2e
 ```
 
-To run tests against the current production application, just run:
+Between each test suite (file), the database is reset. So if you create a new test suite, make sure you initialize test data and accounts within that file
+
+Tests are orchestrated by `e2e/index.ts`. It spins the docker environment, runs the jest test suite, and stops docker.
+
+### Backend Devs Only
+
+To run the tests against a development version of the api service, first build the dev image, then run the dev tests script
 
 ```bash
-# Pull down and run using the "anime-skip/backend/api:prod" image
-yarn test:e2e
+cd /path/to/api-service
+make
+cd /path/to/this/project
+pnpm test:e2e:dev
 ```
