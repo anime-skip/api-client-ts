@@ -24,41 +24,38 @@ See the [contributing guidelines](https://github.com/anime-skip/docs/wiki) for a
 To call the api, you need a client id! Checkout the [API docs](https://www.anime-skip.com/api) to get one. The one used below is a shared one that anyone can use, but it is heavily rate limitted.
 
 ```ts
-import { createAnimeSkipClient } from '@anime-skip/axios-api';
+import { createAnimeSkipClient } from '@anime-skip/api-client';
 import md5 from 'md5';
 
 // Create the client
 
-const baseUrl = "https://test.api.anime-skip.com/";
-const clientId = "ZGfO0sMF3eCwLYf8yMSCJjlynwNGRXWE";
+const baseUrl = 'https://test.api.anime-skip.com/';
+const clientId = 'ZGfO0sMF3eCwLYf8yMSCJjlynwNGRXWE';
 const client = createAnimeSkipClient(baseUrl, clientId);
 
 // Call the API
 
-const { authToken } = await client.login(
-  `{ authToken }`, 
-  {
-    usernameEmail: "username",
-    passwordHash: md5("password")
-  },
-);
+const { authToken } = await client.login(`{ authToken }`, {
+  usernameEmail: 'username',
+  passwordHash: md5('password'),
+});
 
 // Access the axios instance to add interceptors, retries, etc
 
-client.axios
+client.axios;
 ```
 
 The methods exposed on the client match the queries and mutation names used in the graphql. For documentation checkout the [api playground](http://test.api.anime-skip.com/graphiql)! Types are also included as named exports all prefixed with `Gql`. Extend them, pick from them, or use them directly, whatever you prefer!
 
 ```ts
-import { GqlAccount, GqlEpisode, GqlCreateTimestampArgs, ... } from '@anime-skip/axios-api';
+import { GqlAccount, GqlEpisode, GqlCreateTimestampArgs, ... } from '@anime-skip/api-client';
 ```
 
 <br/>
 
 ## E2E Tests
 
-This is where the E2E tests of the API are located. They test both the API and this client library. Contributers should know how to run and update them, but making changes to the backend is not possible because it is private. 
+This is where the E2E tests of the API are located. They test both the API and this client library. Contributers should know how to run and update them, but making changes to the backend is not possible because it is private.
 
 > If you think there's a problem with the API, head over to the support page to get help: <https://www.anime-skip.com/support>
 
