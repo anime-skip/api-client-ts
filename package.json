@@ -6,7 +6,7 @@
   "types": "lib/index.d.ts",
   "repository": "https://github.com/anime-skip/lib-axios-api",
   "author": "Aaron Klinker <aaronklinker1@gmail.com>",
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "private": false,
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
