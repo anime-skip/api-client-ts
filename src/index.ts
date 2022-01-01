@@ -43,6 +43,14 @@ export interface GqlAccount {
 
 export type GqlBoolean = boolean;
 
+export enum GqlColorTheme {
+  PER_SERVICE = 'PER_SERVICE',
+  ANIME_SKIP_BLUE = 'ANIME_SKIP_BLUE',
+  VRV_YELLOW = 'VRV_YELLOW',
+  FUNIMATION_PURPLE = 'FUNIMATION_PURPLE',
+  CRUNCHYROLL_ORANGE = 'CRUNCHYROLL_ORANGE',
+}
+
 export interface GqlEpisode {
   id: GqlID;
   createdAt: GqlTime;
@@ -115,6 +123,7 @@ export interface GqlInputPreferences {
   enableAutoPlay?: GqlBoolean;
   minimizeToolbarWhenEditing?: GqlBoolean;
   hideTimelineWhenMinimized?: GqlBoolean;
+  colorTheme?: GqlColorTheme;
   skipBranding?: GqlBoolean;
   skipIntros?: GqlBoolean;
   skipNewIntros?: GqlBoolean;
@@ -500,6 +509,7 @@ export interface GqlPreferences {
   enableAutoPlay: GqlBoolean;
   minimizeToolbarWhenEditing: GqlBoolean;
   hideTimelineWhenMinimized: GqlBoolean;
+  colorTheme: GqlColorTheme;
   skipBranding: GqlBoolean;
   skipIntros: GqlBoolean;
   skipNewIntros: GqlBoolean;
