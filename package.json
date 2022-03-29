@@ -1,6 +1,6 @@
 {
   "name": "@anime-skip/api-client",
-  "version": "2.6.2",
+  "version": "3.0.0",
   "description": "GraphQL client for interacting with the Anime Skip API",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
