@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-
 export function expectQueryResolves<T>(
   query: Promise<T>,
 ): jest.AndNot<jest.Matchers<Promise<void>, Promise<T>>> {

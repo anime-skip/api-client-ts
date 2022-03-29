@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import md5 from 'md5';
 import * as AnimeSkip from '../../src';
 import { emailServer } from './mock-apis';

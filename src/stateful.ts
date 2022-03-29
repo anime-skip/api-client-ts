@@ -20,7 +20,6 @@ function getDefaultStorage(): AsyncStorage {
   return localStorage;
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function createClient(config: Config) {
   const { fetch = DEFAULT_FETCH, baseUrl, clientId, storage = getDefaultStorage() } = config;
 
