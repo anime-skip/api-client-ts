@@ -5,9 +5,29 @@ import { GqlResponse, GqlError, StatelessConfig, ApiHealth } from './types';
 import { DEFAULT_FETCH } from './fetch';
 
 /**
+ * The `Boolean` scalar type represents `true` or `false`.
+ */
+export type GqlBoolean = boolean;
+
+/**
  * The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point).
  */
 export type GqlFloat = number;
+
+/**
+ * The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as "4") or integer (such as 4) input value will be accepted as an ID.
+ */
+export type GqlID = string;
+
+/**
+ * The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
+ */
+export type GqlInt = number;
+
+/**
+ * The `String`scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
+ */
+export type GqlString = string;
 
 /**
  * Standard [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) timestamp in UTC
@@ -21,26 +41,6 @@ export type GqlFloat = number;
 export type GqlTime = string;
 
 /**
- * The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as "4") or integer (such as 4) input value will be accepted as an ID.
- */
-export type GqlID = string;
-
-/**
- * The `String`scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
- */
-export type GqlString = string;
-
-/**
- * The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
- */
-export type GqlInt = number;
-
-/**
- * The `Boolean` scalar type represents `true` or `false`.
- */
-export type GqlBoolean = boolean;
-
-/**
  * Color theme the user prefers
  */
 export enum GqlColorTheme {
@@ -52,20 +52,6 @@ export enum GqlColorTheme {
   VRV_YELLOW = 'VRV_YELLOW',
   FUNIMATION_PURPLE = 'FUNIMATION_PURPLE',
   CRUNCHYROLL_ORANGE = 'CRUNCHYROLL_ORANGE',
-}
-
-/**
- * The scope that a template applies to
- */
-export enum GqlTemplateType {
-  /**
-   * The template is loaded for all episodes of a given show
-   */
-  SHOW = 'SHOW',
-  /**
-   * The template is loaded for episodes of a given show where their season is included in `Template.seasons`
-   */
-  SEASONS = 'SEASONS',
 }
 
 /**
@@ -107,6 +93,20 @@ export enum GqlRole {
 }
 
 /**
+ * The scope that a template applies to
+ */
+export enum GqlTemplateType {
+  /**
+   * The template is loaded for all episodes of a given show
+   */
+  SHOW = 'SHOW',
+  /**
+   * The template is loaded for episodes of a given show where their season is included in `Template.seasons`
+   */
+  SEASONS = 'SEASONS',
+}
+
+/**
  * Where a timestamp originated from
  */
 export enum GqlTimestampSource {
@@ -114,7 +114,27 @@ export enum GqlTimestampSource {
   BETTER_VRV = 'BETTER_VRV',
 }
 
-export interface GqlTimestamp {
+/**
+ * Account info that should only be accessible by the authorised user
+ */
+export interface GqlAccount {
+  id: GqlID;
+  createdAt: GqlTime;
+  deletedAt?: GqlTime | undefined;
+  username: GqlString;
+  email: GqlString;
+  profileUrl: GqlString;
+  adminOfShows: Array<GqlShowAdmin>;
+  emailVerified: GqlBoolean;
+  role: GqlRole;
+  preferences: GqlPreferences;
+}
+
+/**
+ * The base model has all the fields you would expect a fully fleshed out item in the database would
+ * have. It is used to track who create, updated, and deleted items
+ */
+export interface GqlBaseModel {
   id: GqlID;
   createdAt: GqlTime;
   createdByUserId: GqlID;
@@ -125,13 +145,97 @@ export interface GqlTimestamp {
   deletedAt?: GqlTime | undefined;
   deletedByUserId?: GqlID | undefined;
   deletedBy?: GqlUser | undefined;
-  at: GqlFloat;
-  source: GqlTimestampSource;
-  typeId: GqlID;
-  type: GqlTimestampType;
+}
+
+/**
+ * Basic information about an episode, including season, numbers, a list of timestamps, and urls that
+ * it can be watched at
+ */
+export interface GqlEpisode {
+  id: GqlID;
+  createdAt: GqlTime;
+  createdByUserId: GqlID;
+  createdBy: GqlUser;
+  updatedAt: GqlTime;
+  updatedByUserId: GqlID;
+  updatedBy: GqlUser;
+  deletedAt?: GqlTime | undefined;
+  deletedByUserId?: GqlID | undefined;
+  deletedBy?: GqlUser | undefined;
+  season?: GqlString | undefined;
+  number?: GqlString | undefined;
+  absoluteNumber?: GqlString | undefined;
+  baseDuration?: GqlFloat | undefined;
+  name?: GqlString | undefined;
+  show: GqlShow;
+  showId: GqlID;
+  timestamps: Array<GqlTimestamp>;
+  urls: Array<GqlEpisodeUrl>;
+  template?: GqlTemplate | undefined;
+}
+
+/**
+ * Stores information about what where an episode can be watched from
+ */
+export interface GqlEpisodeUrl {
+  url: GqlString;
+  createdAt: GqlTime;
+  createdByUserId: GqlID;
+  createdBy: GqlUser;
+  updatedAt: GqlTime;
+  updatedByUserId: GqlID;
+  updatedBy: GqlUser;
+  duration?: GqlFloat | undefined;
+  timestampsOffset?: GqlFloat | undefined;
   episodeId: GqlID;
   episode: GqlEpisode;
+  source: GqlEpisodeSource;
 }
+
+/**
+ * Data required to create a new `Episode`. See `Episode` for a description of each field
+ */
+export interface GqlInputEpisode {}
+
+/**
+ * Data required to create a new `EpisodeUrl`. See `EpisodeUrl` for a description of each field
+ */
+export interface GqlInputEpisodeUrl {}
+
+export interface GqlInputExistingTimestamp {}
+
+/**
+ * Data used to update a user's `Preferences`. See `Preferences` for a description of each field. If a
+ * field is not passed or passed as `null`, it will leave the value as is and skip updating it
+ */
+export interface GqlInputPreferences {}
+
+/**
+ * Data required to create a new `Show`. See `Show` for a description of each field
+ */
+export interface GqlInputShow {}
+
+/**
+ * Data required to create a new `ShowAdmin`. See `ShowAdmin` for a description of each field
+ */
+export interface GqlInputShowAdmin {}
+
+/**
+ * Data required to create a new template. See `Template` for a description of each field
+ */
+export interface GqlInputTemplate {}
+
+/**
+ * Data required to modify the timestamps on a template
+ */
+export interface GqlInputTemplateTimestamp {}
+
+/**
+ * Data required to create a new `Timestamp`. See `Timestamp` for a description of each field
+ */
+export interface GqlInputTimestamp {}
+
+export interface GqlInputTimestampOn {}
 
 /**
  * Data required to create a new `TimestampType`. See `TimestampType` for a description of each field
@@ -139,10 +243,69 @@ export interface GqlTimestamp {
 export interface GqlInputTimestampType {}
 
 /**
- * Data used to update a user's `Preferences`. See `Preferences` for a description of each field. If a
- * field is not passed or passed as `null`, it will leave the value as is and skip updating it
+ * When logging in with a password or refresh token, you can get new tokens and account info
  */
-export interface GqlInputPreferences {}
+export interface GqlLoginData {
+  authToken: GqlString;
+  refreshToken: GqlString;
+  account: GqlAccount;
+}
+
+/**
+ * Where all the user preferences are stored. This includes what timestamps the user doesn't want to
+ * watch
+ */
+export interface GqlPreferences {
+  id: GqlID;
+  createdAt: GqlTime;
+  updatedAt: GqlTime;
+  deletedAt?: GqlTime | undefined;
+  userId: GqlID;
+  user: GqlUser;
+  enableAutoSkip: GqlBoolean;
+  enableAutoPlay: GqlBoolean;
+  minimizeToolbarWhenEditing: GqlBoolean;
+  hideTimelineWhenMinimized: GqlBoolean;
+  colorTheme: GqlColorTheme;
+  skipBranding: GqlBoolean;
+  skipIntros: GqlBoolean;
+  skipNewIntros: GqlBoolean;
+  skipMixedIntros: GqlBoolean;
+  skipRecaps: GqlBoolean;
+  skipFiller: GqlBoolean;
+  skipCanon: GqlBoolean;
+  skipTransitions: GqlBoolean;
+  skipCredits: GqlBoolean;
+  skipNewCredits: GqlBoolean;
+  skipMixedCredits: GqlBoolean;
+  skipPreview: GqlBoolean;
+  skipTitleCard: GqlBoolean;
+}
+
+/**
+ * A show containing a list of episodes and relevate links
+ */
+export interface GqlShow {
+  id: GqlID;
+  createdAt: GqlTime;
+  createdByUserId: GqlID;
+  createdBy: GqlUser;
+  updatedAt: GqlTime;
+  updatedByUserId: GqlID;
+  updatedBy: GqlUser;
+  deletedAt?: GqlTime | undefined;
+  deletedByUserId?: GqlID | undefined;
+  deletedBy?: GqlUser | undefined;
+  name: GqlString;
+  originalName?: GqlString | undefined;
+  website?: GqlString | undefined;
+  image?: GqlString | undefined;
+  admins: Array<GqlShowAdmin>;
+  episodes: Array<GqlEpisode>;
+  templates: Array<GqlTemplate>;
+  seasonCount: GqlInt;
+  episodeCount: GqlInt;
+}
 
 /**
  * A list of users that have elevated permissions when making changes to a show, it's episodes, and
@@ -169,36 +332,6 @@ export interface GqlShowAdmin {
   show: GqlShow;
   userId: GqlID;
   user: GqlUser;
-}
-
-export interface GqlUpdatedTimestamps {
-  created: Array<GqlTimestamp>;
-  updated: Array<GqlTimestamp>;
-  deleted: Array<GqlTimestamp>;
-}
-
-/**
- * Episode info provided by a third party. See `Episode` for a description of each field.
- *
- * When creating data based on this type, fill out and post an episode, then timestamps based on the
- * data here. All fields will map 1 to 1 with the exception of `source`. Since a source belongs to a
- * episode for third party data, but belongs to timestamps in Anime Skip, the source should be
- * propogated down to each of the timestamps. This way when more timestamps are added, a episode can
- * have muliple timestamp sources.
- *
- * > Make sure to fill out the `source` field so that original owner of the timestamp is maintained
- */
-export interface GqlThirdPartyEpisode {
-  id?: GqlID | undefined;
-  season?: GqlString | undefined;
-  number?: GqlString | undefined;
-  absoluteNumber?: GqlString | undefined;
-  baseDuration?: GqlFloat | undefined;
-  name?: GqlString | undefined;
-  source?: GqlTimestampSource | undefined;
-  timestamps: Array<GqlThirdPartyTimestamp>;
-  showId: GqlString;
-  show: GqlThirdPartyShow;
 }
 
 /**
@@ -236,56 +369,33 @@ export interface GqlTemplateTimestamp {
 }
 
 /**
- * Data required to modify the timestamps on a template
+ * Episode info provided by a third party. See `Episode` for a description of each field.
+ *
+ * When creating data based on this type, fill out and post an episode, then timestamps based on the
+ * data here. All fields will map 1 to 1 with the exception of `source`. Since a source belongs to a
+ * episode for third party data, but belongs to timestamps in Anime Skip, the source should be
+ * propogated down to each of the timestamps. This way when more timestamps are added, a episode can
+ * have muliple timestamp sources.
+ *
+ * > Make sure to fill out the `source` field so that original owner of the timestamp is maintained
  */
-export interface GqlInputTemplateTimestamp {}
-
-/**
- * When logging in with a password or refresh token, you can get new tokens and account info
- */
-export interface GqlLoginData {
-  authToken: GqlString;
-  refreshToken: GqlString;
-  account: GqlAccount;
+export interface GqlThirdPartyEpisode {
+  id?: GqlID | undefined;
+  season?: GqlString | undefined;
+  number?: GqlString | undefined;
+  absoluteNumber?: GqlString | undefined;
+  baseDuration?: GqlFloat | undefined;
+  name?: GqlString | undefined;
+  source?: GqlTimestampSource | undefined;
+  timestamps: Array<GqlThirdPartyTimestamp>;
+  showId: GqlString;
+  show: GqlThirdPartyShow;
 }
 
-/**
- * Stores information about what where an episode can be watched from
- */
-export interface GqlEpisodeUrl {
-  url: GqlString;
-  createdAt: GqlTime;
-  createdByUserId: GqlID;
-  createdBy: GqlUser;
-  updatedAt: GqlTime;
-  updatedByUserId: GqlID;
-  updatedBy: GqlUser;
-  duration?: GqlFloat | undefined;
-  timestampsOffset?: GqlFloat | undefined;
-  episodeId: GqlID;
-  episode: GqlEpisode;
-  source: GqlEpisodeSource;
-}
-
-/**
- * Data required to create a new `Episode`. See `Episode` for a description of each field
- */
-export interface GqlInputEpisode {}
-
-/**
- * Account info that should only be accessible by the authorised user
- */
-export interface GqlAccount {
-  id: GqlID;
-  createdAt: GqlTime;
-  deletedAt?: GqlTime | undefined;
-  username: GqlString;
-  email: GqlString;
-  profileUrl: GqlString;
-  adminOfShows: Array<GqlShowAdmin>;
-  emailVerified: GqlBoolean;
-  role: GqlRole;
-  preferences: GqlPreferences;
+export interface GqlThirdPartyShow {
+  name: GqlString;
+  createdAt?: GqlTime | undefined;
+  updatedAt?: GqlTime | undefined;
 }
 
 export interface GqlThirdPartyTimestamp {
@@ -295,26 +405,7 @@ export interface GqlThirdPartyTimestamp {
   type: GqlTimestampType;
 }
 
-/**
- * Data required to create a new `Timestamp`. See `Timestamp` for a description of each field
- */
-export interface GqlInputTimestamp {}
-
-export interface GqlThirdPartyShow {
-  name: GqlString;
-  createdAt?: GqlTime | undefined;
-  updatedAt?: GqlTime | undefined;
-}
-
-export interface GqlInputTimestampOn {}
-
-export interface GqlInputExistingTimestamp {}
-
-/**
- * Basic information about an episode, including season, numbers, a list of timestamps, and urls that
- * it can be watched at
- */
-export interface GqlEpisode {
+export interface GqlTimestamp {
   id: GqlID;
   createdAt: GqlTime;
   createdByUserId: GqlID;
@@ -325,47 +416,12 @@ export interface GqlEpisode {
   deletedAt?: GqlTime | undefined;
   deletedByUserId?: GqlID | undefined;
   deletedBy?: GqlUser | undefined;
-  season?: GqlString | undefined;
-  number?: GqlString | undefined;
-  absoluteNumber?: GqlString | undefined;
-  baseDuration?: GqlFloat | undefined;
-  name?: GqlString | undefined;
-  show: GqlShow;
-  showId: GqlID;
-  timestamps: Array<GqlTimestamp>;
-  urls: Array<GqlEpisodeUrl>;
-  template?: GqlTemplate | undefined;
-}
-
-/**
- * Where all the user preferences are stored. This includes what timestamps the user doesn't want to
- * watch
- */
-export interface GqlPreferences {
-  id: GqlID;
-  createdAt: GqlTime;
-  updatedAt: GqlTime;
-  deletedAt?: GqlTime | undefined;
-  userId: GqlID;
-  user: GqlUser;
-  enableAutoSkip: GqlBoolean;
-  enableAutoPlay: GqlBoolean;
-  minimizeToolbarWhenEditing: GqlBoolean;
-  hideTimelineWhenMinimized: GqlBoolean;
-  colorTheme: GqlColorTheme;
-  skipBranding: GqlBoolean;
-  skipIntros: GqlBoolean;
-  skipNewIntros: GqlBoolean;
-  skipMixedIntros: GqlBoolean;
-  skipRecaps: GqlBoolean;
-  skipFiller: GqlBoolean;
-  skipCanon: GqlBoolean;
-  skipTransitions: GqlBoolean;
-  skipCredits: GqlBoolean;
-  skipNewCredits: GqlBoolean;
-  skipMixedCredits: GqlBoolean;
-  skipPreview: GqlBoolean;
-  skipTitleCard: GqlBoolean;
+  at: GqlFloat;
+  source: GqlTimestampSource;
+  typeId: GqlID;
+  type: GqlTimestampType;
+  episodeId: GqlID;
+  episode: GqlEpisode;
 }
 
 /**
@@ -389,6 +445,12 @@ export interface GqlTimestampType {
   description: GqlString;
 }
 
+export interface GqlUpdatedTimestamps {
+  created: Array<GqlTimestamp>;
+  updated: Array<GqlTimestamp>;
+  deleted: Array<GqlTimestamp>;
+}
+
 /**
  * Information about a user that is public. See `Account` for a description of each field
  */
@@ -400,68 +462,6 @@ export interface GqlUser {
   profileUrl: GqlString;
   adminOfShows: Array<GqlShowAdmin>;
 }
-
-/**
- * Data required to create a new template. See `Template` for a description of each field
- */
-export interface GqlInputTemplate {}
-
-/**
- * Data required to create a new `EpisodeUrl`. See `EpisodeUrl` for a description of each field
- */
-export interface GqlInputEpisodeUrl {}
-
-/**
- * The base model has all the fields you would expect a fully fleshed out item in the database would
- * have. It is used to track who create, updated, and deleted items
- */
-export interface GqlBaseModel {
-  id: GqlID;
-  createdAt: GqlTime;
-  createdByUserId: GqlID;
-  createdBy: GqlUser;
-  updatedAt: GqlTime;
-  updatedByUserId: GqlID;
-  updatedBy: GqlUser;
-  deletedAt?: GqlTime | undefined;
-  deletedByUserId?: GqlID | undefined;
-  deletedBy?: GqlUser | undefined;
-}
-
-/**
- * A show containing a list of episodes and relevate links
- */
-export interface GqlShow {
-  id: GqlID;
-  createdAt: GqlTime;
-  createdByUserId: GqlID;
-  createdBy: GqlUser;
-  updatedAt: GqlTime;
-  updatedByUserId: GqlID;
-  updatedBy: GqlUser;
-  deletedAt?: GqlTime | undefined;
-  deletedByUserId?: GqlID | undefined;
-  deletedBy?: GqlUser | undefined;
-  name: GqlString;
-  originalName?: GqlString | undefined;
-  website?: GqlString | undefined;
-  image?: GqlString | undefined;
-  admins: Array<GqlShowAdmin>;
-  episodes: Array<GqlEpisode>;
-  templates: Array<GqlTemplate>;
-  seasonCount: GqlInt;
-  episodeCount: GqlInt;
-}
-
-/**
- * Data required to create a new `Show`. See `Show` for a description of each field
- */
-export interface GqlInputShow {}
-
-/**
- * Data required to create a new `ShowAdmin`. See `ShowAdmin` for a description of each field
- */
-export interface GqlInputShowAdmin {}
 
 export type StatelessClient = ReturnType<typeof createStatelessClient>;
 

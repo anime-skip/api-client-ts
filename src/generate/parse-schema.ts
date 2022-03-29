@@ -7,8 +7,8 @@ export function parseSchema(schema: IntrospectedSchema): ParsedSchema {
     types: [],
     enums: [],
     scalars: [],
-    mutations: [],
     queries: [],
+    mutations: [],
     subscriptions: [],
   };
 

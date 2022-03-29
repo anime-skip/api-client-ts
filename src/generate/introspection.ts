@@ -12,7 +12,7 @@ export async function introspect(url: string): Promise<IntrospectedSchema> {
   });
   axiosRetry(introspectionClient, { retries: 5, retryDelay: () => 5000 });
 
-  return (
+  const schema = (
     await introspectionClient.post<unknown, IntrospectionResponse>(url, {
       query: `query IntrospectionQuery {
             __schema {
@@ -116,4 +116,11 @@ export async function introspect(url: string): Promise<IntrospectedSchema> {
       operationName: 'IntrospectionQuery',
     })
   ).data.data.__schema;
+
+  // sort the types so they stay in a consistent order, regardless of the API order
+
+  // @ts-expect-error: name doesn't necessarily exist
+  schema.types.sort((l, r) => l.name?.localeCompare(r.name) ?? 0);
+
+  return schema;
 }
