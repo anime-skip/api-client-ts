@@ -1,6 +1,6 @@
 # Typescript API Client
 
-A simple, [axios](https://axios-http.com/) based API client that ships with types and powers all of Anime Skip!
+A simple, fetch based API client that ships with types and powers all of Anime Skip!
 
 This library is generated based on the current introspection result from `test.api.anime-skip.com`.
 
@@ -9,7 +9,7 @@ echo "@anime-skip:registry=https://npm.pkg.github.com/" >> .npmrc
 npm i @anime-skip/api-client
 ```
 
-> This is an alternative to Apollo or any other GraphQL client library out there! Use something else if you prefer
+> This is an alternative to Apollo or any other GraphQL client library out there! Use something else if you prefer, this is by no means a requirement to consume the API
 
 <br/>
 
@@ -21,31 +21,33 @@ See the [contributing guidelines](https://github.com/anime-skip/docs/wiki) for a
 
 ## Usage
 
-To call the api, you need a client id! Checkout the [API docs](https://www.anime-skip.com/api) to get one. The one used below is a shared one that anyone can use, but it is heavily rate limitted.
+To call the api, you need a client id! Checkout the [API docs](https://www.anime-skip.com/api) to get one. The client id used below is a shared one that anyone can use, but it is heavily rate limited.
 
 ```ts
-import { createAnimeSkipClient } from '@anime-skip/api-client';
+import { createClient } from '@anime-skip/api-client';
 import md5 from 'md5';
 
-// Create the client
+// Create a fully managed client
+// (tokens will be refreshed automatically)
 
-const baseUrl = 'https://test.api.anime-skip.com/';
-const clientId = 'ZGfO0sMF3eCwLYf8yMSCJjlynwNGRXWE';
-const client = createAnimeSkipClient(baseUrl, clientId);
+const client = createClient({
+  baseUrl: 'https://test.api.anime-skip.com',
+  clientId: 'ZGfO0sMF3eCwLYf8yMSCJjlynwNGRXWE',
+});
 
 // Call the API
 
-const { authToken } = await client.login(`{ authToken }`, {
+const { status } = await client.healthCheck();
+const { authToken } = await client.login({
   usernameEmail: 'username',
   passwordHash: md5('password'),
 });
-
-// Access the axios instance to add interceptors, retries, etc
-
-client.axios;
+const { authToken } = await client.searchShows(`{ id name }`, { search: 're:' });
 ```
 
-The methods exposed on the client match the queries and mutation names used in the graphql. For documentation checkout the [api playground](http://test.api.anime-skip.com/graphiql)! Types are also included as named exports all prefixed with `Gql`. Extend them, pick from them, or use them directly, whatever you prefer!
+The methods exposed on the client match the queries and mutation names used in the graphql. For documentation checkout the [api playground](http://test.api.anime-skip.com/graphiql), but it's also include as JS Doc!
+
+Full types are also available as named exports all prefixed with `Gql`. Extend them, pick from them, or use them directly, whatever you prefer!
 
 ```ts
 import { GqlAccount, GqlEpisode, GqlCreateTimestampArgs, ... } from '@anime-skip/api-client';
@@ -55,7 +57,7 @@ import { GqlAccount, GqlEpisode, GqlCreateTimestampArgs, ... } from '@anime-skip
 
 ## E2E Tests
 
-This is where the E2E tests of the API are located. They test both the API and this client library. Contributers should know how to run and update them, but making changes to the backend is not possible because it is private.
+This is where the E2E tests of the API are located. They test both the API and this client library. Contributors should know how to run and update them, but making changes to the backend is not possible because it is private.
 
 > If you think there's a problem with the API, head over to the support page to get help: <https://www.anime-skip.com/support>
 
