@@ -2,8 +2,9 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: './e2e/jest.environment.js',
-  testTimeout: 60 * 1000,
+  testTimeout: 10e3,
   globals: {
     DOCKER_PID: undefined,
   },
+  setupFilesAfterEnv: ['./e2e/jest.setup.ts'],
 };

@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: timestamps-e2e
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    image: '${BACKEND_IMAGE-docker.pkg.github.com/anime-skip/timestamp-service/server:prod}'
+    environment:
+      - PORT=8080
+      - LOG_LEVEL=0
+      - DATABASE_URL=postgres://postgres:password@db:5432/timestamps-e2e
+      - DATABASE_DISABLE_SSL=true
+      - DATABASE_VERSION=100000
+      - DATABASE_ENABLE_SEEDING=true
+      - ENABLE_INTROSPECTION=true
+      - ENABLE_PLAYGROUND=true
+      - JWT_SECRET=some-secret
+      - EMAIL_SERVICE_HOST=tests:9100
+      - EMAIL_SERVICE_SECRET=some-email-secret
+      - EMAIL_SERVICE_ENABLED=true
+      - RECAPTCHA_SECRET=some-recaptcha-secret
+      - RECAPTCHA_RESPONSE_ALLOWLIST=mock-recaptcha-response
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
+
+  tests:
+    build:
+      dockerfile: Dockerfile.e2e
+      context: .
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db

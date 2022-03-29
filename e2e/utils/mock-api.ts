@@ -1,6 +1,6 @@
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
-import { log } from './log';
+import { println } from './log';
 
 type Methods = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -20,43 +20,52 @@ export interface MockApi {
 
 export async function mockApi(name: string, port: number): Promise<MockApi> {
   return new Promise(res => {
-    log(`Starting ${name} mock...`);
-    const app = new Koa();
-    app.use(bodyParser());
+    println(` - ${name}`);
 
-    const mocks: MockApi = {
+    const mock: MockApi = {
       requests: {},
       clear() {
-        log(`Clearing ${name} mock...`);
+        println(` - ${name}`);
         this.requests = {};
       },
       async stop() {
-        log(`Stopping ${name}...`);
+        println(` - ${name}`);
         return new Promise((res, rej) => {
           server.close(err => {
             if (err) {
-              log(`Stopped ${name} with error: ${err.message}`);
+              println(`   Error: ${err.message}`);
               rej(err);
             } else {
-              log(`Stopped ${name}!`);
               res();
             }
           });
         });
       },
     };
-    app.use(ctx => {
-      if (mocks.requests[ctx.method] == null) mocks.requests[ctx.method] = [];
-      mocks.requests[ctx.method]?.push({
+
+    const app = new Koa();
+    app.use(bodyParser());
+    app.use(async (ctx, next) => {
+      println(`<<< [${name}] ${ctx.method} ${ctx.path}`);
+      println(ctx.request.body);
+      const start = Date.now();
+      await next();
+      const ms = Date.now() - start;
+      println(`>>> [${name}] status=${ctx.status} (${ms}ms)`);
+    });
+    app.use(async ctx => {
+      const info = {
         path: ctx.path,
         body: ctx.request.body,
         headers: ctx.headers,
-      });
+      };
+      mock.requests[ctx.method] ??= [];
+      mock.requests[ctx.method]?.push(info);
       ctx.status = 200;
     });
 
     const server = app.listen(port, () => {
-      res(mocks);
+      res(mock);
     });
   });
 }
