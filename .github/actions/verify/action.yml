@@ -3,14 +3,14 @@ runs:
   using: composite
   steps:
     - run: |
-        yarn compile
-        yarn lint:no-fix
-        yarn format:check
-        yarn build
+        pnpm compile
+        pnpm lint:no-fix
+        pnpm format:check
+        pnpm build
       shell: bash
     - run: |
         if [[ "$(git diff --stat)" != "" ]]; then
-          echo "Generated files are out of date. Run `yarn gen` to regenerate them. Diff:"
+          echo "Generated files are out of date. Run `pnpm gen` to regenerate them. Diff:"
           git diff
           exit 1
         fi
