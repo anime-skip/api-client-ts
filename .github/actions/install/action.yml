@@ -2,5 +2,7 @@ name: Install Dependencies
 runs:
   using: composite
   steps:
-    - run: yarn install --frozen-lockfile
+    - run: |
+        npm i -g pnpm
+        pnpm i --frozen-lockfile
       shell: bash

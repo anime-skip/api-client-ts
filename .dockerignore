@@ -1,0 +1,10 @@
+.github
+.vscode
+lib
+node_modules
+.eslint*
+.git*
+.npm*
+.prettier*
+LICENSE
+README

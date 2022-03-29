@@ -21,6 +21,9 @@ overrides:
     excludedFiles: ['*.d.ts']
     extends:
       - plugin:@typescript-eslint/recommended
+    rules:
+      '@typescript-eslint/no-explicit-any': 'off'
+      '@typescript-eslint/explicit-module-boundary-types': 'off'
   - files: ['e2e/**/*']
     rules:
       '@typescript-eslint/no-non-null-assertion': 'off'

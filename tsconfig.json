@@ -1,19 +1,8 @@
 {
-  "ts-node": {
-    "compilerOptions": {
-      "module": "CommonJS",
-      "noUnusedLocals": false,
-      "noImplicitOverride": false,
-      "noImplicitReturns": false,
-      "noImplicitThis": false,
-      "noFallthroughCasesInSwitch": false,
-      "noImplicitUseStrict": false,
-      "noUnusedParameters": false
-    }
-  },
   "compilerOptions": {
     "target": "ES5",
     "module": "commonjs",
+    "lib": ["ESNext", "DOM"],
     "declaration": true,
     "outDir": "./lib",
     "strict": true,
@@ -22,6 +11,5 @@
     "rootDir": ".",
     "types": ["node", "jest"]
   },
-  "include": ["src/**/*", "e2e/**/*"],
-  "exclude": ["node_modules", "src/generate/templates/*"]
+  "include": ["src/**/*", "e2e/**/*"]
 }

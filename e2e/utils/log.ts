@@ -8,7 +8,15 @@ export function logSection(title: string): () => void {
   };
 }
 
+const COLOR = '\x1b[2m';
+const RESET = '\x1b[0m';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function log(...message: any[]): void {
-  process.stdout.write(`\x1b[2m${message.join('')}\x1b[0m\n`);
+export function println(...messages: any[]): void {
+  const strings = messages.map(message => {
+    if (typeof message === 'object') return JSON.stringify(message, null, 2);
+    return String(message);
+  });
+  const lines = strings.flatMap(str => str.split('\n')).map(line => `${COLOR}${line}${RESET}`);
+  process.stdout.write(lines.join('\n') + '\n');
 }

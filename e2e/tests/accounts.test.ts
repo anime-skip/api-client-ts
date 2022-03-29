@@ -1,38 +1,21 @@
 import expect from 'expect';
 import md5 from 'md5';
-import { clearMockApis, emailServer, setupMockApis, stopMockApis } from '../utils/mock-apis';
-import { healthCheck } from '../utils/connection';
+import { emailServer } from '../utils/mock-apis';
 import { expectFailure, expectQueryResolves as expectSuccess } from '../utils/expectQuery';
-import {
-  authorizeClient,
-  clientId,
-  ClientWithoutAxios,
-  createAuthorizedClient,
-  createClient,
-  recaptchaResponse,
-} from '../utils/clients';
+import { createClient, createStatelessClient, recaptchaResponse } from '../utils/clients';
 import { validUser } from '../utils/users';
+import { Client } from '../../src';
 
 const invalidRecaptchaResponse = 'some-other-response';
 
 describe('E2E API Calls', () => {
-  beforeAll(setupMockApis);
-  afterAll(stopMockApis);
-  beforeEach(clearMockApis);
-
-  it('Health check', async () => {
-    const { axios: axiosWithoutAuth } = createClient();
-    const response = await healthCheck(axiosWithoutAuth, clientId);
-    expect(response).toMatchObject({ status: 200 });
-  });
-
   describe('Creating Accounts', () => {
-    const { createAccount } = createClient().client;
+    const client = createStatelessClient();
     const user = validUser();
 
     it('Fail when username is invalid', () =>
       expectFailure(
-        createAccount(
+        client.createAccount(
           `{
             account { username }
           }`,
@@ -56,7 +39,7 @@ describe('E2E API Calls', () => {
 
     it('Fail when email is invalid', () =>
       expectFailure(
-        createAccount(
+        client.createAccount(
           `{
             authToken
           }`,
@@ -80,7 +63,7 @@ describe('E2E API Calls', () => {
 
     it('Fail with an invalid recaptcha response', () =>
       expectFailure(
-        createAccount(
+        client.createAccount(
           `{
             authToken
           }`,
@@ -104,7 +87,7 @@ describe('E2E API Calls', () => {
 
     it("Create 'user' account", async () => {
       await expectSuccess(
-        createAccount(
+        client.createAccount(
           `{
             authToken
             refreshToken
@@ -154,7 +137,7 @@ describe('E2E API Calls', () => {
       const uncleanUser = validUser();
 
       return expectSuccess(
-        createAccount(
+        client.createAccount(
           `{
             authToken
             refreshToken
@@ -181,9 +164,9 @@ describe('E2E API Calls', () => {
     });
   });
 
-  describe('login', () => {
+  describe('Login', () => {
     const existingUser = validUser('login');
-    const { client } = createClient();
+    const client = createStatelessClient();
 
     beforeAll(async () => {
       await client.createAccount('{ authToken }', {
@@ -280,10 +263,10 @@ describe('E2E API Calls', () => {
     });
   });
 
-  describe('email validation', () => {
+  describe('Email Validation', () => {
     it('New accounts are unverified', async () => {
       const newUser = validUser('new-user');
-      const { client } = await createAuthorizedClient(newUser);
+      const client = await createClient(newUser);
 
       return expectSuccess(
         client.account(`{
@@ -300,7 +283,7 @@ describe('E2E API Calls', () => {
 
     it('Fail with an invalid recaptcha response', async () => {
       const invalidRecaptchaUser = validUser('user-with-invalid-recaptcha');
-      const { client } = await createAuthorizedClient(invalidRecaptchaUser);
+      const client = await createClient(invalidRecaptchaUser);
       await expectFailure(
         client.resendVerificationEmail('', {
           recaptchaResponse: invalidRecaptchaResponse,
@@ -320,7 +303,7 @@ describe('E2E API Calls', () => {
     it('Accounts can become verified', async () => {
       const userToValidate = validUser('user-to-validate');
       const emailToken = () => emailServer.requests.POST![0].body.token;
-      const { client } = await createAuthorizedClient(userToValidate);
+      const client = await createClient(userToValidate);
       await expectSuccess(
         client.account(`{
           username
@@ -365,7 +348,7 @@ describe('E2E API Calls', () => {
     });
   });
 
-  describe('change password', () => {
+  describe('Change Password', () => {
     const changePassUser = {
       ...validUser('change-pass'),
       password: 'password1',
@@ -373,15 +356,15 @@ describe('E2E API Calls', () => {
       newPassword: 'password2',
       wrongNewPassword: 'not-password2',
     };
-    let client: ClientWithoutAxios;
+    let client: Client;
 
     beforeAll(async () => {
-      ({ client } = await createAuthorizedClient(changePassUser));
+      client = await createClient(changePassUser);
     });
 
     it("should fail to change the password when the new passwords don't match", () =>
       expectFailure(
-        client.changePassword(`{ authToken }`, {
+        client.changePassword({
           oldPassword: changePassUser.password,
           newPassword: changePassUser.newPassword,
           confirmNewPassword: changePassUser.wrongNewPassword,
@@ -399,7 +382,7 @@ describe('E2E API Calls', () => {
 
     it('should fail to change the password when a wrong password is used', () =>
       expectFailure(
-        client.changePassword(`{ authToken }`, {
+        client.changePassword({
           oldPassword: changePassUser.wrongPassword,
           newPassword: changePassUser.newPassword,
           confirmNewPassword: changePassUser.newPassword,
@@ -417,7 +400,7 @@ describe('E2E API Calls', () => {
 
     it('should not accept a blank password', () =>
       expectFailure(
-        client.changePassword(`{ authToken }`, {
+        client.changePassword({
           oldPassword: changePassUser.password,
           newPassword: '',
           confirmNewPassword: '',
@@ -434,7 +417,7 @@ describe('E2E API Calls', () => {
       }));
 
     it('should successfully change the password', async () => {
-      const { authToken } = await client.changePassword(`{ authToken }`, {
+      const { authToken } = await client.changePassword({
         oldPassword: changePassUser.password,
         newPassword: changePassUser.newPassword,
         confirmNewPassword: changePassUser.newPassword,
@@ -442,7 +425,7 @@ describe('E2E API Calls', () => {
       expect(authToken).toBeDefined();
 
       await expectFailure(
-        client.login(`{ authToken }`, {
+        client.login({
           usernameEmail: changePassUser.username,
           passwordHash: md5(changePassUser.password),
         }),
@@ -457,23 +440,23 @@ describe('E2E API Calls', () => {
         ],
       });
       await expectSuccess(
-        client.login(`{ authToken }`, {
+        client.login({
           usernameEmail: changePassUser.username,
           passwordHash: md5(changePassUser.newPassword),
         }),
-      ).toEqual({
+      ).toMatchObject({
         authToken: expect.any(String),
       });
     });
   });
 
-  describe('reset password', () => {
+  describe('Reset Password', () => {
     it('should fail for invalid emails', () => {
       const invalidEmailUser = {
         ...validUser('invalid-email'),
         email: 'asdf',
       };
-      const { client } = createClient();
+      const client = createStatelessClient();
       return expectFailure(
         client.requestPasswordReset('', {
           recaptchaResponse,
@@ -493,7 +476,7 @@ describe('E2E API Calls', () => {
 
     it('should fail for an invalid recaptcha', () => {
       const user = validUser();
-      const { client } = createClient();
+      const client = createStatelessClient();
       return expectFailure(
         client.requestPasswordReset('', {
           recaptchaResponse: invalidRecaptchaResponse,
@@ -513,7 +496,7 @@ describe('E2E API Calls', () => {
 
     describe('unregistered users', () => {
       const unregisteredUser = validUser('unregistered');
-      const { client } = createClient();
+      const client = createStatelessClient();
 
       it('should not throw an error when the email is not registered to a user', () =>
         expectSuccess(
@@ -535,8 +518,8 @@ describe('E2E API Calls', () => {
     describe('registered users', () => {
       it('should send the email to a registered user', async () => {
         const registeredUser = validUser('registered');
-        await createAuthorizedClient(registeredUser);
-        const { client } = createClient();
+        await createClient(registeredUser);
+        const client = createStatelessClient();
 
         await expectSuccess(
           client.requestPasswordReset('', {
@@ -560,8 +543,8 @@ describe('E2E API Calls', () => {
 
       it("should fail when the new passwords don't match", async () => {
         const registeredUser = validUser('registered');
-        await createAuthorizedClient(registeredUser);
-        const { client } = createClient();
+        await createClient(registeredUser);
+        const client = createStatelessClient();
 
         await client.requestPasswordReset('', {
           recaptchaResponse,
@@ -589,8 +572,8 @@ describe('E2E API Calls', () => {
 
       it('should reset the password using the token from the email', async () => {
         const registeredUser = validUser('registered');
-        await createAuthorizedClient(registeredUser);
-        const { client } = createClient();
+        await createClient(registeredUser);
+        const client = createStatelessClient();
 
         await client.requestPasswordReset('', {
           recaptchaResponse,
@@ -609,8 +592,7 @@ describe('E2E API Calls', () => {
 
       it('should allow logging in with new password', async () => {
         const registeredUser = validUser('registered');
-        await createAuthorizedClient(registeredUser);
-        const { axios, client } = createClient();
+        const client = await createClient(registeredUser);
         const newPassword = 'new-pass';
 
         await client.requestPasswordReset('', {
@@ -618,15 +600,21 @@ describe('E2E API Calls', () => {
           email: registeredUser.email,
         });
         const { token } = emailServer.requests.POST![0].body;
-        const { authToken } = await client.resetPassword(`{ authToken }`, {
+        await client.resetPassword({
           newPassword,
           confirmNewPassword: newPassword,
           passwordResetToken: token,
         });
 
-        authorizeClient(axios, authToken);
-        expectSuccess(client.account('{ username }')).toEqual({
-          username: registeredUser.username,
+        expectSuccess(
+          client.login({
+            usernameEmail: registeredUser.username,
+            passwordHash: md5(newPassword),
+          }),
+        ).toMatchObject({
+          account: {
+            username: registeredUser.username,
+          },
         });
       });
     });
