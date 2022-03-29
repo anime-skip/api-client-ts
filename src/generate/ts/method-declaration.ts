@@ -15,8 +15,8 @@ export function writeMethodDeclaration(
   const argString = args?.map(getMethodArg).join(', ') ?? '';
   w.conditionalWrite(isAsync, () => 'async ');
   w.write(`function ${name}(${argString})`);
-  w.conditionalWrite(!!returnType, () => {
-    if (isAsync) return `: Promise<${getType(returnType!)}>`;
-    else return `: ${getType(returnType!)}`;
-  });
+  if (returnType) {
+    if (isAsync) w.write(`: Promise<${getType(returnType)}>`);
+    else w.write(`: ${getType(returnType)}`);
+  }
 }

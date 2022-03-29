@@ -102,9 +102,6 @@ export interface RootResolverType {
 }
 
 export interface IntrospectedSchema {
-  queryType?: { name: string };
-  mutationType?: { name: string };
-  subscriptionType?: { name: string };
   types: Type[];
   // directives: IntrospectedDirective[];
 }

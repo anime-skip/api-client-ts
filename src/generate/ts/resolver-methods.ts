@@ -5,7 +5,6 @@ import { capitalize } from '../utils/text';
 import { writeComment } from './comment';
 import { writeMethod } from './method';
 import { getMethodArg } from './method-arg';
-import { getSafeName } from './safe-name';
 import { getType } from './type';
 
 export function writeResolverMethods(w: CodeBlockWriter, resolver: RootResolverType): void {
