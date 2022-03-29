@@ -57,7 +57,7 @@ export interface InputObjectType {
   kind: 'INPUT_OBJECT';
   name: string;
   description?: string;
-  fields: Field[];
+  inputFields: Field[];
 }
 
 export interface ScalarType {
