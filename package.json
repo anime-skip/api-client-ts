@@ -8,9 +8,6 @@
   "author": "Aaron Klinker <aaronklinker1@gmail.com>",
   "license": "GPL-3.0-or-later",
   "private": false,
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
   "engines": {
     "pnpm": ">=7"
   },
