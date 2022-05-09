@@ -11,6 +11,9 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
+  "engines": {
+    "pnpm": ">=7"
+  },
   "scripts": {
     "compile": "tsc --noEmit",
     "lint": "pnpm lint:no-fix -- --fix",
