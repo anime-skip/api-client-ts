@@ -7,16 +7,16 @@ export const endpoint = 'http://backend:8080';
 export const clientId = 'ZGfO0sMF3eCwLYf8yMSCJjlynwNGRXWE';
 export const recaptchaResponse = 'mock-recaptcha-response';
 
-const CONFIG: AnimeSkip.Config = {
+const CONFIG = (): AnimeSkip.Config => ({
   baseUrl: endpoint,
   clientId,
   // @ts-expect-error: fetch type mismatch, should be fine
   fetch,
   storage: AnimeSkip.createInMemoryStorage(),
-};
+});
 
 export function createStatelessClient() {
-  return AnimeSkip.createStatelessClient(CONFIG);
+  return AnimeSkip.createStatelessClient(CONFIG());
 }
 
 // export function authorizeClient(client: AnimeSkip.StatelessClient, accessToken: string): AnimeSkip.Client {
@@ -54,7 +54,7 @@ export async function createClient(user: {
   password: string;
   email: string;
 }): Promise<AnimeSkip.Client> {
-  const client = AnimeSkip.createClient(CONFIG);
+  const client = AnimeSkip.createClient(CONFIG());
   await client.createAccount({
     username: user.username,
     email: user.email,

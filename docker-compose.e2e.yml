@@ -12,7 +12,7 @@ services:
       retries: 5
 
   backend:
-    image: '${BACKEND_IMAGE-docker.pkg.github.com/anime-skip/timestamp-service/server:prod}'
+    image: '${BACKEND_IMAGE-docker.pkg.github.com/anime-skip/public-api/server:prod}'
     environment:
       - PORT=8080
       - LOG_LEVEL=0

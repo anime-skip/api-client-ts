@@ -22,7 +22,7 @@
     "build": "pnpm gen && pnpm compile && tsc -p tsconfig.build.json",
     "build:dev": "pnpm gen:dev && pnpm compile && tsc -p tsconfig.build.json",
     "test:e2e": "docker-compose -f docker-compose.e2e.yml up --build --abort-on-container-exit --renew-anon-volumes",
-    "test:e2e:dev": "BACKEND_IMAGE=anime-skip/timestamp-service/server:dev pnpm test:e2e",
+    "test:e2e:dev": "BACKEND_IMAGE=anime-skip/public-api/server:dev pnpm test:e2e",
     "prepare": "husky install"
   },
   "devDependencies": {

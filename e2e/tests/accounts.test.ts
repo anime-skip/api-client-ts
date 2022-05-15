@@ -8,7 +8,7 @@ import { Client } from '../../src';
 
 const invalidRecaptchaResponse = 'some-other-response';
 
-describe('E2E API Calls', () => {
+describe('E2E Account Tests', () => {
   describe('Creating Accounts', () => {
     const client = createStatelessClient();
     const user = validUser();

@@ -41,6 +41,11 @@ export type GqlString = string;
 export type GqlTime = string;
 
 /**
+ * A positive integer, specifically Golang's [uint](https://pkg.go.dev/builtin#uint)
+ */
+export type GqlUInt = number;
+
+/**
  * Color theme the user prefers
  */
 export enum GqlColorTheme {
@@ -71,11 +76,15 @@ export enum GqlEpisodeSource {
    * Data is from <funimation.com>
    */
   FUNIMATION = 'FUNIMATION',
+  /**
+   * Data is from <crunchyroll.com> and <beta.crunchyroll.com>
+   */
+  CRUNCHYROLL = 'CRUNCHYROLL',
 }
 
 /**
  * A user's role in the system. Higher roles allow a user write access to certain data that a normal
- * user would not. Some queries and mutations are only alloed by certain roles
+ * user would not. Some queries and mutations are only allowed by certain roles
  */
 export enum GqlRole {
   /**
@@ -115,7 +124,7 @@ export enum GqlTimestampSource {
 }
 
 /**
- * Account info that should only be accessible by the authorised user
+ * Account info that should only be accessible by the authorized user
  */
 export interface GqlAccount {
   id: GqlID;
@@ -133,7 +142,7 @@ export interface GqlAccount {
   /**
    * The linking object that associates a user to the shows they are admins of.
    *
-   * > This data is also accessible on the `User` model. It has been added here for convienience
+   * > This data is also accessible on the `User` model. It has been added here for convenience
    */
   adminOfShows: Array<GqlShowAdmin>;
   /**
@@ -148,6 +157,39 @@ export interface GqlAccount {
    * The user's preferences
    */
   preferences: GqlPreferences;
+}
+
+export interface GqlApiClient {
+  id: GqlString;
+  createdAt: GqlTime;
+  createdByUserId: GqlID;
+  createdBy: GqlUser;
+  updatedAt: GqlTime;
+  updatedByUserId: GqlID;
+  updatedBy: GqlUser;
+  deletedAt?: GqlTime | undefined;
+  deletedByUserId?: GqlID | undefined;
+  deletedBy?: GqlUser | undefined;
+  /**
+   * The ID of the user this client belongs to
+   */
+  userId: GqlID;
+  /**
+   * The user this client belongs to
+   */
+  user: GqlUser;
+  appName: GqlString;
+  description: GqlString;
+  rateLimitRpm?: GqlUInt | undefined;
+}
+
+export interface GqlApiClientChanges {
+  appName?: GqlString | undefined;
+  description?: GqlString | undefined;
+  /**
+   * Rate limits can only be changed by admins
+   */
+  rateLimitRpm?: GqlUInt | undefined;
 }
 
 /**
@@ -195,6 +237,11 @@ export interface GqlBaseModel {
    * The entire user that deleted the item
    */
   deletedBy?: GqlUser | undefined;
+}
+
+export interface GqlCreateApiClient {
+  appName: GqlString;
+  description: GqlString;
 }
 
 /**
@@ -246,7 +293,7 @@ export interface GqlEpisode {
    * Generally, this works because each service has it's own branding at the beginning of the show, not
    * at the end of it
    */
-  baseDuration?: GqlFloat | undefined;
+  baseDuration: GqlFloat;
   /**
    * The episode's name
    */
@@ -256,7 +303,7 @@ export interface GqlEpisode {
    */
   show: GqlShow;
   /**
-   * The id of the show that the episode blongs to
+   * The id of the show that the episode belongs to
    */
   showId: GqlID;
   /**
@@ -342,7 +389,7 @@ export interface GqlInputEpisode {
   /**
    * See `Episode.baseDuration`
    */
-  baseDuration?: GqlFloat | undefined;
+  baseDuration: GqlFloat;
 }
 
 /**
@@ -537,7 +584,7 @@ export interface GqlPreferences {
    */
   skipCanon: GqlBoolean;
   /**
-   * Whether or not the user whats to skip commertial transitions. Default: `true`
+   * Whether or not the user whats to skip commercial transitions. Default: `true`
    */
   skipTransitions: GqlBoolean;
   /**
@@ -563,7 +610,7 @@ export interface GqlPreferences {
 }
 
 /**
- * A show containing a list of episodes and relevate links
+ * A show containing a list of episodes and relevant links
  */
 export interface GqlShow {
   id: GqlID;
@@ -732,8 +779,8 @@ export interface GqlTemplateTimestamp {
  * When creating data based on this type, fill out and post an episode, then timestamps based on the
  * data here. All fields will map 1 to 1 with the exception of `source`. Since a source belongs to a
  * episode for third party data, but belongs to timestamps in Anime Skip, the source should be
- * propogated down to each of the timestamps. This way when more timestamps are added, a episode can
- * have muliple timestamp sources.
+ * propagated down to each of the timestamps. This way when more timestamps are added, a episode can
+ * have multiple timestamp sources.
  *
  * > Make sure to fill out the `source` field so that original owner of the timestamp is maintained
  */
@@ -745,7 +792,7 @@ export interface GqlThirdPartyEpisode {
   season?: GqlString | undefined;
   number?: GqlString | undefined;
   absoluteNumber?: GqlString | undefined;
-  baseDuration?: GqlFloat | undefined;
+  baseDuration: GqlFloat;
   name?: GqlString | undefined;
   source?: GqlTimestampSource | undefined;
   timestamps: Array<GqlThirdPartyTimestamp>;
@@ -799,7 +846,7 @@ export interface GqlTimestamp {
    */
   typeId: GqlID;
   /**
-   * The type the timestamp is. Thid field is a constant string so including it has no effect on
+   * The type the timestamp is. This field is a constant string so including it has no effect on
    * performance or query complexity.
    */
   type: GqlTimestampType;
@@ -815,7 +862,7 @@ export interface GqlTimestamp {
 
 /**
  * The type a timestamp can be. This table rarely changes so the values fetched can either be hard
- * coded or fetch occasionaly. Anime Skip website and web extension use hardcoded maps to store this
+ * coded or fetch occasionally. Anime Skip website and web extension use hardcoded maps to store this
  * data, but a third party might want to fetch and cache this instead since you won't know when Anime
  * Skip adds timestamps
  */
@@ -1711,6 +1758,81 @@ export function createStatelessClient({
     return data['findTemplateByDetails'];
   }
   /**
+   * List or search through the authenticated user's API clients
+   */
+  async function myApiClients(
+    query: string,
+    variables?: {
+      search?: GqlString | undefined;
+      offset?: GqlInt | undefined;
+      limit?: GqlInt | undefined;
+      sort?: GqlString | undefined;
+    },
+    config?: RequestInit,
+  ): Promise<Array<GqlApiClient>> {
+    const res = await fetch(baseUrl + '/graphql', {
+      ...config,
+      method: 'POST',
+      body: JSON.stringify({
+        query: `query MyApiClients(
+  $search: String,
+  $offset: Int,
+  $limit: Int,
+  $sort: String,
+) {
+  myApiClients(
+    search: $search,
+    offset: $offset,
+    limit: $limit,
+    sort: $sort,
+  ) ${query}
+}`,
+        variables,
+        operationName: 'MyApiClients',
+      }),
+      headers: {
+        ...config?.headers,
+        'X-Client-ID': clientId,
+        'Content-Type': 'application/json',
+      },
+    });
+    const { data, errors } = (await res.json()) as GqlResponse<'myApiClients', Array<GqlApiClient>>;
+    if (errors != null) throw new GqlError(res.status, errors);
+    return data['myApiClients'];
+  }
+  /**
+   * Find an API Client that you created based on it's ID. This will not return other users' clients
+   */
+  async function findApiClient(
+    query: string,
+    variables?: { id: GqlString },
+    config?: RequestInit,
+  ): Promise<GqlApiClient> {
+    const res = await fetch(baseUrl + '/graphql', {
+      ...config,
+      method: 'POST',
+      body: JSON.stringify({
+        query: `query FindApiClient(
+  $id: String!,
+) {
+  findApiClient(
+    id: $id,
+  ) ${query}
+}`,
+        variables,
+        operationName: 'FindApiClient',
+      }),
+      headers: {
+        ...config?.headers,
+        'X-Client-ID': clientId,
+        'Content-Type': 'application/json',
+      },
+    });
+    const { data, errors } = (await res.json()) as GqlResponse<'findApiClient', GqlApiClient>;
+    if (errors != null) throw new GqlError(res.status, errors);
+    return data['findApiClient'];
+  }
+  /**
    * Create a user account. 3rd party applications will not have access to this function because of
    * `recaptchaResponse`. Redirect new users to create an account on <anime-skip.com>
    */
@@ -2074,8 +2196,6 @@ export function createStatelessClient({
   }
   /**
    * Update show data
-   *
-   * > `@isShowAdmin` - You need to be an admin of the show to do this action
    */
   async function updateShow(
     query: string,
@@ -2212,8 +2332,6 @@ export function createStatelessClient({
   }
   /**
    * Create an episode under a `Show`
-   *
-   * > `@isShowAdmin` - You need to be an admin of the show to do this action
    */
   async function createEpisode(
     query: string,
@@ -2248,8 +2366,6 @@ export function createStatelessClient({
   }
   /**
    * Update episode info
-   *
-   * > `@isShowAdmin` - You need to be an admin of the show to do this action
    */
   async function updateEpisode(
     query: string,
@@ -2318,8 +2434,6 @@ export function createStatelessClient({
   }
   /**
    * Link an `Episode` to a service URL
-   *
-   * > `@isShowAdmin` - You need to be an admin of the show to do this action
    */
   async function createEpisodeUrl(
     query: string,
@@ -2388,8 +2502,6 @@ export function createStatelessClient({
   }
   /**
    * Update episode url info
-   *
-   * > `@isShowAdmin` - You need to be an admin of the show to do this action
    */
   async function updateEpisodeUrl(
     query: string,
@@ -2424,8 +2536,6 @@ export function createStatelessClient({
   }
   /**
    * Add a timestamp to an `Episode`
-   *
-   * > `@isShowAdmin` - You need to be an admin of the show to do this action
    */
   async function createTimestamp(
     query: string,
@@ -2460,8 +2570,6 @@ export function createStatelessClient({
   }
   /**
    * Update timestamp data
-   *
-   * > `@isShowAdmin` - You need to be an admin of the show to do this action
    */
   async function updateTimestamp(
     query: string,
@@ -2496,8 +2604,6 @@ export function createStatelessClient({
   }
   /**
    * Delete a timestamp
-   *
-   * > `@isShowAdmin` - You need to be an admin of the show to do this action
    */
   async function deleteTimestamp(
     query: string,
@@ -2530,8 +2636,6 @@ export function createStatelessClient({
   }
   /**
    * Will create, update, and delete timestamps as passed. Partial failures are completely rolled back
-   *
-   * > `@isShowAdmin` - You need to be an admin of the show to do this action
    */
   async function updateTimestamps(
     query: string,
@@ -2754,6 +2858,8 @@ export function createStatelessClient({
   }
   /**
    * Delete an existing template
+   *
+   * > `@isShowAdmin` - You need to be an admin of the show to do this action
    */
   async function deleteTemplate(
     query: string,
@@ -2854,6 +2960,104 @@ export function createStatelessClient({
     if (errors != null) throw new GqlError(res.status, errors);
     return data['removeTimestampFromTemplate'];
   }
+  /**
+   * Create a new API client for the authenticated user to use
+   */
+  async function createApiClient(
+    query: string,
+    variables?: { client: GqlCreateApiClient },
+    config?: RequestInit,
+  ): Promise<GqlApiClient> {
+    const res = await fetch(baseUrl + '/graphql', {
+      ...config,
+      method: 'POST',
+      body: JSON.stringify({
+        query: `mutation CreateApiClient(
+  $client: CreateApiClient!,
+) {
+  createApiClient(
+    client: $client,
+  ) ${query}
+}`,
+        variables,
+        operationName: 'CreateApiClient',
+      }),
+      headers: {
+        ...config?.headers,
+        'X-Client-ID': clientId,
+        'Content-Type': 'application/json',
+      },
+    });
+    const { data, errors } = (await res.json()) as GqlResponse<'createApiClient', GqlApiClient>;
+    if (errors != null) throw new GqlError(res.status, errors);
+    return data['createApiClient'];
+  }
+  /**
+   * Update one of the authenticated user's API clients
+   */
+  async function updateApiClient(
+    query: string,
+    variables?: { id: GqlString; changes: GqlApiClientChanges },
+    config?: RequestInit,
+  ): Promise<GqlApiClient> {
+    const res = await fetch(baseUrl + '/graphql', {
+      ...config,
+      method: 'POST',
+      body: JSON.stringify({
+        query: `mutation UpdateApiClient(
+  $id: String!,
+  $changes: ApiClientChanges!,
+) {
+  updateApiClient(
+    id: $id,
+    changes: $changes,
+  ) ${query}
+}`,
+        variables,
+        operationName: 'UpdateApiClient',
+      }),
+      headers: {
+        ...config?.headers,
+        'X-Client-ID': clientId,
+        'Content-Type': 'application/json',
+      },
+    });
+    const { data, errors } = (await res.json()) as GqlResponse<'updateApiClient', GqlApiClient>;
+    if (errors != null) throw new GqlError(res.status, errors);
+    return data['updateApiClient'];
+  }
+  /**
+   * Delete one of the authenticated user's API clients
+   */
+  async function deleteApiClient(
+    query: string,
+    variables?: { id: GqlString },
+    config?: RequestInit,
+  ): Promise<GqlApiClient> {
+    const res = await fetch(baseUrl + '/graphql', {
+      ...config,
+      method: 'POST',
+      body: JSON.stringify({
+        query: `mutation DeleteApiClient(
+  $id: String!,
+) {
+  deleteApiClient(
+    id: $id,
+  ) ${query}
+}`,
+        variables,
+        operationName: 'DeleteApiClient',
+      }),
+      headers: {
+        ...config?.headers,
+        'X-Client-ID': clientId,
+        'Content-Type': 'application/json',
+      },
+    });
+    const { data, errors } = (await res.json()) as GqlResponse<'deleteApiClient', GqlApiClient>;
+    if (errors != null) throw new GqlError(res.status, errors);
+    return data['deleteApiClient'];
+  }
 
   async function healthCheck(): Promise<ApiHealth> {
     const res = await fetch(baseUrl + '/status', { headers: { 'X-Client-ID': clientId } });
@@ -2887,6 +3091,8 @@ export function createStatelessClient({
     findTemplate,
     findTemplatesByShowId,
     findTemplateByDetails,
+    myApiClients,
+    findApiClient,
     createAccount,
     changePassword,
     resendVerificationEmail,
@@ -2919,6 +3125,9 @@ export function createStatelessClient({
     deleteTemplate,
     addTimestampToTemplate,
     removeTimestampFromTemplate,
+    createApiClient,
+    updateApiClient,
+    deleteApiClient,
     healthCheck,
   };
 }

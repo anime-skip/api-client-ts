@@ -4,4 +4,4 @@ WORKDIR /tests
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm i --frozen-lockfile --unsafe-perm
 COPY . .
-CMD [ "node_modules/.bin/jest", "--runInBand", "--bail", "--colors" ]
+CMD [ "node_modules/.bin/jest", "--runInBand", "--bail", "--colors", "api-clients" ]
